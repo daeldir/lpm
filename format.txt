@@ -10,8 +10,8 @@
 
 
                                #Abstract#
-    Ce langage de  balisage léger permet de pratiquer  la programmation lettrée
-    de manière simple et agréable.
+    Ce  langage de  balisage  léger permet  de pratiquer  la  programmation
+    lettrée de manière simple et agréable.
                                   ###
 
 
@@ -60,6 +60,7 @@ définir notre propre langage ?)
  - Générer automatiquement la table des matières
  - Coloriser le code source
 
+
 = Propositions de syntaxe :
 
 == TITRE :
@@ -107,7 +108,7 @@ avec plusieurs paragraphes
 
 Le résumé est  transformé par l'outil  de mise en forme du fichier texte  :  la
 commande Abstract est centrée,  le ### qui indique la fin du bloc aussi,  et le
-texte est légèrement indenté :
+texte est légèrement indenté (et un peu moins large) :
 <Code:
                                    #Abstract#
     Ceci est un résumé,
@@ -117,7 +118,6 @@ texte est légèrement indenté :
 >
 
 == SECTIONS :
-
 Les sections sont marquées comme en markdown :
 <Code:
 =Section de premier niveau
@@ -141,6 +141,7 @@ Ceci est un texte* avec une référence*.
 
 /!\ On peut écrire la définition de la référence avant le texte,  mais ce n'est
 /!\ pas conseillé :
+
 <Code:
 *: Un texte, c'est une suite de mots
 *: Une référence, c'est une manière de briser le flux de lecture
@@ -252,7 +253,10 @@ morceau de code.  L'indentation est respectée  (voir le fonctionnement de noweb
 pour ça), et comme <\>>, <\<> peut être échappé avec <\\<>, puis <\\\<> etc. Un
 bloc qui n'a pas de nom  n'est pas extrait dans un fichier texte,  il est juste
 formatté comme du code.  On peut définir le langage de programmation par défaut
-avec la commande <#Code: langage>.
+avec la commande  <#Code: langage>.  (à ceux qui lisent ce document à partir de
+son code source :  oui,  ce paragraphe est particulièrement moche,  mais avouez
+que c'est rare d'utiliser la commande de code pour décrire la commande de code.
+Dans les autres cas, ce sera moins moche ;-) )
 
 <Code: morceau de code
 print "La suite de notre code dans test.py"
@@ -274,4 +278,5 @@ Inclue un fichier brut, sans l'interpreter.
 >
 Inclue un fichier et l'interprète.  Le fichier n'est par contre pas inclut dans
 le fichier texte quand on reformate celui-ci (ça serait chiant, sinon…).
+
 

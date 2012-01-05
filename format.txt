@@ -34,6 +34,7 @@ markdown ou ReStructuredText).
  - Possibilité de faire des liens dans le document (se référer à une section,
    par son nom ? Donner un alias à une section ? Une ancre (comme en HTML)
    qu'on peut insérer n'importe où ?)
+ - Inclusion d'un autre document (et de manière plus pratique que Latex)
 
 == Mise en page :
  - Permettre le gras, l'italique, le souligné et le barré
@@ -253,3 +254,16 @@ print "La suite de notre code dans test.py"
 On peut aussi marquer un passage de texte comme du code, en le mettant entre
 <\<\>>. On doit alors échapper <\<> et <\>> avec un \ (avec le même effet que
 les morceaux de code : rajouter un \ pour échapper un \ de plus). 
+
+== INCLUSION D'AUTRE FICHIER :
+<Code:
+#Include: mon_fichier.txt
+>
+Inclue un fichier brut, sans l'interpreter.
+
+<Code:
+#Get: mon_fichier.txt
+>
+Inclue un fichier et l'interprète. Le fichier n'est par contre pas inclut dans
+le fichier texte quand on reformate celui-ci (ça serait chiant, sinon…).
+

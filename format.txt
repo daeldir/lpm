@@ -1,12 +1,12 @@
 
-                  ******************************************
-                  * Mon Markup qu'il faut y trouver un nom *
-                  *                                        *
-                  ******************************************
+                    **********************************************
+                    * Lossless Game Litterate Programming Markup *
+                    *                                            *
+                    **********************************************
 
 #Authors: Dorian Trupin
 
-#Code: my_unnamed_markup
+#Code: lpm
 
 
                                #Abstract#
@@ -26,7 +26,7 @@ programmation par défaut,  et un langage par bloc de code  (on pourrait deviner
 le type d'un bloc par rapport au type des blocs dans lesquels il est inséré  ?)
 
 On  ne doit  pas forcer  l'indentation de ce  code source  (à la différence  de
-markdown ou ReStructuredText).
+Markdown ou ReStructuredText).
 
 
 == Structuration du document :
@@ -256,7 +256,7 @@ formatté comme du code.  On peut définir le langage de programmation par défa
 avec la commande  <#Code: langage>.  (à ceux qui lisent ce document à partir de
 son code source :  oui,  ce paragraphe est particulièrement moche,  mais avouez
 que c'est rare d'utiliser la commande de code pour décrire la commande de code.
-Dans les autres cas, ce sera moins moche ;-) )
+Dans les autres cas,  ce sera moins moche ;-) ) 
 
 <Code: morceau de code
 print "La suite de notre code dans test.py"
@@ -265,7 +265,11 @@ print "La suite de notre code dans test.py"
 
 On peut aussi  marquer un passage  de texte comme du code,  en le mettant entre
 <\<\>>.  On doit alors échapper <\<> et <\>> avec un \  (avec le même effet que
-les morceaux de code : rajouter un \ pour échapper un \ de plus). 
+les morceaux  de code  :  rajouter un  \  pour échapper  un  \  de plus).  (Une
+dernière remarque :  si un morceau de code se termine par <\\>,  il va échapper
+le <\>>  qui le suit.  Dans ce cas,  il suffit  de le doubler,  pour obtenir un
+<\\>>,  qui sera  ensuite  interprété  correctement  pour fermer  la balise  de
+code.)
 
 == INCLUSION D'AUTRE FICHIER :
 <Code:

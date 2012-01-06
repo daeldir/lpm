@@ -4,15 +4,15 @@
                     *                                            *
                     **********************************************
 
-#Authors: Dorian Trupin
+~Authors: Dorian Trupin
 
-#Code: lpm
+~Code: lpm
 
 
-                               #Abstract#
+                               ~Abstract~
     Ce  langage de  balisage  léger permet  de pratiquer  la  programmation
     lettrée de manière simple et agréable.
-                                  ###
+                                  ~~~
 
 
 = Fonctionnalités :
@@ -91,30 +91,30 @@ texte en :
 Le langage se base au  maximum sur une mise en forme avec le texte  (comme pour
 le titre), mais comprend certaines commandes :
 <Code:
-#Authors Dorian Trupin, Anthony Reynier et Yannick Imposti
+~Authors: Dorian Trupin, Anthony Reynier et Yannick Imposti
 
 >
 
 == RÉSUMÉ :
 Le résumé est aussi une commande :
 <Code:
-#Abstract#
+~Abstract~
 Ceci est un résumé,
 
 avec plusieurs paragraphes
-###
+~~~
 
 >
 
 Le résumé est  transformé par l'outil  de mise en forme du fichier texte  :  la
-commande Abstract est centrée,  le ### qui indique la fin du bloc aussi,  et le
+commande Abstract est centrée,  le ~~~ qui indique la fin du bloc aussi,  et le
 texte est légèrement indenté (et un peu moins large) :
 <Code:
-                                   #Abstract#
+                                   ~Abstract~
     Ceci est un résumé,
 
     avec plusieurs paragraphes
-                                      ###
+                                      ~~~
 >
 
 == SECTIONS :
@@ -192,7 +192,7 @@ Voici une liste à plusieurs niveaux :
 >
 
 (qui ressemblera à ceci :)
-<Code
+<Code:
  - élément 1
    -- élément 1.1
    -- élément 1.2
@@ -200,16 +200,23 @@ Voici une liste à plusieurs niveaux :
 >
 
 Et voici la même chose en numéroté (déjà reformaté) :
-<Code
- #) élément 1
-    ##) élément 1.1
- #) élément 2
+<Code:
+ # élément 1
+   ## élément 1.1
+ # élément 2
+>
+
+Ou encore, une liste non numérotée contenant une liste numérotée :
+<Code:
+ - élément 1
+   -# élément 1.1
+ - élément 2
 >
 
 == IMAGE :
 C'est une commande :
 <Code:
-#Image: ../data/img/lolcat.jpg
+~Image: ../data/img/lolcat.jpg
 >
 
 == NOTE IMPORTANTE :
@@ -234,7 +241,7 @@ Enfin,  le code  :  un morceau de  code nommé,  avec une  référence  à un a
 morceau de code, et le langage de programmation spécifié :
 
 <Code:
-<Code (python): test.py
+\<Code (python): test.py
 import coco
 def a():
   \<morceau de code
@@ -253,14 +260,16 @@ morceau de code.  L'indentation est respectée  (voir le fonctionnement de noweb
 pour ça), et comme <\>>, <\<> peut être échappé avec <\\<>, puis <\\\<> etc. Un
 bloc qui n'a pas de nom  n'est pas extrait dans un fichier texte,  il est juste
 formatté comme du code.  On peut définir le langage de programmation par défaut
-avec la commande  <#Code: langage>.  (à ceux qui lisent ce document à partir de
+avec la commande  <~Code: langage>.  (à ceux qui lisent ce document à partir de
 son code source :  oui,  ce paragraphe est particulièrement moche,  mais avouez
 que c'est rare d'utiliser la commande de code pour décrire la commande de code.
 Dans les autres cas,  ce sera moins moche ;-) ) 
 
-<Code: morceau de code
+<Code:
+\<Code: morceau de code
 print "La suite de notre code dans test.py"
 
+\>
 >
 
 On peut aussi  marquer un passage  de texte comme du code,  en le mettant entre
@@ -273,12 +282,12 @@ code.)
 
 == INCLUSION D'AUTRE FICHIER :
 <Code:
-#Include: mon_fichier.txt
+~Include: mon_fichier.txt
 >
 Inclue un fichier brut, sans l'interpreter.
 
 <Code:
-#Get: mon_fichier.txt
+~Get: mon_fichier.txt
 >
 Inclue un fichier et l'interprète.  Le fichier n'est par contre pas inclut dans
 le fichier texte quand on reformate celui-ci (ça serait chiant, sinon…).

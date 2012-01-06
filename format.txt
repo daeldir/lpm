@@ -278,7 +278,9 @@ les morceaux  de code  :  rajouter un  \  pour échapper  un  \  de plus).  (Un
 dernière remarque :  si un morceau de code se termine par <\\>,  il va échapper
 le <\>>  qui le suit.  Dans ce cas,  il suffit  de le doubler,  pour obtenir un
 <\\>>,  qui sera  ensuite  interprété  correctement  pour fermer  la balise  de
-code.)
+code.)  On peut définir  le langage  qui va  formater cette portion  de code en
+l'ajoutant entre  <\<\>>  dans la portion de code  (et on échappe  ces morceaux
+toujours de la même manière). Exemple~: <\<python\>import os>
 
 == INCLUSION D'AUTRE FICHIER :
 <Code:

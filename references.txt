@@ -1,0 +1,14 @@
+Je me suis inspiré de ReStructuredText[..] pour les liens*, les notes en bas
+de page* et le titre[..]. Textile[..] m'a fait penser à l'imbrication de listes
+de type différents[..]. Bien sûr, l'utilisation de LaTeX[..] et Noweb[..] m'a
+fortement influencé, l'objectif étant de remplacer ces outils.
+
+..: http://fr.wikipedia.org/wiki/ReStructuredText
+*: Même si j'ai pas gardé leur syntaxe exactement
+*: Je sais pas comment c'est fait en ReStructuredText, je me suis inspiré des
+   liens.
+..: http://en.wikipedia.org/wiki/Textile_%28markup_language%29
+..: http://en.wikipedia.org/wiki/Textile_%28markup_language%29#Lists
+..: http://fr.wikipedia.org/wiki/LaTeX
+..: http://www.cs.tufts.edu/~nr/noweb/
+

@@ -36,7 +36,7 @@ bibendum. In at magna nisi.
 ~~~
 
 = Formattage
-Dans cette partie, nous traiterons du formattage du document
+Dans cette partie, nous traiterons du formatage du document
 
 == Sections
 On gère les fonctions comme on veut.
@@ -89,7 +89,7 @@ L'ancre renvoie ici[=une ancre].
 
 == La gueule des paragraphes et du texte
 
-/!\ Les paragraphes peuvent être formattés pour être rendus plus importants.
+/!\ Les paragraphes peuvent être formatés pour être rendus plus importants.
 /!\
 /!\ Praesent tincidunt posuere velit. Fusce sed eros sed turpis lacinia
 rhoncus. Suspendisse potenti. Nulla feugiat, nisi vitae egestas tincidunt,
@@ -102,6 +102,9 @@ nec commodo vel, consequat eget neque. Integer volutpat, mi eget interdum
 lobortis, lorem ligula accumsan elit, at imperdiet tellus turpis sit amet
 justo. 
 
+/!\ Les deux paragraphes précédents sont dans un seul bloc important, mais
+celui-ci en est séparé.
+
 Les mots peuvent être **gras**, //italiques//, __soulignés__ ou --barrés--.
 
 On peut inclure des images :
@@ -111,33 +114,34 @@ On peut inclure des images :
 Dans cette partie, nous traiterons de la gestion du code dans le document
 
 <Code: test.py
-""" Ce code sera extrait dans le fichier test.py, et formatté en python """
+""" Ce code sera extrait dans le fichier test.py, et formaté en python """
 def a():
      <morceau de python
+a()
 >
 
 <Code: test.c
-/* Ce code sera extrait dans test.c, mais formatté en python */
-<morceau de c mal formatté
+/* Ce code sera extrait dans test.c, mais formaté en python */
+<morceau de c mal formaté
 >
 
 <Code (C): test2.c
-/* Ce code sera extrait dans test2.c, et formatté en C */
-<morceau de c bien formatté
+/* Ce code sera extrait dans test2.c, et formaté en C */
+<morceau de c bien formaté
 >
 
 <Code: morceau de python
 print "L'indentation est conservée"
 >
 
-<Code: morceau de c mal formatté
+<Code: morceau de c mal formaté
 /* Ce morceau de code est référencé par un code considéré comme du python et
- * sera mal formatté */
+ * sera mal formaté */
 >
 
-<Code: morceau de c bien formatté
+<Code: morceau de c bien formaté
 /* Ce morceau de code est référencé par un code considéré comme du C et sera
- * bien formatté. */
+ * bien formaté. */
 >
 
 <Code:
@@ -156,15 +160,18 @@ coco
 \>
 >
 
-On peut mettre des blocs de code dans un paragraphe (<import os>), spécifier le langage (<<C>#include \<stdio.h\>>), et échapper les caractères qui sont utilisés par lpm (<\<\<python\>test\>>). On peut aussi finir un bloc de code par \ : <test \\>.
+On peut mettre des blocs de code dans un paragraphe (<import os>), spécifier le
+langage (<<C>#include \<stdio.h\>>), et échapper les caractères qui sont
+utilisés par lpm (<\<\<python\>test\>>). On peut aussi finir un bloc de code
+par \ en l'échappant : <test \\>.
 
 = Inclusion de fichiers
 On peut insérer un fichier sans le parser :
+
 ~Include test2.txt
 
 Ou en le parsant :
+
 ~Get test2.txt
 
-Inclusion de fichier brut
-Inclusion de fichier interprété
 

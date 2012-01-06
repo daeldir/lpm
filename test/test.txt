@@ -74,8 +74,8 @@ Et pour finir :
 Il y a les notes de bas de page*, les liens[..], les (liens ancrés)[une ancre]
 qui peuvent contenir plusieurs mots.
 
-* Comme ça
-.. http://fr.wikipedia.org/wiki/Lien_hypertexte
+*: Comme ça
+..: http://fr.wikipedia.org/wiki/Lien_hypertexte
 
 Nulla aliquet adipiscing justo, ultricies blandit erat congue at. Sed sapien
 dui, convallis et sollicitudin ac, volutpat ut diam. Cras sed consequat ipsum.

@@ -1,0 +1,297 @@
+
+                    **********************************************
+                    * Lossless Game Litterate Programming Markup *
+                    *                                            *
+                    **********************************************
+
+~Authors: Dorian Trupin
+
+~Code: lpm
+
+
+                               ~Abstract~
+    Ce  langage de  balisage  léger permet  de pratiquer  la  programmation
+    lettrée de manière simple et agréable.
+                                  ~~~
+
+
+= Fonctionnalités :
+
+Les fonctionnalités désirées pour  un langage de balisage léger pour notre code
+source :
+
+== Code source :
+Inclusion  de  code source,   avec   possibilité  de  définir   un  langage  de
+programmation par défaut,  et un langage par bloc de code  (on pourrait deviner
+le type d'un bloc par rapport au type des blocs dans lesquels il est inséré  ?)
+
+On  ne doit  pas forcer  l'indentation de ce  code source  (à la différence  de
+Markdown ou ReStructuredText).
+
+
+== Structuration du document :
+ - Liste des auteurs
+ - Titre
+ - Résumé
+ - Des sections, avec n'importe quel niveau de profondeur
+ - Des notes en bas de page et des liens comme en RST
+ - Possibilité de faire  des liens dans le document  (se référer à une section,
+   par son nom  ?  Donner un alias à une section  ?  Une ancre  (comme en HTML)
+   qu'on peut insérer n'importe où ?)
+ - Inclusion d'un autre document (et de manière plus pratique que Latex)
+
+== Mise en page :
+ - Permettre le gras, l'italique, le souligné et le barré
+ - Permettre l'inclusion d'images
+ - Permettre de pouvoir  reformatter le  fichier texte  lui même  (justifier le
+   texte, centrer les titres…)  sans abimer le fichier  (avec une bonne gestion
+   du code source).
+ - Gérer les listes,  les retours à la ligne  après deux points…  Ne pas forcer
+   des lignes blanches pour empêcher la fusion des paragraphes  (à la markdown,
+   avec deux espaces à la fin de la ligne ?)
+ - Permettre les notes importantes (</!\\>)
+
+== Maths :
+Ça va nous manquer,  réfléchir à une solution.   (inclure du Latex,  du MathML,
+définir notre propre langage ?)
+
+== Rendu :
+ - Sortie en plusieurs formats
+ - Générer automatiquement la table des matières
+ - Coloriser le code source
+
+
+= Propositions de syntaxe :
+
+== TITRE :
+Entouré d'étoiles,  c'est un titre.  On peut abréger  le cadre  d'étoiles de la
+sorte :
+<Code:
+**
+* Mon titre
+* Sur plusieurs lignes
+*
+**
+
+>
+
+L'outil  qui permet de reformater  le fichier  texte lui-même  transformera  ce
+texte en :
+
+<Code:
+                               ************************
+                               *      Mon titre       *
+                               * Sur plusieurs lignes *
+                               *                      *
+                               ************************
+
+>
+
+== AUTEURS :
+Le langage se base au  maximum sur une mise en forme avec le texte  (comme pour
+le titre), mais comprend certaines commandes :
+<Code:
+~Authors: Dorian Trupin, Anthony Reynier et Yannick Imposti
+
+>
+
+== RÉSUMÉ :
+Le résumé est aussi une commande :
+<Code:
+~Abstract~
+Ceci est un résumé,
+
+avec plusieurs paragraphes
+~~~
+
+>
+
+Le résumé est  transformé par l'outil  de mise en forme du fichier texte  :  la
+commande Abstract est centrée,  le ~~~ qui indique la fin du bloc aussi,  et le
+texte est légèrement indenté (et un peu moins large) :
+<Code:
+                                   ~Abstract~
+    Ceci est un résumé,
+
+    avec plusieurs paragraphes
+                                      ~~~
+>
+
+== SECTIONS :
+Les sections sont marquées comme en markdown :
+<Code:
+=Section de premier niveau
+==Section de second niveau
+===Section de troisième niveau…
+>
+
+== NOTES DE BAS DE PAGE :
+Les notes de bas de page sont notées de manière anonyme, avec une étoile.  Il y
+a une  correspondance entre  les étoiles  apparaissant  dans le  texte,  et les
+étoiles  apparaissant  en  début  de  ligne  (première  étoile  dans  le  texte
+correspond à première étoile en début de ligne, etc.)
+
+<Code:
+Ceci est un texte* avec une référence*.
+
+*: Un texte, c'est une suite de mots
+*: Une référence, c'est une manière de briser le flux de lecture
+
+>
+
+/!\ On peut écrire la définition de la référence avant le texte,  mais ce n'est
+/!\ pas conseillé :
+
+<Code:
+*: Un texte, c'est une suite de mots
+*: Une référence, c'est une manière de briser le flux de lecture
+
+Ceci est un texte* avec une référence*.
+>
+
+(Pour rappel, on compte le « numéro » de la référence.)
+
+== LIENS :
+<Code:
+Il y a les liens vers une page web[..], et les liens à l'interieur du
+document[ancre]. Il y a bien sûr (des portions de texte)[=ancre] qui peuvent
+correspondre à un lien.
+
+..: http://example.org/
+>
+
+Dans l'exemple précédent,  un mot devient un lien s'il est suivit de […], et un
+groupe de mots devient un lien s'il est entre parenthèses et suivit de […].
+
+Le  contenu  de  <[…]>  définit  le  type  de lien.  <[..]>  est  un  lien vers
+l'exterieur,  marqué ensuite comme les notes de bas de pages,  <[texte]> est un
+lien vers une partie du document,  nommée grâce à <[=texte]> (le « = » signifie
+qu'on définit une ancre,  et le nom de l'ancre sans « = » signifie qu'on pointe
+vers cette ancre).
+
+== MISE EN PAGE :
+<Code:
+Ceci est **gras**, //italique//, __souligné__, --barré--.
+Voici une liste non numérotée :
+- élément 1
+- élément 2
+>
+
+(qui sera reformatté ainsi :)
+<Code:
+ - élément 1
+ - élément 2
+>
+
+Voici une liste à plusieurs niveaux :
+<Code:
+- élément 1
+--élément 1.1
+--élément 1.2
+- élément 2
+>
+
+(qui ressemblera à ceci :)
+<Code:
+ - élément 1
+   -- élément 1.1
+   -- élément 1.2
+ - élément 
+>
+
+Et voici la même chose en numéroté (déjà reformaté) :
+<Code:
+ # élément 1
+   ## élément 1.1
+ # élément 2
+>
+
+Ou encore, une liste non numérotée contenant une liste numérotée :
+<Code:
+ - élément 1
+   -# élément 1.1
+ - élément 2
+>
+
+== IMAGE :
+C'est une commande :
+<Code:
+~Image: ../data/img/lolcat.jpg
+>
+
+== NOTE IMPORTANTE :
+<Code:
+/!\ Ceci est une note importante,
+sur plusieurs lignes.
+>
+
+Sera transformé ainsi :
+<Code:
+/!\ Ceci est une note importante,
+/!\ sur plusieurs lignes
+>
+
+(bien  sûr,  normalement,   ces  deux  lignes  auraient  fusionnée.   C'est  un
+paragraphe. C'était juste pour montrer à quoi ça ressemble si le paragraphe est
+très long.)
+
+== CODE :
+
+Enfin,  le code  :  un morceau de  code nommé,  avec une  référence  à un autre
+morceau de code, et le langage de programmation spécifié :
+
+<Code:
+\<Code (python): test.py
+import coco
+def a():
+  \<morceau de code
+a()
+
+\>
+>
+
+<\>> tout seul sur une ligne termine le morceau de code. <\\>> est convertit en
+<\>> dans le fichier source, et <\\\>> en <\\>>  (et ainsi de suite,  on enlève
+juste un \ quand il y en a plusieurs).  Ceci dit,  <\>> tout seul sur une ligne
+devrait être  assez rare  dans un  code source.  <\<Code:>  indique le début du
+code.  Entre parenthèse  peut-être  rajouté le nom  du langage.  Après les deux
+points, le nom du bloc. Une fois dans le bloc de code, <\<> permet d'inclure un
+morceau de code.  L'indentation est respectée  (voir le fonctionnement de noweb
+pour ça), et comme <\>>, <\<> peut être échappé avec <\\<>, puis <\\\<> etc. Un
+bloc qui n'a pas de nom  n'est pas extrait dans un fichier texte,  il est juste
+formatté comme du code.  On peut définir le langage de programmation par défaut
+avec la commande  <~Code: langage>.  (à ceux qui lisent ce document à partir de
+son code source :  oui,  ce paragraphe est particulièrement moche,  mais avouez
+que c'est rare d'utiliser la commande de code pour décrire la commande de code.
+Dans les autres cas,  ce sera moins moche ;-) ) 
+
+<Code:
+\<Code: morceau de code
+print "La suite de notre code dans test.py"
+
+\>
+>
+
+On peut aussi  marquer un passage  de texte comme du code,  en le mettant entre
+<\<\>>.  On doit alors échapper <\<> et <\>> avec un \  (avec le même effet que
+les morceaux  de code  :  rajouter un  \  pour échapper  un  \  de plus).  (Une
+dernière remarque :  si un morceau de code se termine par <\\>,  il va échapper
+le <\>>  qui le suit.  Dans ce cas,  il suffit  de le doubler,  pour obtenir un
+<\\>>,  qui sera  ensuite  interprété  correctement  pour fermer  la balise  de
+code.)  On peut définir  le langage  qui va  formater cette portion  de code en
+l'ajoutant entre  <\<\>>  dans la portion de code  (et on échappe  ces morceaux
+toujours de la même manière). Exemple~: <\<python\>import os>
+
+== INCLUSION D'AUTRE FICHIER :
+<Code:
+~Include: mon_fichier.txt
+>
+Inclue un fichier brut, sans l'interpreter.
+
+<Code:
+~Get: mon_fichier.txt
+>
+Inclue un fichier et l'interprète.  Le fichier n'est par contre pas inclut dans
+le fichier texte quand on reformate celui-ci (ça serait chiant, sinon…).
+
+

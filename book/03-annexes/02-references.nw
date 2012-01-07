@@ -10,6 +10,6 @@ sections.},
 \href{http://en.wikipedia.org/wiki/Textile_%28markup_language%29}{Textile}
 \footnote{Pour l'imbrication de listes de type différente} et bien sûr,
 \href{http://fr.wikipedia.org/wiki/LaTeX}{\LaTeX{}} et
-\href{http://www.cs.tufts.edu/~nr/noweb/}{Noweb} ont influencé la conception de
+\href{http://www.cs.tufts.edu/~nr/noweb/}{Noweb}\footnote{LPM étant un remplacement de ces deux derniers outils.} ont influencé la conception de
 ce système.
 

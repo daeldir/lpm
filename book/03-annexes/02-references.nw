@@ -1,0 +1,15 @@
+\chapter{Références}
+
+Les langages de balisage léger
+\href{http://fr.wikipedia.org/wiki/ReStructuredText}{ReStructuredText}
+\footnote{pour les liens (même si nous n'avons pas gardé leur
+syntaxe exacte), les notes en bas de page (inspirées aussi des liens) et le
+titre.},
+\href{http://fr.wikipedia.org/wiki/Wikicr%C3%A9ole}{Créole}\footnote{Pour les
+sections.},
+\href{http://en.wikipedia.org/wiki/Textile_%28markup_language%29}{Textile}
+\footnote{Pour l'imbrication de listes de type différente} et bien sûr,
+\href{http://fr.wikipedia.org/wiki/LaTeX}{\LaTeX{}} et
+\href{http://www.cs.tufts.edu/~nr/noweb/}{Noweb} ont influencé la conception de
+ce système.
+

@@ -1,0 +1,55 @@
+\documentclass{report}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{ucs}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage[frenchb]{babel}
+\usepackage{noweb}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[bookmarks=true,pdfborder={0 0 0}]{hyperref}
+\usepackage{ulem}
+\normalem
+
+\begin{document}
+
+\title{Literate Programming Markup}
+\author{Dorian Trupin}
+\maketitle
+
+\newpage
+
+\begin{abstract}
+L'objectif de cet outil est de simplifier la programmation lettrée encore plus
+qu'avec AutoNoweb. Pour cela, nous utilisons un langage de balisage léger, plus
+agréable et facile à utiliser que \LaTeX{}. Comme aucun langage de balisage ne
+convenait à notre usage (écriture d'un livre avec beaucoup d'inclusion de
+code), nous avons écrit le notre.
+
+Notre outil doit être utilisable facilement. Dans l'idéal, un simple
+glissé/déposé de notre fichier texte principal devrait~:
+\begin{itemize}
+\item Reformater notre fichier texte pour rendre sa lecture agréable (justifier
+      le texte, formatter le titre…). Ainsi, quel que soit le système et
+      l'éditeur utilisé, nous pouvons avoir un rendu identique et cohérent pour
+      toute l'équipe sans effort.
+\item Générer un ou plusieurs fichiers de documentation, agréables à lire (dans
+      une page web, un pdf, un epub ?), et dont les portions de code source
+      sont colorées, formattée correctement pour faciliter leur lecture.
+\item Extraire le code source dans les fichiers qui vont bien, en créant les
+      dossiers nécessaires et sans réécrire les fichiers qui n'ont pas changés.
+\end{itemize}
+
+Le tout en prenant en compte qu'un fichier texte peut en inclure d'autres
+(commande [[~Get]]), et en faisant donc toutes ces actions pour tout les fichiers
+référencés.
+
+S'il y a des problèmes de performance, nous envisagerons de pouvoir passer des
+paramètres pour empêcher certaines actions de s'effectuer (si elles sont
+inutiles pour la tâche en cours).\footnote{au pire, sur Windows, un script .bat
+devrait pouvoir garder la chose exploitable.}
+\end{abstract}
+
+\newpage
+

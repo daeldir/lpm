@@ -1,3 +1,15 @@
+\chapter{Un programme de test}
+
+Cette partie contient un programme écrit en programmation lettrée. Ce programme
+ne fait rien, mais permet de tester le bon fonctionnement de LPM. Il doit donc
+utiliser toutes les fonctionnalités de LPM. Il contient aussi quelques passages
+en Lorem Ipsum afin de tester la mise en page des paragraphes suivant leur
+contexte.
+
+Voici le programme~:
+
+<<test/test.txt>>=
+
 **
 * Le titre du document :
 * Ce document est un document de test
@@ -52,15 +64,15 @@ Ou, si vous préférez :
 
 Il y a aussi : 
  - des listes numérotées dans des listes non numérotées
-   -# avec plusieurs éléments
-   -# comme ça
+ -# avec plusieurs éléments
+ -# comme ça
  - des listes non numérotées dans des listes numérotées
-   -- avec autant d'éléments
-   -- que précédemment
+ - - avec autant d'éléments
+ - - que précédemment
  # et aussi des liste non numérotées dans des listes numérotées
-   #- de ce style
+ #- de ce style
  # Puis pour ne pas surprendre :
-   ## des liste numérotées dans des listes numérotées
+ ## des liste numérotées dans des listes numérotées
 
 Et pour finir :
  - Une formation
@@ -161,9 +173,9 @@ coco
 >
 
 On peut mettre des blocs de code dans un paragraphe (<import os>), spécifier le
-langage (<<C>#include \<stdio.h\>>), et échapper les caractères qui sont
+langage (@<<C>#include \<stdio.h\>>), et échapper les caractères qui sont
 utilisés par lpm (<\<\<python\>test\>>). On peut aussi finir un bloc de code
-par \ en l'échappant : <test \\>.
+par \\ en l'échappant : <test \\>.
 
 = Inclusion de fichiers
 On peut insérer un fichier sans le parser :
@@ -174,4 +186,14 @@ Ou en le parsant :
 
 ~Get test2.txt
 
+@
+
+Ce fichier fait référence à deux autres fichiers. Une image (contenue dans le
+dossier merge à côté de ce livre), et un fichier [[test2.txt]], que voici~:
+
+<<test/test2.txt>>=
+===Une sous section à insérer
+
+/!\ Contenant un paragraphe important.
+@
 

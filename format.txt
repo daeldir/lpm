@@ -12,6 +12,9 @@
                                ~Abstract~
     Ce  langage de  balisage  léger permet  de pratiquer  la  programmation
     lettrée de manière simple et agréable.
+
+    /!\ Ce fichier n'est pas à jour et n'est lisible qu'à des fins de
+    /!\ présentation de l'apparence du fichier bien formatté.
                                   ~~~
 
 

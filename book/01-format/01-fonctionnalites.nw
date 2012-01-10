@@ -295,6 +295,16 @@ numérotées, et inversement~:
 ## Liste numérotée, second niveau, second élément
 @
 
+Pour finir, si un élément d'une liste tient sur plus d'une ligne, on remplace
+le symbole de la liste par un [[']], pour indiquer cette continuation~:
+<<exemple de code>>=
+- un élément de liste
+' avec un retour à la ligne
+# la même chose
+' avec une liste numérotée
+@
+
+
 \subsection{Les liens}
 \subsubsection{Les liens vers une ressource externe}
 Les liens vers les ressources externes fonctionnent comme les notes de bas de

@@ -7,6 +7,8 @@ from os import getcwd, path
 
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
 
+DEFAULT_LENGTH = 80
+
 # Fonctions utiles
 def detect_starline(line):
     if len(line) < 2:
@@ -25,8 +27,109 @@ def debugDisplay(kind, deep, line = ""):
     indent = ""
     for i in range(deep):
         indent += "'"
-    l = "- %s - %s %s" % (kind.ljust(10), indent, line)
+    l = "-%s-%s%s" % (kind.ljust(10), indent, line)
     print l[:min(len(l),75)]
+
+def escape(txt):
+    r = u""
+    for i in range(len(txt)):
+        if i == 0:
+            if txt[i] in ["-", "#", "'", "="]:
+                r += "\\"
+        elif i < len(txt)-2:
+            if txt[i:i+2] in ["--", "__", "//", "**"]:
+                r += "\\"
+        elif txt[i] in ["\\", "*", "<", ">", "[", "]", "~"]:
+            r += "\\"
+        r += txt[i]
+    return r
+
+def addSpaceAfter(line, c, direction):
+    l = len(line)
+    if direction == 1:
+        start = 4
+        stop = l-4
+    else:
+        start = l-5
+        stop = 3
+    for i in range(start, stop, direction):
+        if line[i:i+3] != c+"  " and line[i:i+2] == c+" ":
+            return True, line[:i+1]+" "+line[i+1:]
+    return False, line
+def addSpaceBefore(line, c, direction):
+    l = len(line)
+    if direction == 1:
+        start = 4
+        stop = l-4
+    else:
+        start = l-5
+        stop = 3
+    for i in range(start, stop, direction):
+        if line[i-2:i+1] != "  "+c and line[i-1:i+1] == " "+c:
+            return True, line[:i-1]+" "+line[i-1:]
+    return False, line
+
+def addSpaceAnywhere(line, direction):
+    l = len(line)
+    if direction == 1:
+        start = 4
+        stop = l-4
+    else:
+        start = l-5
+        stop = 3
+    spaces = []
+    last = ""
+    for i in range(start, stop, direction):
+        if line[i] == " ":
+            if last == " ":
+                spaces[-1]["c"] += 1
+            else:
+                spaces.append({"i":i, "c": 1})
+        last = line[i]
+    if len(spaces) == 0:
+        return False, line
+    least = spaces[0]
+    for i in spaces:
+        if i["c"] < least["c"]:
+            least = i
+    most = []
+    for i in spaces:
+        if i["c"] == least["c"]:
+            most.append(i)
+    c = most[int(len(most)/2)]["i"]
+    return True, line[:c]+" "+line[c:]
+
+def addSpace(line, direction):
+    r, line = addSpaceAfter(line, ".", direction)
+    if not r:
+        r, line = addSpaceAfter(line, ",", direction)
+    if not r:
+        r, line = addSpaceAfter(line, ")", direction)
+    if not r:
+        r, line = addSpaceAfter(line, "]", direction)
+    if not r:
+        r, line = addSpaceAfter(line, ">", direction)
+    if not r:
+        r, line = addSpaceBefore(line, "-", direction)
+    if not r:
+        r, line = addSpaceBefore(line, "-", direction)
+    if not r:
+        r, line = addSpaceBefore(line, "(", direction)
+    if not r:
+        r, line = addSpaceBefore(line, "[", direction)
+    if not r:
+        r, line = addSpaceBefore(line, "<", direction)
+    if not r:
+        r, line = addSpaceAnywhere(line, direction)
+    return line
+
+def justify(line, length):
+    l = len(line)
+    direction = 1
+    while len(line) < length:
+        line = addSpace(line, direction).strip()
+        direction *= -1
+    return line
 
 # Importation
 class Code:
@@ -75,6 +178,20 @@ class Code:
         debugDisplay("code chunk", deep, "language: "+language+u", name: "+name)
         for i in self.code:
             i.debugDisplay(deep+1)
+    def formatText(self, length):
+        if self.name == None:
+            name = u""
+        else:
+            name = self.name
+        if self.language == None:
+            language = u""
+        else:
+            language = " ("+self.language+")"
+        r = u"<Code"+language+": "+name+"\n"
+        for i in self.code:
+            r += i.formatText(length)
+        r += ">\n"
+        return r
     
     def parse(self):
         for i in self.raw_code:
@@ -94,6 +211,13 @@ class Code:
             self.line = line
         def debugDisplay(self, deep):
             debugDisplay("codeline", deep, self.line+u"'")
+        def formatText(self, length):
+            sline = self.line.strip()
+            if sline != "" and sline[0] in ["<", ">", "\\"]:
+                return "\\"+self.line+"\n"
+            else:
+                return self.line+"\n"
+
     class Reference:
         def __init__(self, line):
             self.indentation = ""
@@ -104,17 +228,42 @@ class Code:
             self.name = line.strip()[1:].strip()
         def debugDisplay(self, deep):
             debugDisplay("coderef", deep, u"dest: «"+self.name+u"», indent: |]"+self.indentation+u"[>")
+        def formatText(self, length):
+            return self.indentation+"<"+self.name+"\n"
 
 class Paragraph:
     def __init__(self):
         self.line = ""
         self.content = []
     def append(self, line):
-        self.line += u" "+line
+        for i in line.split():
+            self.line += u" "+i
+        self.line = self.line.strip()
     def debugDisplay(self, deep):
         debugDisplay("par", deep)
         for i in self.content:
             i.debugDisplay(deep+1)
+    def formatText(self, length, prefixed = False):
+        r = u""
+        for i in self.content:
+            r += i.formatText(length)
+        t = r.split()
+        t2 = []
+        l = u""
+        for i in r.split():
+            if len(l)+len(i)+1 < length:
+                l += i+" "
+            else:
+                t2.append(l)
+                l = i+" "
+        t2.append(l)
+        r = u""
+        for i in t2[:-1]:
+            r += justify(i, length)+"\n"
+        r += t2[-1]+"\n"
+        if not prefixed:
+            r = u"\n\n"+r
+        return r
     def important(self):
         return len(self.line) > 0
     def parse(self):
@@ -125,9 +274,11 @@ class Paragraph:
             if mode[-1].type == "escape":
                 mode.pop()
                 mode[-1].add(c)
-            elif mode[-1].type == "link":
+            elif mode[-1].type in ["link", "anchor"]:
                 if c == "]":
                     mode = self.parseChange(mode)
+                else:
+                    mode[-1].add(c)
             elif c == "\\":
                 mode.append(self.Escape())
             elif mode[-1].type == "code":
@@ -165,8 +316,9 @@ class Paragraph:
             elif c == "[":
                 if mode[-1].type == "text":
                     linktext = self.Text()
-                    linktext.add(self.line[:i].split()[-1])
-                    mode[-1].content = mode[-1].content[:-len(linktext.content)]
+                    if i != 0 and self.line[i-1] != " ":
+                        linktext.add(self.line[:i].split()[-1])
+                        mode[-1].content = mode[-1].content[:-len(linktext.content)]
                 else:
                     linktext = mode.pop()
                 if self.line[i:i+4] == "[..]":
@@ -177,6 +329,7 @@ class Paragraph:
                 elif self.line[i+1] == "=":
                     mode.append(self.Anchor())
                     mode[-1].content = linktext
+                    i += 1
                 else:
                     mode.append(self.Link())
                     mode[-1].content = linktext
@@ -223,6 +376,8 @@ class Paragraph:
             self.content += el
         def debugDisplay(self, deep):
             debugDisplay("text", deep, self.content)
+        def formatText(self, length):
+            return escape(self.content)
 
     class Bold:
         def __init__(self):
@@ -236,6 +391,11 @@ class Paragraph:
             debugDisplay("bold", deep)
             for i in self.content:
                 i.debugDisplay(deep+1)
+        def formatText(self, length):
+            r = u""
+            for i in self.content:
+                r += i.formatText(length)
+            return "**"+r+"**"
 
     class Italic:
         def __init__(self):
@@ -249,6 +409,11 @@ class Paragraph:
             debugDisplay("italic", deep)
             for i in self.content:
                 i.debugDisplay(deep+1)
+        def formatText(self, length):
+            r = u""
+            for i in self.content:
+                r += i.formatText(length)
+            return "//"+r+"//"
 
     class Underline:
         def __init__(self):
@@ -262,6 +427,11 @@ class Paragraph:
             debugDisplay("underline", deep)
             for i in self.content:
                 i.debugDisplay(deep+1)
+        def formatText(self, length):
+            r = u""
+            for i in self.content:
+                r += i.formatText(length)
+            return "__"+r+"__"
 
     class Overline:
         def __init__(self):
@@ -275,6 +445,11 @@ class Paragraph:
             debugDisplay("overline", deep)
             for i in self.content:
                 i.debugDisplay(deep+1)
+        def formatText(self, length):
+            r = u""
+            for i in self.content:
+                r += i.formatText(length)
+            return "--"+r+"--"
 
     class Bracket:
         def __init__(self):
@@ -288,6 +463,12 @@ class Paragraph:
             debugDisplay("bracket", deep)
             for i in self.content:
                 i.debugDisplay(deep+1)
+        def formatText(self, length):
+            r = "("
+            for i in self.content:
+                r += i.formatText(length)
+            r += ")"
+            return r
 
     class Code:
         def __init__(self):
@@ -302,6 +483,12 @@ class Paragraph:
             else:
                 lang = self.lang
             debugDisplay("code", deep, u"("+lang+u")"+self.content)
+        def formatText(self, length):
+            if self.lang == None:
+                lang = ""
+            else:
+                lang = "<"+self.lang+">"
+            return "<"+lang+escape(self.content)+">"
 
     class URLRef:
         def __init__(self):
@@ -310,6 +497,8 @@ class Paragraph:
         def debugDisplay(self, deep):
             debugDisplay("urlref", deep)
             self.content.debugDisplay(deep+1)
+        def formatText(self, length):
+            return self.content.formatText(length)+"[..]"
 
     class Link:
         def __init__(self):
@@ -317,10 +506,12 @@ class Paragraph:
             self.name = ""
             self.content = Paragraph.Text()
         def add(self, el):
-            self.content[-1].add(el)
+            self.name += el
         def debugDisplay(self, deep):
             debugDisplay("link", deep)
             self.content.debugDisplay(deep+1)
+        def formatText(self, length):
+            return self.content.formatText(length)+"["+self.name+"]"
 
     class Anchor:
         def __init__(self):
@@ -330,14 +521,18 @@ class Paragraph:
         def add(self, el):
             self.name += el
         def debugDisplay(self, deep):
-            debugDisplay("anchor", deep)
+            debugDisplay("anchor", deep, "name: "+self.name)
             self.content.debugDisplay(deep+1)
+        def formatText(self, length):
+            return self.content.formatText(length)+"[="+self.name+"]"
 
     class NoteRef:
         def __init__(self):
             self.type = "noteref"
         def debugDisplay(self, deep):
             debugDisplay("noteref", deep)
+        def formatText(self, length):
+            return "*"
 
     class Escape:
         def __init__(self):
@@ -346,38 +541,64 @@ class Paragraph:
 class OrderedList:
     def __init__(self, line):
         self.content = [line]
-        self.pars = Documentation()
+        self.pars = []
     def append(self, line):
         self.content.append(line.strip())
     def debugDisplay(self, deep):
         debugDisplay("ol", deep)
-        self.pars.debugDisplay(deep+1)
+        for i in self.pars:
+            i.debugDisplay(deep+1)
     def important(self):
         return len(self.content) > 0
     def parse(self):
         for line in self.content:
+            line = line.strip()
+            if begin(line, "#"):
+                self.pars.append(Documentation())
             if begin(line, "#") or begin(line, "'"):
                 line = line[1:]
-            self.pars.append(line)
-        self.pars.parse()
+            self.pars[-1].append(line)
+        for i in self.pars:
+            i.parse()
+    def formatText(self, length, prefixed = None):
+        r = u""
+        for par in self.pars:
+            par = par.formatText(length-3).strip().split("\n")
+            r += " # "+par[0].strip()+"\n"
+            for i in par[1:]:
+                r += " ' "+i.strip()+"\n"
+        return r+"\n"
 
 class UnorderedList:
     def __init__(self, line):
         self.content = [line]
-        self.pars = Documentation()
+        self.pars = []
     def append(self, line):
         self.content.append(line.strip())
     def debugDisplay(self, deep):
         debugDisplay("ul", deep)
-        self.pars.debugDisplay(deep+1)
+        for i in self.pars:
+            i.debugDisplay(deep+1)
     def important(self):
         return len(self.content) > 0
     def parse(self):
         for line in self.content:
+            line = line.strip()
+            if begin(line, "-"):
+                self.pars.append(Documentation())
             if begin(line, "-") or begin(line, "'"):
                 line = line[1:]
-            self.pars.append(line)
-        self.pars.parse()
+            self.pars[-1].append(line)
+        for i in self.pars:
+            i.parse()
+    def formatText(self, length, prefixed = None):
+        r = u""
+        for par in self.pars:
+            par = par.formatText(length-3).strip().split("\n")
+            r += " - "+par[0].strip()+"\n"
+            for i in par[1:]:
+                r += " ' "+i.strip()+"\n"
+        return r+"\n"
 
 class FootNote:
     def __init__(self, line):
@@ -396,10 +617,17 @@ class FootNote:
                 i = i[2:].strip()
             self.pars.append(i)
         self.pars.parse()
+    def formatText(self, length, prefixed = None):
+        pars = self.pars.formatText(length-4, True).split("\n")
+        r = "*: "+pars[0]+"\n"
+        for i in pars[1:]:
+            r += "    "+i
+        return " "+r.strip()+"\n"
+
 
 class FootURL:
     def __init__(self, line):
-        self.url = line[3:]
+        self.url = line[3:].strip()
     def append(self, line):
         self.url += line.strip()
     def debugDisplay(self, deep):
@@ -408,6 +636,16 @@ class FootURL:
         return len(self.url) > 0
     def parse(self):
         pass
+    def formatText(self, length, prefixed = None):
+        r = u"..: "
+        count = 0
+        for c in self.url:
+            count += 1
+            r += c
+            if count == length-4:
+                r += "\n    "
+                count = 0
+        return r+"\n"
 
 class Warn:
     def __init__(self, line):
@@ -417,7 +655,6 @@ class Warn:
         self.content.append(line)
     def debugDisplay(self, deep):
         debugDisplay("important", deep)
-        #for i in self.pars:
         self.pars.debugDisplay(deep+1)
     def important(self):
         for line in self.content:
@@ -432,6 +669,14 @@ class Warn:
                 line = line[3:].strip()
             self.pars.append(line)
         self.pars.parse()
+    def formatText(self, length, prefixed = None):
+        lines = self.pars.formatText(length - 4).strip().split("\n")
+        r = u""
+        if not prefixed:
+            r += u"\n"
+        for i in lines:
+            r += "/!\\ "+i+"\n"
+        return r
 
 class Image:
     def __init__(self, line):
@@ -443,6 +688,8 @@ class Image:
         return len(self.name) > 0
     def parse(self):
         self.name = self.name[6:].strip()
+    def formatText(self, length, prefixed = None):
+        return "~Image "+self.name+"\n"
 
 class Get:
     def __init__(self, line):
@@ -454,6 +701,8 @@ class Get:
         return len(self.name) > 0
     def parse(self):
         self.name = self.name[4:].strip()
+    def formatText(self, length, prefixed = None):
+        return "~Get "+self.name+"\n"
 
 class Include:
     def __init__(self, line):
@@ -465,6 +714,8 @@ class Include:
         return len(self.name) > 0
     def parse(self):
         self.name = self.name[8:].strip()
+    def formatText(self, length, prefixed = None):
+        return "~Include "+self.name+"\n"
 
 class TextBlock:
     def __init__(self):
@@ -484,6 +735,7 @@ class TextBlock:
         element = Paragraph()
         block = []
         for line in self.raw_content:
+            line = line.strip()
             if begin(line, "*:"):
                 mode = "footnote"
                 if element.important():
@@ -494,12 +746,6 @@ class TextBlock:
                 if element.important():
                     block.append(element)
                 element = FootURL(line)
-            elif begin(line, "--") and mode == "unordered list":
-                element.append(line)
-            elif begin(line, "-#") and mode == "unordered list":
-                element.append(line)
-            elif begin(line, "-'") and mode == "unordered list":
-                element.append(line)
             elif begin(line, "'") and mode == "unordered list":
                 element.append(line)
             elif begin(line, "-") and mode == "unordered list":
@@ -511,12 +757,6 @@ class TextBlock:
                     block.append(element)
                 element = UnorderedList(line)
             elif begin(line, "'") and mode == "ordered list":
-                element.append(line)
-            elif begin(line, "#-") and mode == "ordered list":
-                element.append(line)
-            elif begin(line, "##") and mode == "ordered list":
-                element.append(line)
-            elif begin(line, "#'") and mode == "ordered list":
                 element.append(line)
             elif begin(line, "#") and mode == "ordered list":
                 element.append("")
@@ -598,6 +838,17 @@ class Documentation:
         debugDisplay("docu", deep)
         for i in self.pars:
             i.debugDisplay(deep+1)
+    def formatText(self, length, prefixed = False):
+        r = u""
+        for i in self.pars:
+            r += i.formatText(length, prefixed)
+        text = u""
+        old = None
+        for i in r.split("\n"):
+            if not (old == "" and i.strip() == ""):
+                text += i+"\n"
+            old = i.strip()
+        return text
 
 
 class Title:
@@ -614,6 +865,21 @@ class Title:
     def debugDisplay(self, deep):
         for i in self.name:
             debugDisplay("title", deep, i)
+    def formatText(self, line_length):
+        max_width = 0
+        for i in self.name:
+            max_width = max(max_width, len(i))
+        max_width += 2
+        bar = ""
+        for i in range(max_width+2):
+            bar += "*"
+        r = u""
+        r += bar.center(line_length)+"\n"
+        for i in self.name:
+            text = u"*"+i.center(max_width)+u"*"
+            r += text.center(line_length)+"\n"
+        r += bar.center(line_length)+"\n"
+        return r
 
 class Introduction:
     def __init__(self):
@@ -658,6 +924,11 @@ class Introduction:
     def parse(self):
         for i in self.content:
             i.parse()
+    def formatText(self, length):
+        r = u""
+        for i in self.content:
+            r += i.formatText(length)
+        return r
 
 class Authors:
     def __init__(self):
@@ -670,6 +941,12 @@ class Authors:
     def append(self, name):
         if name.strip() != "":
             self.names.append(name)
+    def formatText(self, length):
+        r = u""
+        for i in self.names:
+            r += u"~Authors "+i+u"\n"
+        return r
+
 
 class Document:
     def __init__(self, name = None):
@@ -772,7 +1049,6 @@ class Document:
                     mode = "beginabstract"
                     self.abstract = Document()
                     self.abstract.type = abstract
-                    self.abstract.name = "Abstract"
                 elif mode in ["beginabstract", "abstract"]:
                     mode = "abstract"
                     if sline == "~~~":
@@ -864,9 +1140,62 @@ class Document:
         self.splitDocCode()
         self.parseChunks()
         #self.resolveReferences()
+    def formatText(self, line_length = DEFAULT_LENGTH):
+        r = u""
+        if self.title.important():
+            r += "\n"
+            r += self.title.formatText(line_length)
+            r += "\n"
+        if self.name != None:
+            r += "\n"
+            for i in self.getPosition()[1:]:
+                r += "="
+            r += " "+self.name
+            r += "\n"
+        r += "\n"
+        if self.authors.important():
+            r += self.authors.formatText(line_length)
+        if self.code_type != None:
+            r += u"~Code "+self.code_type+"\n"
+        r += "\n"
+        if self.abstract != None:
+            r += "\n"
+            r += "\n"+u"~Abstract~".center(line_length)+"\n\n"
+            indent = u""
+            for i in range(line_length*1/16):
+                indent += u" "
+            for i in self.abstract.formatText(int(line_length*7/8)).split("\n"):
+                r += indent + i + "\n"
+            r += "\n"+u"~~~".center(line_length)+"\n\n"
+        if self.introduction.important():
+            r += "\n"
+            r += self.introduction.formatText(line_length)
+            r += "\n"
+        for section in self.sections:
+            r += "\n"
+            r += section.formatText(line_length)+"\n\n"
+        # On remplace les doubles lignes vides par des lignes vides uniques
+        mode = "doc"
+        text = u""
+        old = None
+        for i in r.split("\n"):
+            if mode == "code":
+                text += i+"\n"
+                if i != "" and i[0] == ">":
+                    mode = "doc"
+                    text += "\n"
+                    old = ""
+            else:
+                if not (old == "" and i.strip() == ""):
+                    if i != "" and i[0] == "<":
+                        mode = "code"
+                    text += i+"\n"
+                old = i.strip()
+        return text
 
 d = Document()
 d.fromFile(sys.argv[1])
 d.parse()
-print d.format()
+print d.formatText()
+#d.debugDisplay()
 

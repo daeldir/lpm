@@ -1,0 +1,872 @@
+#!/usr/bin/python2
+# -*- encoding: utf-8 -*-
+
+# Initialisation
+import sys, codecs
+from os import getcwd, path
+
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
+
+# Fonctions utiles
+def detect_starline(line):
+    if len(line) < 2:
+        return False
+    for c in line:
+        if c != "*":
+            return False
+    return True
+
+def begin(line, begin):
+    if len(line) < len(begin):
+        return False
+    return line[:len(begin)].lower() == begin
+
+def debugDisplay(kind, deep, line = ""):
+    indent = ""
+    for i in range(deep):
+        indent += "'"
+    l = "- %s - %s %s" % (kind.ljust(10), indent, line)
+    print l[:min(len(l),75)]
+
+# Importation
+class Code:
+    def __init__(self, line):
+        """ Contient un morceau de code """
+        self.type = "code"
+        self.language = None
+        self.raw_code = []
+        self.code = []
+
+        split = line.split(":")
+        language = split[0]
+        if "(" in language:
+            language = language.split("(")[1]
+            if ")" in language:   
+                self.language = language.split(")")[0]
+        name = ":".join(split[1:])
+        if name.strip() != "":
+            self.name = name.strip()
+        else:
+            self.name = None
+
+    def append(self, line):
+        self.raw_code.append(line)
+
+    def important(self):
+        """ Renvoie False si le morceau de code est vide et n'a pas de nom. """
+        if self.name != None:
+            return True
+        for i in self.raw_code:
+            # Le strip nous empêche d'écrire des codes anonymes en whitespace.
+            # Tant pis.
+            if i.strip() != "":
+                return True
+        return False
+
+    def debugDisplay(self, deep):
+        if self.name == None:
+            name = u"None"
+        else:
+            name = self.name
+        if self.language == None:
+            language = u"None"
+        else:
+            language = self.language
+        debugDisplay("code chunk", deep, "language: "+language+u", name: "+name)
+        for i in self.code:
+            i.debugDisplay(deep+1)
+    
+    def parse(self):
+        for i in self.raw_code:
+            if len(i.strip()) > 0 and i.strip()[0] == "<":
+                self.code.append(self.Reference(i))
+            else:
+                self.code.append(self.Line(i))
+        pass
+
+    class Line:
+        def __init__(self, line):
+            """ Crée une ligne sans le retour à la ligne final. """
+            if line != "" and line[-1] == "\n":
+                line = line[:-1]
+            if len(line) > 0 and line[0] == "\\":
+                line = line[1:]
+            self.line = line
+        def debugDisplay(self, deep):
+            debugDisplay("codeline", deep, self.line+u"'")
+    class Reference:
+        def __init__(self, line):
+            self.indentation = ""
+            for c in line:
+                if c != " " and c != "\t":
+                    break
+                self.indentation += c
+            self.name = line.strip()[1:].strip()
+        def debugDisplay(self, deep):
+            debugDisplay("coderef", deep, u"dest: «"+self.name+u"», indent: |]"+self.indentation+u"[>")
+
+class Paragraph:
+    def __init__(self):
+        self.line = ""
+        self.content = []
+    def append(self, line):
+        self.line += u" "+line
+    def debugDisplay(self, deep):
+        debugDisplay("par", deep)
+        for i in self.content:
+            i.debugDisplay(deep+1)
+    def important(self):
+        return len(self.line) > 0
+    def parse(self):
+        mode = [self.Text()]
+        i = 0
+        while i < len(self.line):
+            c = self.line[i]
+            if mode[-1].type == "escape":
+                mode.pop()
+                mode[-1].add(c)
+            elif mode[-1].type == "link":
+                if c == "]":
+                    mode = self.parseChange(mode)
+            elif c == "\\":
+                mode.append(self.Escape())
+            elif mode[-1].type == "code":
+                if c == ">":
+                    mode = self.parseChange(mode)
+                else:
+                    mode[-1].add(c)
+            elif self.line[i:i+2] == "//":
+                if mode[-1].type != "italic":
+                    mode.append(self.Italic())
+                else:
+                    mode = self.parseChange(mode)
+                i += 1
+            elif self.line[i:i+2] == "__":
+                if mode[-1].type != "underline":
+                    mode.append(self.Underline())
+                else:
+                    mode = self.parseChange(mode)
+                i += 1
+            elif self.line[i:i+2] == "--":
+                if mode[-1].type != "overline":
+                    mode.append(self.Overline())
+                else:
+                    mode = self.parseChange(mode)
+                i += 1
+            elif self.line[i:i+2] == "**":
+                if mode[-1].type != "bold":
+                    mode.append(self.Bold())
+                else:
+                    mode = self.parseChange(mode)
+                i += 1
+            elif c == "*":
+                mode.append(self.NoteRef())
+                mode = self.parseChange(mode)
+            elif c == "[":
+                if mode[-1].type == "text":
+                    linktext = self.Text()
+                    linktext.add(self.line[:i].split()[-1])
+                    mode[-1].content = mode[-1].content[:-len(linktext.content)]
+                else:
+                    linktext = mode.pop()
+                if self.line[i:i+4] == "[..]":
+                    mode.append(self.URLRef())
+                    mode[-1].content = linktext
+                    mode = self.parseChange(mode)
+                    i += 3
+                elif self.line[i+1] == "=":
+                    mode.append(self.Anchor())
+                    mode[-1].content = linktext
+                else:
+                    mode.append(self.Link())
+                    mode[-1].content = linktext
+                text = ""
+            elif c == "(":
+                mode.append(self.Bracket())
+            elif c == ")" and mode[-1].type == "bracket":
+                if self.line[i+1] != "[":
+                    mode = self.parseChange(mode)
+            elif c == "<":
+                mode.append(self.Code())
+                if self.line[i+1] == "<":
+                    lang = self.line[i+2:].split(">")[0]
+                    mode[-1].lang = lang
+                    i += len(lang)+2
+            else:
+                mode[-1].add(c)
+            i += 1
+        self.parseChange(mode)
+
+    def parseChange(self, mode):
+        el = mode.pop()
+        if len(mode) == 0:
+            self.content.append(el)
+            mode.append(self.Text())
+        elif mode[-1].type == "text":
+            el2 = mode.pop()
+            if len(mode) > 0:
+                mode[-1].append(el2)
+                mode[-1].append(el)
+            else:
+                self.content.append(el2)
+                self.content.append(el)
+            mode.append(self.Text())
+        else:
+            mode[-1].append(el)
+        return mode
+        
+    class Text:
+        def __init__(self, content = u""):
+            self.type = "text"
+            self.content = content
+        def add(self, el):
+            self.content += el
+        def debugDisplay(self, deep):
+            debugDisplay("text", deep, self.content)
+
+    class Bold:
+        def __init__(self):
+            self.type = "bold"
+            self.content = [Paragraph.Text()]
+        def append(self, el):
+            self.content.append(el)
+        def add(self, el):
+            self.content[-1].add(el)
+        def debugDisplay(self, deep):
+            debugDisplay("bold", deep)
+            for i in self.content:
+                i.debugDisplay(deep+1)
+
+    class Italic:
+        def __init__(self):
+            self.type = "italic"
+            self.content = [Paragraph.Text()]
+        def append(self, el):
+            self.content.append(el)
+        def add(self, el):
+            self.content[-1].add(el)
+        def debugDisplay(self, deep):
+            debugDisplay("italic", deep)
+            for i in self.content:
+                i.debugDisplay(deep+1)
+
+    class Underline:
+        def __init__(self):
+            self.type = "underline"
+            self.content = [Paragraph.Text()]
+        def append(self, el):
+            self.content.append(el)
+        def add(self, el):
+            self.content[-1].add(el)
+        def debugDisplay(self, deep):
+            debugDisplay("underline", deep)
+            for i in self.content:
+                i.debugDisplay(deep+1)
+
+    class Overline:
+        def __init__(self):
+            self.type = "overline"
+            self.content = [Paragraph.Text()]
+        def append(self, el):
+            self.content.append(el)
+        def add(self, el):
+            self.content[-1].add(el)
+        def debugDisplay(self, deep):
+            debugDisplay("overline", deep)
+            for i in self.content:
+                i.debugDisplay(deep+1)
+
+    class Bracket:
+        def __init__(self):
+            self.type = "bracket"
+            self.content = [Paragraph.Text()]
+        def append(self, el):
+            self.content.append(el)
+        def add(self, el):
+            self.content[-1].add(el)
+        def debugDisplay(self, deep):
+            debugDisplay("bracket", deep)
+            for i in self.content:
+                i.debugDisplay(deep+1)
+
+    class Code:
+        def __init__(self):
+            self.type = "code"
+            self.content = u""
+            self.lang = None
+        def add(self, el):
+            self.content += el
+        def debugDisplay(self, deep):
+            if self.lang == None:
+                lang = "None"
+            else:
+                lang = self.lang
+            debugDisplay("code", deep, u"("+lang+u")"+self.content)
+
+    class URLRef:
+        def __init__(self):
+            self.type = "urlref"
+            self.content = Paragraph.Text()
+        def debugDisplay(self, deep):
+            debugDisplay("urlref", deep)
+            self.content.debugDisplay(deep+1)
+
+    class Link:
+        def __init__(self):
+            self.type = "link"
+            self.name = ""
+            self.content = Paragraph.Text()
+        def add(self, el):
+            self.content[-1].add(el)
+        def debugDisplay(self, deep):
+            debugDisplay("link", deep)
+            self.content.debugDisplay(deep+1)
+
+    class Anchor:
+        def __init__(self):
+            self.type = "anchor"
+            self.name = ""
+            self.content = Paragraph.Text()
+        def add(self, el):
+            self.name += el
+        def debugDisplay(self, deep):
+            debugDisplay("anchor", deep)
+            self.content.debugDisplay(deep+1)
+
+    class NoteRef:
+        def __init__(self):
+            self.type = "noteref"
+        def debugDisplay(self, deep):
+            debugDisplay("noteref", deep)
+
+    class Escape:
+        def __init__(self):
+            self.type = "escape"
+
+class OrderedList:
+    def __init__(self, line):
+        self.content = [line]
+        self.pars = Documentation()
+    def append(self, line):
+        self.content.append(line.strip())
+    def debugDisplay(self, deep):
+        debugDisplay("ol", deep)
+        self.pars.debugDisplay(deep+1)
+    def important(self):
+        return len(self.content) > 0
+    def parse(self):
+        for line in self.content:
+            if begin(line, "#") or begin(line, "'"):
+                line = line[1:]
+            self.pars.append(line)
+        self.pars.parse()
+
+class UnorderedList:
+    def __init__(self, line):
+        self.content = [line]
+        self.pars = Documentation()
+    def append(self, line):
+        self.content.append(line.strip())
+    def debugDisplay(self, deep):
+        debugDisplay("ul", deep)
+        self.pars.debugDisplay(deep+1)
+    def important(self):
+        return len(self.content) > 0
+    def parse(self):
+        for line in self.content:
+            if begin(line, "-") or begin(line, "'"):
+                line = line[1:]
+            self.pars.append(line)
+        self.pars.parse()
+
+class FootNote:
+    def __init__(self, line):
+        self.content = [line]
+        self.pars = Documentation()
+    def append(self, line):
+        self.content.append(line)
+    def debugDisplay(self, deep):
+        debugDisplay("footnote", deep)
+        self.pars.debugDisplay(deep+1)
+    def important(self):
+        return len(self.content) > 0
+    def parse(self):
+        for i in self.content:
+            if begin(i, "*:"):
+                i = i[2:].strip()
+            self.pars.append(i)
+        self.pars.parse()
+
+class FootURL:
+    def __init__(self, line):
+        self.url = line[3:]
+    def append(self, line):
+        self.url += line.strip()
+    def debugDisplay(self, deep):
+        debugDisplay("footurl", deep, self.url)
+    def important(self):
+        return len(self.url) > 0
+    def parse(self):
+        pass
+
+class Warn:
+    def __init__(self, line):
+        self.content = [line]
+        self.pars = Documentation()
+    def append(self, line):
+        self.content.append(line)
+    def debugDisplay(self, deep):
+        debugDisplay("important", deep)
+        #for i in self.pars:
+        self.pars.debugDisplay(deep+1)
+    def important(self):
+        for line in self.content:
+            if line[:3] == "/!\\":
+                line = line[3:]
+            if line.strip() != "":
+                return True
+        return False
+    def parse(self):
+        for line in self.content:
+            if line[:3] == "/!\\":
+                line = line[3:].strip()
+            self.pars.append(line)
+        self.pars.parse()
+
+class Image:
+    def __init__(self, line):
+        self.name = line
+    def debugDisplay(self, deep):
+        i = self.name
+        debugDisplay("image", deep, i)
+    def important(self):
+        return len(self.name) > 0
+    def parse(self):
+        self.name = self.name[6:].strip()
+
+class Get:
+    def __init__(self, line):
+        self.name = line
+    def debugDisplay(self, deep):
+        i = self.name
+        debugDisplay("get", deep, i)
+    def important(self):
+        return len(self.name) > 0
+    def parse(self):
+        self.name = self.name[4:].strip()
+
+class Include:
+    def __init__(self, line):
+        self.name = line
+    def debugDisplay(self, deep):
+        i = self.name
+        debugDisplay("include", deep, i)
+    def important(self):
+        return len(self.name) > 0
+    def parse(self):
+        self.name = self.name[8:].strip()
+
+class TextBlock:
+    def __init__(self):
+        self.raw_content = []
+        self.content = []
+    def append(self, line):
+        if line.strip() != "":
+            self.raw_content.append(line.strip())
+    def debugDisplay(self, deep):
+        for i in self.raw_content:
+            debugDisplay("block", deep, i)
+    def important(self):
+        return len(self.raw_content) > 0
+    def parse(self):
+        """ Renvoie une liste de paragraphes et d'autres éléments (liste…) """
+        mode = "par"
+        element = Paragraph()
+        block = []
+        for line in self.raw_content:
+            if begin(line, "*:"):
+                mode = "footnote"
+                if element.important():
+                    block.append(element)
+                element = FootNote(line)
+            elif begin(line, "..:"):
+                mode = "footurl"
+                if element.important():
+                    block.append(element)
+                element = FootURL(line)
+            elif begin(line, "--") and mode == "unordered list":
+                element.append(line)
+            elif begin(line, "-#") and mode == "unordered list":
+                element.append(line)
+            elif begin(line, "-'") and mode == "unordered list":
+                element.append(line)
+            elif begin(line, "'") and mode == "unordered list":
+                element.append(line)
+            elif begin(line, "-") and mode == "unordered list":
+                element.append("")
+                element.append(line)
+            elif begin(line, "-") and mode != "unordered list":
+                mode = "unordered list"
+                if element.important():
+                    block.append(element)
+                element = UnorderedList(line)
+            elif begin(line, "'") and mode == "ordered list":
+                element.append(line)
+            elif begin(line, "#-") and mode == "ordered list":
+                element.append(line)
+            elif begin(line, "##") and mode == "ordered list":
+                element.append(line)
+            elif begin(line, "#'") and mode == "ordered list":
+                element.append(line)
+            elif begin(line, "#") and mode == "ordered list":
+                element.append("")
+                element.append(line)
+            elif begin(line, "#") and mode != "ordered list":
+                mode = "ordered list"
+                if element.important():
+                    block.append(element)
+                element = OrderedList(line)
+            elif begin(line, "~image"):
+                mode = "image"
+                if element.important():
+                    block.append(element)
+                block.append(Image(line))
+                element = Paragraph()
+            elif begin(line, "~get"):
+                mode = "get"
+                if element.important():
+                    block.append(element)
+                block.append(Get(line))
+                element = Paragraph()
+            elif begin(line, "~include"):
+                mode = "include"
+                if element.important():
+                    block.append(element)
+                block.append(Include(line))
+                element = Paragraph()
+            elif begin(line, "/!\\") and mode != "warn":
+                mode = "warn"
+                if element.important():
+                    block.append(element)
+                element = Warn(line)
+            elif mode in ["image", "get", "include", "ordered list", "unordered list"]:
+                mode = "par"
+                if element.important():
+                    block.append(element)
+                element = Paragraph()
+                element.append(line)
+            else:
+                element.append(line)
+        if element.important():
+            block.append(element)
+        for element in block:
+            element.parse()
+        return block
+
+class Documentation:
+    def __init__(self):
+        self.lines = []
+        self.pars = []
+        self.blocks = []
+        self.type = "documentation"
+
+    def append(self, line):
+        self.lines.append(line.strip())
+
+    def important(self):
+        """ Renvoie False si la documentation ne contient que des lignes vides """
+        for i in self.lines:
+            if i != "":
+                return True
+        return False
+
+    def parse(self):
+        block = TextBlock()
+        for i in self.lines:
+            if i != "":
+                block.append(i)
+            else:
+                if block.important():
+                    self.blocks.append(block)
+                block = TextBlock()
+        if block.important():
+            self.blocks.append(block)
+        for i in self.blocks:
+            self.pars += i.parse()
+
+    def debugDisplay(self, deep):
+        debugDisplay("docu", deep)
+        for i in self.pars:
+            i.debugDisplay(deep+1)
+
+
+class Title:
+    def __init__(self):
+        self.name = []
+    def important(self):
+        """ Renvoie True si le titre n'est pas vide. """
+        for i in self.name:
+            if i != "":
+                return True
+        return False
+    def append(self, c):
+        self.name.append(c.strip())
+    def debugDisplay(self, deep):
+        for i in self.name:
+            debugDisplay("title", deep, i)
+
+class Introduction:
+    def __init__(self):
+        self.raw_content = []
+        self.content = []
+    def append(self, line):
+        self.raw_content.append(line)
+    def important(self):
+        for i in self.content:
+            if i != "":
+                return True
+        return False
+    def split(self):
+        last_chunk = Documentation()
+        mode = "documentation"
+        for line in self.raw_content:
+            sline = line.strip()
+            if begin(line, "<code"):
+                mode = "begincode"
+                if last_chunk.important():
+                    self.content.append(last_chunk)
+                last_chunk = Code(line)
+            elif mode in ["code", "begincode"]:
+                if line.rstrip() == ">":
+                    mode = "endcode"
+                else:
+                    mode = "code"
+                    last_chunk.append(line)
+            elif mode == "endcode":
+                mode = "documentation"
+                if last_chunk.important():
+                    self.content.append(last_chunk)
+                last_chunk = Documentation()
+            else:
+                last_chunk.append(line.strip())
+        if last_chunk.important():
+            self.content.append(last_chunk)
+    def debugDisplay(self, deep):
+        debugDisplay("intro", deep)
+        for i in self.content:
+            i.debugDisplay(deep+1)
+    def parse(self):
+        for i in self.content:
+            i.parse()
+
+class Authors:
+    def __init__(self):
+        self.names = []
+    def important(self):
+        return len(self.names) > 0
+    def debugDisplay(self, deep):
+        for i in self.names:
+            debugDisplay("authors", deep, i)
+    def append(self, name):
+        if name.strip() != "":
+            self.names.append(name)
+
+class Document:
+    def __init__(self, name = None):
+        """ Crée un document et charge le fichier si passé en paramètre. """
+        self.type = "section"
+        self.parent = None
+        self.name = name
+        self.position = 0
+        self.sections = []
+        self.introduction = Introduction()
+        self.title = Title()
+        self.authors = Authors()
+        self.abstract = None
+        self.code_type = None
+        self.lines = []
+
+    def fromFile(self, filename):
+        """ Récupère le code source d'un fichier (interprète ~Get) """
+        self.type = "document"
+        filename = path.abspath(filename)
+        basedir = path.dirname(filename)
+        f = codecs.open(filename, 'r', encoding="utf-8")
+        lines = f.readlines()
+        f.close()
+        for i in lines:
+            if begin(i, "~get"):
+                filename = i.strip()[4:].strip()
+                if filename != "":
+                    document = Document()
+                    document.fromFile(path.join(basedir, filename))
+                    self.lines += document.lines
+            else:
+                self.lines.append(i)
+
+    def fromOneFile(self, filename):
+        """ Récupère le code source d'un fichier (sans interpreter ~Get) """
+        filename = path.abspath(filename)
+        basedir = path.dirname(filename)
+        f = codecs.open(filename, 'r', encoding="utf-8")
+        lines = f.readlines()
+        f.close()
+        for i in lines:
+            self.lines.append(i)
+
+    def parseStructure(self, level = 0):
+        """ Place les lignes dans la structure du document. """
+        mode = "intro"
+        introduction = True
+        abstract = []
+        document = Document()
+        document.parent = self
+        position = 1
+        for line in self.lines:
+            sline = line.strip()
+            if begin(line, "<code"):
+                mode = "begincode"
+            elif mode in ["code", "begincode"]:
+                if line.rstrip() == ">":
+                    mode = "endcode"
+                else:
+                    mode = "code"
+            elif begin(sline, "==") and not introduction:
+                mode = "sectionpar"
+                line = sline[1:]
+            elif begin(sline, "="):
+                mode = "section"
+                line = sline.lstrip("=").strip()
+                if not introduction:
+                    document.parseStructure(level+1)
+                introduction = False
+                if document.important():
+                    self.sections.append(document)
+                    position = document.position+1
+                document = Document(line)
+                document.parent = self
+                document.position = position
+            elif introduction:
+                if detect_starline(sline):
+                    if mode in ["title", "begintitle"]:
+                        mode = "endtitle"
+                    else:
+                        mode = "begintitle"
+                elif mode in ["begintitle", "title"]:
+                    mode = "title"
+                    if len(sline) > 0 and sline[0] == "*":
+                        sline = sline[1:]
+                    if len(sline) > 2 and sline[-1] == "*":
+                        sline = sline[:-1]
+                    line = sline.strip()
+                    self.title.append(line)
+                elif begin(sline, "~authors"):
+                    mode = "authors"
+                    line = sline[8:].strip()
+                    self.authors.append(line)
+                elif begin(sline, "~code"):
+                    mode = "code type"
+                    line = sline[5:].strip()
+                    self.code_type = line
+                elif sline.lower() == "~abstract~":
+                    mode = "beginabstract"
+                    self.abstract = Document()
+                    self.abstract.type = abstract
+                    self.abstract.name = "Abstract"
+                elif mode in ["beginabstract", "abstract"]:
+                    mode = "abstract"
+                    if sline == "~~~":
+                        mode = "endabstract"
+                        self.abstract.parseStructure(level+1)
+                    else:
+                        self.abstract.lines.append(line)
+            else:
+                mode = "sectionpar"
+            if mode in ["intro", "sectionpar", "begincode", "coderef", "endcode", "code"]:
+                if introduction:
+                    self.introduction.append(line)
+                else:
+                    document.lines.append(line)
+        if not introduction:
+            document.parseStructure(level+1)
+        if document.important():
+            self.sections.append(document)
+
+    def getPosition(self):
+        """ Renvoie un tableau contenant le chemin d'accès à cette partie du
+        document, en terme de sections. """
+        position = [self.position]
+        parent = self.parent
+        while parent != None:
+            position = [parent.position]+position
+            parent = parent.parent
+        return position
+
+    def debugDisplay(self, deep = 0):
+        """ Affiche la structure du document """
+        debugDisplay("document", deep)
+        if self.title.important():
+            self.title.debugDisplay(deep)
+        if self.name != None:
+            t = ""
+            position = []
+            for i in self.getPosition()[1:]:
+                position.append(str(i))
+            debugDisplay("secname", deep, ".".join(position)+" "+self.name)
+        if self.authors.important():
+            self.authors.debugDisplay(deep)
+        if self.code_type != None:
+            debugDisplay("set code", deep, self.code_type)
+        if self.abstract != None:
+            self.abstract.debugDisplay(deep)
+        if self.introduction.important():
+            self.introduction.debugDisplay(deep)
+        for section in self.sections:
+            section.debugDisplay(deep+1)
+
+    def splitDocCode(self):
+        """ Place le code et la documentation de l'introduction dans une suite
+        de morceaux séparés (un morceau de code, un morceau de doc, et ainsi de
+        suite), et effectue la même séparation sur les sections qui la suivent.
+        """
+        self.introduction.split()
+        if self.abstract != None:
+            self.abstract.splitDocCode()
+        for section in self.sections:
+            section.splitDocCode()
+    def parseChunks(self):
+        """ Découpe les paragraphes et prépare leur mise en forme. """
+        self.introduction.parse()
+        if self.abstract != None:
+            self.abstract.parseChunks()
+        for section in self.sections:
+            section.parseChunks()
+    def important(self):
+        if self.name != "" and self.name != None:
+            return True
+        for i in self.sections:
+            if i.important:
+                return True
+        if self.introduction.important():
+            return True
+        if self.title.important():
+            return True
+        if self.authors.important():
+            return True
+        if self.abstract != None and self.abstract.important():
+            return True
+        if self.code_type != None and self.code_type.important():
+            return True
+        return False
+    def parse(self):
+        """ Analyse le document. """
+        self.parseStructure()
+        self.splitDocCode()
+        self.parseChunks()
+        #self.resolveReferences()
+
+d = Document()
+d.fromFile(sys.argv[1])
+d.parse()
+print d.format()
+

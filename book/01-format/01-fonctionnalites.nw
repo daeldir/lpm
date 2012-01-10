@@ -277,22 +277,22 @@ un [[-]]~:
 Nous pouvons imbriquer des listes, en doublant, triplant et plus le symbole de
 liste~:
 <<exemple de code>>=
-- liste de premier niveau
-- - liste de deuxième niveau
-- - deuxième élément de la liste de deuxième niveau
-- deuxième élément de la liste de premier niveau
+ - liste de premier niveau
+ ' - liste de deuxième niveau
+ ' - deuxième élément de la liste de deuxième niveau
+ - deuxième élément de la liste de premier niveau
 @
 
 Nous pouvons aussi imbriquer des listes numérotées dans des listes non
 numérotées, et inversement~:
 <<exemple de code>>=
-# Liste numérotée, premier niveau, premier élément
-#- Liste non-numérotée, second niveau, premier élément
-#-# Liste numérotée, troisième niveau, premier élément
-#- Liste non-numérotée, second niveau,  second élément
-# Liste numérotée, premier niveau, second élément
-## Liste numérotée, second niveau, premier élément
-## Liste numérotée, second niveau, second élément
+ # Liste numérotée, premier niveau, premier élément
+ '- Liste non-numérotée, second niveau, premier élément
+ ''# Liste numérotée, troisième niveau, premier élément
+ '- Liste non-numérotée, second niveau,  second élément
+ # Liste numérotée, premier niveau, second élément
+ '# Liste numérotée, second niveau, premier élément
+ '# Liste numérotée, second niveau, second élément
 @
 
 Pour finir, si un élément d'une liste tient sur plus d'une ligne, on remplace

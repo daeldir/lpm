@@ -192,6 +192,20 @@ class Code:
             r += i.formatText(length)
         r += ">\n"
         return r
+    def outputHTML(self):
+        if self.name == None:
+            name = u""
+        else:
+            name = "<span class=\"\codename\">"+self.name+"</span>"
+        if self.language == None:
+            language = u""
+        else:
+            language = "<span class=\"codelang\">("+self.language+")</span>"
+        r = u"<div class=\"codechunk\">&lt;Code"+language+": "+name+"\n"
+        for i in self.code:
+            r += i.outputHTML()
+        r += "&gt;</div>\n"
+        return r
     
     def parse(self):
         for i in self.raw_code:
@@ -217,6 +231,8 @@ class Code:
                 return "\\"+self.line+"\n"
             else:
                 return self.line+"\n"
+        def outputHTML(self):
+            return "<div>"+self.line.replace(" ", "&nbsp;").replace("<", "&lt;")+"</div>\n"
 
     class Reference:
         def __init__(self, line):
@@ -230,6 +246,8 @@ class Code:
             debugDisplay("coderef", deep, u"dest: «"+self.name+u"», indent: |]"+self.indentation+u"[>")
         def formatText(self, length):
             return self.indentation+"<"+self.name+"\n"
+        def outputHTML(self):
+            return "<div class=\"coderef\">"+self.indentation.replace(" ", "&nbsp;")+"&lt;"+self.name.replace("<", "&lt;")+"</div>\n"
 
 class Paragraph:
     def __init__(self):
@@ -264,6 +282,11 @@ class Paragraph:
         if not prefixed:
             r = u"\n\n"+r
         return r
+    def outputHTML(self):
+        r = u"<p>"
+        for i in self.content:
+            r += i.outputHTML()+" "
+        return r+"</p>"
     def important(self):
         return len(self.line) > 0
     def parse(self):
@@ -378,6 +401,8 @@ class Paragraph:
             debugDisplay("text", deep, self.content)
         def formatText(self, length):
             return escape(self.content)
+        def outputHTML(self):
+            return self.content
 
     class Bold:
         def __init__(self):
@@ -396,6 +421,11 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "**"+r+"**"
+        def outputHTML(self):
+            r = u""
+            for i in self.content:
+                r += i.outputHTML()
+            return "<span class=\"bold\">"+r+"</span>"
 
     class Italic:
         def __init__(self):
@@ -414,6 +444,11 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "//"+r+"//"
+        def outputHTML(self):
+            r = u""
+            for i in self.content:
+                r += i.outputHTML()
+            return "<span class=\"italic\">"+r+"</span>"
 
     class Underline:
         def __init__(self):
@@ -432,6 +467,11 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "__"+r+"__"
+        def outputHTML(self):
+            r = u""
+            for i in self.content:
+                r += i.outputHTML()
+            return "<span class=\"underline\">"+r+"</span>"
 
     class Overline:
         def __init__(self):
@@ -450,6 +490,11 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "--"+r+"--"
+        def outputHTML(self):
+            r = u""
+            for i in self.content:
+                r += i.outputHTML()
+            return "<span class=\"overline\">"+r+"</span>"
 
     class Bracket:
         def __init__(self):
@@ -469,6 +514,11 @@ class Paragraph:
                 r += i.formatText(length)
             r += ")"
             return r
+        def outputHTML(self):
+            r = u""
+            for i in self.content:
+                r += i.outputHTML()
+            return "("+r+")"
 
     class Code:
         def __init__(self):
@@ -489,16 +539,29 @@ class Paragraph:
             else:
                 lang = "<"+self.lang+">"
             return "<"+lang+escape(self.content)+">"
+        def outputHTML(self):
+            if self.lang == None:
+                lang = ""
+            else:
+                lang = "<span>"+self.lang+"</span>"
+            return "<span class=\"code_span\">&lt;"+self.content+"&gt;</span>"
 
     class URLRef:
         def __init__(self):
             self.type = "urlref"
             self.content = Paragraph.Text()
+            self.ref = None
         def debugDisplay(self, deep):
             debugDisplay("urlref", deep)
             self.content.debugDisplay(deep+1)
         def formatText(self, length):
             return self.content.formatText(length)+"[..]"
+        def outputHTML(self):
+            if self.ref == None:
+                ref = "#"
+            else:
+                ref = self.ref.url
+            return "<a href=\""+ref+"\" target=\"about:blank\">"+self.content.outputHTML()+"</a>"
 
     class Link:
         def __init__(self):
@@ -512,6 +575,8 @@ class Paragraph:
             self.content.debugDisplay(deep+1)
         def formatText(self, length):
             return self.content.formatText(length)+"["+self.name+"]"
+        def outputHTML(self):
+            return "<a href=\"#"+self.name+"\">"+self.content.outputHTML()+"</a>"
 
     class Anchor:
         def __init__(self):
@@ -525,14 +590,23 @@ class Paragraph:
             self.content.debugDisplay(deep+1)
         def formatText(self, length):
             return self.content.formatText(length)+"[="+self.name+"]"
+        def outputHTML(self):
+            return "<a name=\""+self.name+"\">"+self.content.outputHTML()+"</a>"
 
     class NoteRef:
         def __init__(self):
             self.type = "noteref"
+            self.ref = None
         def debugDisplay(self, deep):
             debugDisplay("noteref", deep)
         def formatText(self, length):
             return "*"
+        def outputHTML(self):
+            if self.ref != None:
+                ref = self.ref.count
+            else:
+                ref = "0"
+            return "<a href=\"#ref"+ref+"\" name=\"toref"+ref+"\"><exp>"+ref+"</exp></a>"
 
     class Escape:
         def __init__(self):
@@ -568,6 +642,11 @@ class OrderedList:
             for i in par[1:]:
                 r += " ' "+i.strip()+"\n"
         return r+"\n"
+    def outputHTML(self):
+        r = u"<ol>"
+        for par in self.pars:
+            r += "<li>"+par.outputHTML()+"</li>"
+        return r+"</ol>\n"
 
 class UnorderedList:
     def __init__(self, line):
@@ -599,11 +678,17 @@ class UnorderedList:
             for i in par[1:]:
                 r += " ' "+i.strip()+"\n"
         return r+"\n"
+    def outputHTML(self):
+        r = u"<ul>"
+        for par in self.pars:
+            r += "<li>"+par.outputHTML()+"</li>"
+        return r+"</ul>\n"
 
 class FootNote:
     def __init__(self, line):
         self.content = [line]
         self.pars = Documentation()
+        self.count = 0
     def append(self, line):
         self.content.append(line)
     def debugDisplay(self, deep):
@@ -623,6 +708,10 @@ class FootNote:
         for i in pars[1:]:
             r += "    "+i
         return " "+r.strip()+"\n"
+    def outputHTML(self):
+        r = u"<a href=\"#toref"+str(self.count)+"\" name=\"ref"+str(self.count)+"\">^</a> "
+        r += self.pars.outputHTML()
+        return r
 
 
 class FootURL:
@@ -646,6 +735,8 @@ class FootURL:
                 r += "\n    "
                 count = 0
         return r+"\n"
+    def outputHTML(self):
+        return ""
 
 class Warn:
     def __init__(self, line):
@@ -677,6 +768,9 @@ class Warn:
         for i in lines:
             r += "/!\\ "+i+"\n"
         return r
+    def outputHTML(self):
+        r = "<div class=\"warning\">"+self.pars.outputHTML()+"</div>"
+        return r
 
 class Image:
     def __init__(self, line):
@@ -690,6 +784,8 @@ class Image:
         self.name = self.name[6:].strip()
     def formatText(self, length, prefixed = None):
         return "~Image "+self.name+"\n"
+    def outputHTML(self):
+        return "TODO"
 
 class Get:
     def __init__(self, line):
@@ -703,6 +799,8 @@ class Get:
         self.name = self.name[4:].strip()
     def formatText(self, length, prefixed = None):
         return "~Get "+self.name+"\n"
+    def outputHTML(self):
+        return "TODO"
 
 class Include:
     def __init__(self, line):
@@ -716,6 +814,8 @@ class Include:
         self.name = self.name[8:].strip()
     def formatText(self, length, prefixed = None):
         return "~Include "+self.name+"\n"
+    def outputHTML(self):
+        return "TODO"
 
 class TextBlock:
     def __init__(self):
@@ -849,6 +949,11 @@ class Documentation:
                 text += i+"\n"
             old = i.strip()
         return text
+    def outputHTML(self):
+        r = u""
+        for i in self.pars:
+            r += i.outputHTML()
+        return r
 
 
 class Title:
@@ -879,6 +984,18 @@ class Title:
             text = u"*"+i.center(max_width)+u"*"
             r += text.center(line_length)+"\n"
         r += bar.center(line_length)+"\n"
+        return r
+    def outputHTMLTitle(self):
+        r = u"<title> | "
+        for i in self.name:
+            r += i+u" | "
+        r += "</title>\n"
+        return r
+    def outputHTML(self):
+        r = u"<div class=\"title\">\n"
+        for i in self.name:
+            r += "\t<div>"+i+"</div>\n"
+        r += "</div>\n"
         return r
 
 class Introduction:
@@ -929,6 +1046,11 @@ class Introduction:
         for i in self.content:
             r += i.formatText(length)
         return r
+    def outputHTML(self):
+        r = u""
+        for i in self.content:
+            r += i.outputHTML()
+        return r
 
 class Authors:
     def __init__(self):
@@ -946,6 +1068,11 @@ class Authors:
         for i in self.names:
             r += u"~Authors "+i+u"\n"
         return r
+    def outputHTML(self):
+        r = "<div class=\"authors\">Par "
+        for i in self.names:
+            r += "<span>"+i+"</span>"
+        return r+"</div>"
 
 
 class Document:
@@ -1192,10 +1319,51 @@ class Document:
                     text += i+"\n"
                 old = i.strip()
         return text
+    def outputHTML(self, top = True):
+        r = u""
+        if top:
+            r += u"<!doctype html><head><meta charset=\"utf-8\"><style>div{border: 1px solid red; margin: 10px;}</style>"
+            if self.title.important():
+                r += self.title.outputHTMLTitle()+"\n"
+            r += u"</head><body>\n"
+        if self.title.important():
+            r += self.title.outputHTML()+"\n"
+        if self.name != None:
+            r += "\n"
+            p = self.getPosition()[1:]
+            r += "<h"+str(len(p))+">"
+            for i in p:
+                r += str(i)+"."
+            r += " "+self.name
+            r += "</h"+str(len(p))+">"
+            r += "\n"
+        r += "\n"
+        if self.authors.important():
+            r += self.authors.outputHTML()
+        if self.code_type != None:
+            r += u"<div class=\"codetype\">Projet codé majoritairement en "+self.code_type+"</div>\n"
+        r += "\n"
+        if self.abstract != None:
+            r += "\n<div class=\"abstract\">"
+            h = "h"+str(len(self.getPosition()))
+            r += "\n"+u"<"+h+u">Résumé</"+h+">"+"\n\n"
+            r += self.abstract.outputHTML(False)
+            r += "</div>"
+        if self.introduction.important():
+            r += "\n"
+            r += self.introduction.outputHTML()
+            r += "\n"
+        for section in self.sections:
+            r += "\n"
+            r += section.outputHTML(False)+"\n\n"
+        if top:
+            r += "</body></html>"
+        return r
 
 d = Document()
 d.fromFile(sys.argv[1])
 d.parse()
-print d.formatText()
+#print d.formatText()
+print d.outputHTML()
 #d.debugDisplay()
 

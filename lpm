@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 
 # Initialisation
-import sys, codecs
+import sys, codecs, base64
 from os import getcwd, path
 
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
@@ -35,6 +35,8 @@ def escape(txt):
     for i in range(len(txt)):
         if i == 0:
             if txt[i] in ["-", "#", "'", "="]:
+                r += "\\"
+            if txt[i:i+3] == "..:":
                 r += "\\"
         elif i < len(txt)-2:
             if txt[i:i+2] in ["--", "__", "//", "**"]:
@@ -785,7 +787,9 @@ class Image:
     def formatText(self, length, prefixed = None):
         return "~Image "+self.name+"\n"
     def outputHTML(self):
-        return "TODO"
+        img = open(self.name).read()
+        img = base64.b64encode(img)
+        return "<img src=\"data:image/*;base64,"+img+"\">"
 
 class Get:
     def __init__(self, line):
@@ -800,7 +804,7 @@ class Get:
     def formatText(self, length, prefixed = None):
         return "~Get "+self.name+"\n"
     def outputHTML(self):
-        return "TODO"
+        return ""
 
 class Include:
     def __init__(self, line):
@@ -815,7 +819,7 @@ class Include:
     def formatText(self, length, prefixed = None):
         return "~Include "+self.name+"\n"
     def outputHTML(self):
-        return "TODO"
+        return "<pre>"+codecs.open(self.name, 'r', encoding = "utf-8").read()+"</pre>"
 
 class TextBlock:
     def __init__(self):
@@ -1091,7 +1095,8 @@ class Document:
         self.lines = []
 
     def fromFile(self, filename):
-        """ Récupère le code source d'un fichier (interprète ~Get) """
+        """ Récupère le code source d'un fichier (interprète ~Get) et remplace
+        les chemins de fichiers par leur chemin absolu. """
         self.type = "document"
         filename = path.abspath(filename)
         basedir = path.dirname(filename)
@@ -1106,6 +1111,10 @@ class Document:
                     document.fromFile(path.join(basedir, filename))
                     self.lines += document.lines
             else:
+                if begin(i, "~include"):
+                    i = "~include "+path.join(basedir, i[8:].strip())
+                if begin(i, "~image"):
+                    i = "~image "+path.join(basedir, i[6:].strip())
                 self.lines.append(i)
 
     def fromOneFile(self, filename):

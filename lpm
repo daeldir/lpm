@@ -259,7 +259,7 @@ class Paragraph:
         self.line = ""
         self.content = []
     def append(self, line):
-        for i in line.split():
+        for i in line.split(" "):
             self.line += u" "+i
         self.line = self.line.strip()
     def debugDisplay(self, deep):
@@ -270,10 +270,9 @@ class Paragraph:
         r = u""
         for i in self.content:
             r += i.formatText(length)
-        t = r.split()
         t2 = []
         l = u""
-        for i in r.split():
+        for i in r.split(" "):
             if len(l)+len(i)+1 < length:
                 l += i+" "
             else:
@@ -345,7 +344,7 @@ class Paragraph:
                 if mode[-1].type == "text":
                     linktext = self.Text()
                     if i != 0 and self.line[i-1] != " ":
-                        linktext.add(self.line[:i].split()[-1])
+                        linktext.add(self.line[:i].split(" ")[-1])
                         mode[-1].content = mode[-1].content[:-len(linktext.content)]
                 else:
                     linktext = mode.pop()

@@ -7,7 +7,9 @@ from os import getcwd, path
 
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
 
-DEFAULT_LENGTH = 80
+DEFAULT_LENGTH = 72
+INDENT = "    "
+MARGINS = len(INDENT)
 
 # Fonctions utiles
 def detect_starline(line):
@@ -126,6 +128,9 @@ def addSpace(line, direction):
 def justify(line, length):
     l = len(line)
     direction = 1
+    if len(line) < 10:
+        return line # We can't justify that as we use only spaces beetween five
+                    # characters from the start and to the end of the string.
     while len(line) < length:
         line = addSpace(line, direction).strip()
         direction *= -1
@@ -638,9 +643,13 @@ class OrderedList:
         r = u""
         for par in self.pars:
             par = par.formatText(length-3).strip().split("\n")
-            r += " # "+par[0].strip()+"\n"
+            if par[0] != "" and par[0][0] == " ":
+                par[0] = par[0][1:] 
+            r += " # "+par[0]+"\n"
             for i in par[1:]:
-                r += " ' "+i.strip()+"\n"
+                if i != "" and i[0] == " ":
+                    i = i[1:]
+                r += " ' "+i+"\n"
         return r+"\n"
     def outputHTML(self):
         r = u"<ol>"
@@ -674,9 +683,13 @@ class UnorderedList:
         r = u""
         for par in self.pars:
             par = par.formatText(length-3).strip().split("\n")
-            r += " - "+par[0].strip()+"\n"
+            if par[0] != "" and par[0][0] == " ":
+                par[0] = par[0][1:] 
+            r += " - "+par[0]+"\n"
             for i in par[1:]:
-                r += " ' "+i.strip()+"\n"
+                if i != "" and i[0] == " ":
+                    i = i[1:]
+                r += " ' "+i+"\n"
         return r+"\n"
     def outputHTML(self):
         r = u"<ul>"
@@ -706,7 +719,7 @@ class FootNote:
         pars = self.pars.formatText(length-4, True).split("\n")
         r = "*: "+pars[0]+"\n"
         for i in pars[1:]:
-            r += "    "+i
+            r += "    " +i
         return " "+r.strip()+"\n"
     def outputHTML(self):
         r = u"<a href=\"#toref"+str(self.count)+"\" name=\"ref"+str(self.count)+"\">^</a> "
@@ -758,15 +771,17 @@ class Warn:
         for line in self.content:
             if line[:3] == "/!\\":
                 line = line[3:].strip()
+            if line[-3:] == "/!\\":
+                line = line[:-3].strip()
             self.pars.append(line)
         self.pars.parse()
     def formatText(self, length, prefixed = None):
-        lines = self.pars.formatText(length - 4).strip().split("\n")
+        lines = self.pars.formatText(length - MARGINS*2 - 8).strip().split("\n")
         r = u""
         if not prefixed:
             r += u"\n"
         for i in lines:
-            r += "/!\\ "+i+"\n"
+            r += INDENT + "/!\\ "+i.ljust(length - MARGINS*2 - 8)+" /!\\\n"
         return r
     def outputHTML(self):
         r = "<div class=\"warning\">"+self.pars.outputHTML()+"</div>"
@@ -1295,11 +1310,8 @@ class Document:
         if self.abstract != None:
             r += "\n"
             r += "\n"+u"~Abstract~".center(line_length)+"\n\n"
-            indent = u""
-            for i in range(line_length*1/16):
-                indent += u" "
-            for i in self.abstract.formatText(int(line_length*7/8)).split("\n"):
-                r += indent + i + "\n"
+            for i in self.abstract.formatText(line_length-MARGINS*2).split("\n"):
+                r += INDENT + i + "\n"
             r += "\n"+u"~~~".center(line_length)+"\n\n"
         if self.introduction.important():
             r += "\n"

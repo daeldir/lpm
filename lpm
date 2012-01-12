@@ -33,13 +33,11 @@ def debugDisplay(kind, deep, line = ""):
 def escape(txt):
     r = u""
     for i in range(len(txt)):
-        if i == 0:
-            if txt[i] in ["-", "#", "'", "="]:
+        if i == 0 and txt[i] in ["-", "#", "'", "="]:
                 r += "\\"
-            if txt[i:i+3] == "..:":
+        elif i == 0 and txt[i:i+3] == "..:":
                 r += "\\"
-        elif i < len(txt)-2:
-            if txt[i:i+2] in ["--", "__", "//", "**"]:
+        elif i < len(txt)-2 and txt[i:i+2] in ["--", "__", "//", "**"]:
                 r += "\\"
         elif txt[i] in ["\\", "*", "<", ">", "[", "]", "~"]:
             r += "\\"
@@ -1372,7 +1370,7 @@ class Document:
 d = Document()
 d.fromFile(sys.argv[1])
 d.parse()
-#print d.formatText()
-print d.outputHTML()
+print d.formatText()
+#print d.outputHTML()
 #d.debugDisplay()
 

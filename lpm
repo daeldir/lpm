@@ -1368,6 +1368,7 @@ class Document:
         self.title = Title()
         self.authors = Authors()
         self.abstract = None
+        self.licence = None
         self.code_type = None
         self.lines = []
         self.original_depth = 0
@@ -1474,7 +1475,7 @@ class Document:
                 elif sline.lower() == "~abstract~":
                     mode = "beginabstract"
                     self.abstract = Document()
-                    self.abstract.type = abstract
+                    self.abstract.type = "abstract"
                 elif mode in ["beginabstract", "abstract"]:
                     mode = "abstract"
                     if sline == "~~~":
@@ -1482,6 +1483,17 @@ class Document:
                         self.abstract.parseStructure(level+1)
                     else:
                         self.abstract.lines.append(line)
+                elif sline.lower() == "~licence~":
+                    mode = "beginlicence"
+                    self.licence = Document()
+                    self.licence.type = "licence"
+                elif mode in ["beginlicence", "licence"]:
+                    mode = "licence"
+                    if sline == "~~~":
+                        mode = "endlicence"
+                        self.licence.parseStructure(level+1)
+                    else:
+                        self.licence.lines.append(line)
             else:
                 mode = "sectionpar"
             if mode in ["intro", "sectionpar", "begincode", "coderef", "endcode", "code"]:
@@ -1534,6 +1546,8 @@ class Document:
         self.introduction.split()
         if self.abstract != None:
             self.abstract.splitDocCode()
+        if self.licence != None:
+            self.licence.splitDocCode()
         for section in self.sections:
             section.splitDocCode()
     def parseChunks(self):
@@ -1541,6 +1555,8 @@ class Document:
         self.introduction.parse()
         if self.abstract != None:
             self.abstract.parseChunks()
+        if self.licence != None:
+            self.licence.parseChunks()
         for section in self.sections:
             section.parseChunks()
     def important(self):
@@ -1556,6 +1572,8 @@ class Document:
         if self.authors.important():
             return True
         if self.abstract != None and self.abstract.important():
+            return True
+        if self.licence != None and self.licence.important():
             return True
         if self.code_type != None and self.code_type.important():
             return True
@@ -1599,6 +1617,12 @@ class Document:
         for section in self.sections:
             r += "\n"
             r += section.formatText(line_length)+"\n\n"
+        if self.licence != None:
+            r += "\n"
+            r += "\n"+u"~Licence~".center(line_length)+"\n\n"
+            for i in self.licence.formatText(line_length-MARGINS*2).split("\n"):
+                r += INDENT + i + "\n"
+            r += "\n"+u"~~~".center(line_length)+"\n\n"
         # On remplace les doubles lignes vides par des lignes vides uniques
         mode = "doc"
         text = u""
@@ -1672,6 +1696,21 @@ class Document:
                             margin-bottom: 40px;
                         }
                         .abstract h1 {
+                            text-align: center;
+                        }
+                        .licence {
+                        """
+            if not ebook:
+                r += u"""
+                            width: 90%;
+                            position: relative;
+                            left: 5%;
+                      """
+            r += u"""
+                            margin-top: 40px;
+                            margin-bottom: 40px;
+                        }
+                        .licence h1 {
                             text-align: center;
                         }
                         .warning {
@@ -1752,8 +1791,7 @@ class Document:
         r += "\n"
         if self.abstract != None:
             r += "\n<div class=\"abstract\">"
-            h = "h"+str(len(self.getPosition()))
-            r += "\n"+u"<"+h+u">Résumé</"+h+">"+"\n\n"
+            r += "\n"+u"<h1>Résumé</h1>"+"\n\n"
             r += self.abstract.outputHTML(False)
             r += "</div>"
         if top:
@@ -1767,6 +1805,11 @@ class Document:
         for section in self.sections:
             r += "\n"
             r += section.outputHTML(False)+"\n\n"
+        if self.licence != None:
+            r += "\n<div class=\"licence\">"
+            r += "\n"+u"<h1>Licence</h1>"+"\n\n"
+            r += self.licence.outputHTML(False)
+            r += "</div>"
         if top:
             r += "<hr>"
             for i in FOOTNOTE:

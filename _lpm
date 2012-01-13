@@ -1377,7 +1377,7 @@ class Document:
         self.title = Title()
         self.authors = Authors()
         self.abstract = None
-        self.licence = None
+        self.license = None
         self.code_type = None
         self.lines = []
         self.original_depth = 0
@@ -1501,22 +1501,22 @@ class Document:
                         self.abstract.parseStructure(level+1)
                     else:
                         self.abstract.lines.append(line)
-                elif mode in ["endabstract", "endlicence"]:
+                elif mode in ["endabstract", "endlicense"]:
                     if introduction:
                         mode = "intro"
                     else:
                         mode = "sectionpar"
-                elif sline.lower() == "~licence~":
-                    mode = "beginlicence"
-                    self.licence = Document()
-                    self.licence.type = "licence"
-                elif mode in ["beginlicence", "licence"]:
-                    mode = "licence"
+                elif sline.lower() == "~license~":
+                    mode = "beginlicense"
+                    self.license = Document()
+                    self.license.type = "license"
+                elif mode in ["beginlicense", "license"]:
+                    mode = "license"
                     if sline == "~~~":
-                        mode = "endlicence"
-                        self.licence.parseStructure(level+1)
+                        mode = "endlicense"
+                        self.license.parseStructure(level+1)
                     else:
-                        self.licence.lines.append(line)
+                        self.license.lines.append(line)
             else:
                 mode = "sectionpar"
             if mode in ["intro", "sectionpar", "begincode", "coderef", "endcode", "code"]:
@@ -1569,8 +1569,8 @@ class Document:
         self.introduction.split()
         if self.abstract != None:
             self.abstract.splitDocCode()
-        if self.licence != None:
-            self.licence.splitDocCode()
+        if self.license != None:
+            self.license.splitDocCode()
         for section in self.sections:
             section.splitDocCode()
     def parseChunks(self):
@@ -1578,8 +1578,8 @@ class Document:
         self.introduction.parse()
         if self.abstract != None:
             self.abstract.parseChunks()
-        if self.licence != None:
-            self.licence.parseChunks()
+        if self.license != None:
+            self.license.parseChunks()
         for section in self.sections:
             section.parseChunks()
     def important(self):
@@ -1596,7 +1596,7 @@ class Document:
             return True
         if self.abstract != None and self.abstract.important():
             return True
-        if self.licence != None and self.licence.important():
+        if self.license != None and self.license.important():
             return True
         if self.code_type != None and self.code_type.important():
             return True
@@ -1640,10 +1640,10 @@ class Document:
         for section in self.sections:
             r += "\n"
             r += section.formatText(line_length)+"\n\n"
-        if self.licence != None:
+        if self.license != None:
             r += "\n"
-            r += "\n"+u"~Licence~".center(line_length)+"\n\n"
-            for i in self.licence.formatText(line_length-MARGINS*2).split("\n"):
+            r += "\n"+u"~License~".center(line_length)+"\n\n"
+            for i in self.license.formatText(line_length-MARGINS*2).split("\n"):
                 r += INDENT + i + "\n"
             r += "\n"+u"~~~".center(line_length)+"\n\n"
         # On remplace les doubles lignes vides par des lignes vides uniques
@@ -1721,7 +1721,7 @@ class Document:
                         .abstract h1 {
                             text-align: center;
                         }
-                        .licence {
+                        .license {
                         """
             if not ebook:
                 r += u"""
@@ -1733,7 +1733,7 @@ class Document:
                             margin-top: 40px;
                             margin-bottom: 40px;
                         }
-                        .licence h1 {
+                        .license h1 {
                             text-align: center;
                         }
                         .warning {
@@ -1828,10 +1828,10 @@ class Document:
         for section in self.sections:
             r += "\n"
             r += section.outputHTML(False)+"\n\n"
-        if self.licence != None:
-            r += "\n<div class=\"licence\">"
+        if self.license != None:
+            r += "\n<div class=\"license\">"
             r += "\n"+u"<h1>Licence</h1>"+"\n\n"
-            r += self.licence.outputHTML(False)
+            r += self.license.outputHTML(False)
             r += "</div>"
         if top:
             r += "<hr>"

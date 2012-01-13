@@ -378,7 +378,8 @@ class Paragraph:
         self.type = "paragraph"
     def append(self, line):
         for i in line.split(" "):
-            self.line += u" "+i
+            if i != "":
+                self.line += u" "+i
         self.line = self.line.strip()
     def debugDisplay(self, deep):
         debugDisplay("par", deep)
@@ -1109,7 +1110,7 @@ class TextBlock:
             elif begin(line, "-") and mode == "unordered list":
                 element.append("")
                 element.append(line)
-            elif begin(line, "-") and mode != "unordered list":
+            elif begin(line, "-") and (not begin(line, "--")) and mode != "unordered list":
                 mode = "unordered list"
                 if element.important():
                     block.append(element)
@@ -1369,6 +1370,7 @@ class Document:
         self.abstract = None
         self.code_type = None
         self.lines = []
+        self.original_depth = 0
 
     def fromFile(self, filename):
         """ Récupère le code source d'un fichier (interprète ~Get) et remplace
@@ -1378,6 +1380,11 @@ class Document:
         basedir = path.dirname(filename)
         f = codecs.open(filename, 'r', encoding="utf-8")
         lines = f.readlines()
+        d = Document()
+        d.fromOneFile(filename)
+        d.parse()
+        d.resolv()
+        codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
         f.close()
         for i in lines:
             if begin(i, "~get"):
@@ -1426,7 +1433,11 @@ class Document:
                 line = sline[1:]
             elif begin(sline, "="):
                 mode = "section"
-                line = sline.lstrip("=").strip()
+                original_depth = 0
+                while sline[0] == "=":
+                    original_depth += 1
+                    sline = sline[1:]
+                line = sline.strip()
                 if not introduction:
                     document.parseStructure(level+1)
                 introduction = False
@@ -1434,6 +1445,7 @@ class Document:
                     self.sections.append(document)
                     position = document.position+1
                 document = Document(line)
+                document.original_depth = original_depth -  1
                 document.parent = self
                 document.position = position
             elif introduction:
@@ -1563,6 +1575,8 @@ class Document:
         if self.name != None:
             r += "\n"
             for i in self.getPosition()[1:]:
+                r += "="
+            for i in range(self.original_depth):
                 r += "="
             r += " "+self.name
             r += "\n"

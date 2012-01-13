@@ -2,14 +2,27 @@
 # -*- encoding: utf-8 -*-
 
 # Initialisation
-import sys, codecs, base64
-from os import getcwd, path
+import sys, codecs, base64, os
+from os import path
+import pygments
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
 
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
 
 DEFAULT_LENGTH = 72
 INDENT = "    "
 MARGINS = len(INDENT)
+
+FOOTNOTE = []
+NOTEREF = 0 
+URLREF = 0
+FOOTURL = []
+CODE = {}
+REFCOUNT = 0
+
+DOCUMENT_LANGUAGE = "text"
 
 # Fonctions utiles
 def detect_starline(line):
@@ -140,10 +153,15 @@ def justify(line, length):
 class Code:
     def __init__(self, line):
         """ Contient un morceau de code """
+        global CODE
         self.type = "code"
         self.language = None
         self.raw_code = []
         self.code = []
+        self.resolved = []
+        self.referenced = False
+        self.references = []
+        self.index = 0
 
         split = line.split(":")
         language = split[0]
@@ -154,6 +172,11 @@ class Code:
         name = ":".join(split[1:])
         if name.strip() != "":
             self.name = name.strip()
+            if self.name in CODE:
+                CODE[self.name].append(self)
+            else:
+                CODE[self.name] = [self]
+            self.index = len(CODE[self.name])
         else:
             self.name = None
 
@@ -197,20 +220,83 @@ class Code:
             r += i.formatText(length)
         r += ">\n"
         return r
-    def outputHTML(self):
+    def outputHTML(self, remain = False, line = 1):
         if self.name == None:
             name = u""
+            before = u""
+            after = u""
         else:
-            name = "<span class=\"\codename\">"+self.name+"</span>"
+            name = "<span class=\"\codename\"><a id=\""+self.name.replace(" ", "%20")+str(self.index)+"\">"+self.name+"</a></span>"
+            if self.index != 1:
+                before = u"<a href=\"#"+self.name.replace(" ", "%20")+str(self.index-1)+"\"> &lt;-</a>"
+            else:
+                before = u""
+            if self.index < len(CODE[self.name]):
+                after = u"<a href=\"#"+self.name.replace(" ", "%20")+str(self.index+1)+"\"> -&gt;</a>"
+            else:
+                after = u""
+        references = u" "
+        for i in self.references:
+            references += "<a href=\"#coderef"+str(i)+"\">("+str(i)+")</a> "
         if self.language == None:
-            language = u""
+            language = u" "
+            format_language = DOCUMENT_LANGUAGE
         else:
-            language = "<span class=\"codelang\">("+self.language+")</span>"
-        r = u"<div class=\"codechunk\">&lt;Code"+language+": "+name+"\n"
+            format_language = self.language
+            language = " <span class=\"codelang\">("+self.language+")</span>"
+        if not remain:
+            r = u"<div class=\"codechunk\">&lt;Code"+language+": "+name+before+after+references+"\n"
+        else:
+            r = u""
+        code = u""
+        try:
+            lexer = get_lexer_by_name(format_language.lower(), stripall=True)
+        except pygments.util.ClassNotFound:
+            lexer = get_lexer_by_name("text", stripall=True)
+        old_line = line
+        formatter = HtmlFormatter(linenos=True, linenostart = line, cssclass="source")
         for i in self.code:
-            r += i.outputHTML()
-        r += "&gt;</div>\n"
+            if i.type != "reference":
+                code += i.outputHTML()
+                line += 1
+            else:
+                formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
+                if i.name in CODE:
+                    line += len(CODE[i.name][0].resolved)
+                old_line = line
+                r += highlight(code, lexer, formatter)
+                code = u""
+                r += i.outputHTML(remain)
+        formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
+        r += highlight(code, lexer, formatter)
+        if not remain:
+            r += "&gt;</div>\n"
         return r
+    def resolv(self):
+        global CODE
+        resolved = False
+        self.resolved = self.code
+        while not resolved:
+            resolved = True
+            new_resolved = []
+            for i in self.resolved:
+                if type(i) != unicode:
+                    if i.type == "reference":
+                        resolved = False
+                        new_resolved += i.resolv()
+                    else:
+                        new_resolved.append(i.line)
+                else:
+                    new_resolved.append(i)
+            self.resolved = new_resolved
+        return self.resolved
+    def outputCode(self):
+        global CODE
+        r = u""
+        for i in CODE[self.name]:
+            for j in i.code:
+                r += j.outputCode()
+        return r[:-1]
     
     def parse(self):
         for i in self.raw_code:
@@ -218,7 +304,6 @@ class Code:
                 self.code.append(self.Reference(i))
             else:
                 self.code.append(self.Line(i))
-        pass
 
     class Line:
         def __init__(self, line):
@@ -228,6 +313,7 @@ class Code:
             if len(line) > 0 and line[0] == "\\":
                 line = line[1:]
             self.line = line
+            self.type = "line"
         def debugDisplay(self, deep):
             debugDisplay("codeline", deep, self.line+u"'")
         def formatText(self, length):
@@ -236,28 +322,60 @@ class Code:
                 return "\\"+self.line+"\n"
             else:
                 return self.line+"\n"
+        def outputCode(self):
+            return self.line+"\n"
         def outputHTML(self):
-            return "<div>"+self.line.replace(" ", "&nbsp;").replace("<", "&lt;")+"</div>\n"
+            return self.line+"\n"
 
     class Reference:
         def __init__(self, line):
+            global REFCOUNT
+            self.type = "reference"
             self.indentation = ""
             for c in line:
                 if c != " " and c != "\t":
                     break
                 self.indentation += c
             self.name = line.strip()[1:].strip()
+            REFCOUNT += 1
+            self.count = REFCOUNT
         def debugDisplay(self, deep):
             debugDisplay("coderef", deep, u"dest: «"+self.name+u"», indent: |]"+self.indentation+u"[>")
         def formatText(self, length):
             return self.indentation+"<"+self.name+"\n"
-        def outputHTML(self):
-            return "<div class=\"coderef\">"+self.indentation.replace(" ", "&nbsp;")+"&lt;"+self.name.replace("<", "&lt;")+"</div>\n"
+        def outputHTML(self, remain = False):
+            r = "<table class=\"coderef\"><tbody><tr><td><pre>&nbsp;&nbsp;</pre><td><pre>"
+            r += self.indentation.replace(" ", "&nbsp;").replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
+            r += "&lt;<a "
+            if not remain:
+                r += "id=\"coderef"+str(self.count)+"\" "
+            r += "href=\"#"+self.name.replace(" ", "%20")+"1\">"
+            r += self.name.replace("<", "&lt;")
+            r += "</a></pre></td></tr></tbody></table>\n"
+            return r
+        def outputCode(self):
+            global CODE
+            r = u""
+            for i in CODE[self.name][0].outputCode().split("\n"):
+                r += self.indentation+i+"\n"
+            return r
+        def resolv(self):
+            r = []
+            if self.name in CODE:
+                for i in CODE[self.name]:
+                    i.referenced = True
+                    i.references.append(self.count)
+                    for j in i.resolv():
+                        r.append(self.indentation+j)
+            else:
+                sys.stderr.write("<Code: "+self.name+" does not exists\n")
+            return r
 
 class Paragraph:
     def __init__(self):
         self.line = ""
         self.content = []
+        self.type = "paragraph"
     def append(self, line):
         for i in line.split(" "):
             self.line += u" "+i
@@ -272,7 +390,39 @@ class Paragraph:
             r += i.formatText(length)
         t2 = []
         l = u""
-        for i in r.split(" "):
+        split = []
+        mode = "text"
+        escape = False
+        word = u""
+        for i in r:
+            if escape:
+                word += i
+                escape = False
+            elif i == "\\":
+                word += i
+                escape = True
+            elif mode == "link":
+                word += i
+                if i == "]":
+                    mode = "text"
+            elif mode == "code":
+                word += i
+                if i == ">":
+                    mode = "text"
+            elif i == "<":
+                word += i
+                mode = "code"
+            elif i == "[":
+                word += i
+                mode = "link"
+            elif i == " ":
+                split.append(word)
+                word = u""
+            else:
+                word += i
+        split.append(word)
+
+        for i in split:
             if len(l)+len(i)+1 < length:
                 l += i+" "
             else:
@@ -286,11 +436,13 @@ class Paragraph:
         if not prefixed:
             r = u"\n\n"+r
         return r
-    def outputHTML(self):
-        r = u"<p>"
+    def outputHTML(self, prefixed = False):
+        r = u""
         for i in self.content:
-            r += i.outputHTML()+" "
-        return r+"</p>"
+            r += i.outputHTML()
+        if not prefixed:
+            r = u"<p>\n"+r+"</p>\n"
+        return r
     def important(self):
         return len(self.line) > 0
     def parse(self):
@@ -364,7 +516,7 @@ class Paragraph:
             elif c == "(":
                 mode.append(self.Bracket())
             elif c == ")" and mode[-1].type == "bracket":
-                if self.line[i+1] != "[":
+                if i < len(self.line)-1 and self.line[i+1] != "[":
                     mode = self.parseChange(mode)
             elif c == "<":
                 mode.append(self.Code())
@@ -405,7 +557,7 @@ class Paragraph:
             debugDisplay("text", deep, self.content)
         def formatText(self, length):
             return escape(self.content)
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             return self.content
 
     class Bold:
@@ -425,7 +577,7 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "**"+r+"**"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             r = u""
             for i in self.content:
                 r += i.outputHTML()
@@ -448,7 +600,7 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "//"+r+"//"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             r = u""
             for i in self.content:
                 r += i.outputHTML()
@@ -471,7 +623,7 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "__"+r+"__"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             r = u""
             for i in self.content:
                 r += i.outputHTML()
@@ -494,7 +646,7 @@ class Paragraph:
             for i in self.content:
                 r += i.formatText(length)
             return "--"+r+"--"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             r = u""
             for i in self.content:
                 r += i.outputHTML()
@@ -518,11 +670,13 @@ class Paragraph:
                 r += i.formatText(length)
             r += ")"
             return r
-        def outputHTML(self):
+        def outputHTML(self, inlink = False):
             r = u""
             for i in self.content:
                 r += i.outputHTML()
-            return "("+r+")"
+            if not inlink:
+                r = "("+r+")"
+            return r
 
     class Code:
         def __init__(self):
@@ -543,29 +697,40 @@ class Paragraph:
             else:
                 lang = "<"+self.lang+">"
             return "<"+lang+escape(self.content)+">"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             if self.lang == None:
                 lang = ""
+                language = DOCUMENT_LANGUAGE
             else:
+                language = self.lang
                 lang = "<span>"+self.lang+"</span>"
-            return "<span class=\"code_span\">&lt;"+self.content+"&gt;</span>"
+            try:
+                lexer = get_lexer_by_name("python", stripall=True)
+            except pygments.util.ClassNotFound:
+                lexer = get_lexer_by_name("text", stripall=True)
+            formatter = HtmlFormatter(cssclass="source", nowrap = True)
+            result = highlight(self.content, lexer, formatter).strip()
+            return result
 
     class URLRef:
         def __init__(self):
+            global URLREF
             self.type = "urlref"
             self.content = Paragraph.Text()
-            self.ref = None
+            self.ref = URLREF
+            URLREF += 1
         def debugDisplay(self, deep):
             debugDisplay("urlref", deep)
             self.content.debugDisplay(deep+1)
         def formatText(self, length):
             return self.content.formatText(length)+"[..]"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
+            global FOOTURL
             if self.ref == None:
                 ref = "#"
             else:
-                ref = self.ref.url
-            return "<a href=\""+ref+"\" target=\"about:blank\">"+self.content.outputHTML()+"</a>"
+                ref = FOOTURL[self.ref].url
+            return "<a href=\""+ref+"\" target=\"about:blank\">"+self.content.outputHTML(True)+"</a>"
 
     class Link:
         def __init__(self):
@@ -579,8 +744,8 @@ class Paragraph:
             self.content.debugDisplay(deep+1)
         def formatText(self, length):
             return self.content.formatText(length)+"["+self.name+"]"
-        def outputHTML(self):
-            return "<a href=\"#"+self.name+"\">"+self.content.outputHTML()+"</a>"
+        def outputHTML(self, inlink = None):
+            return "<a href=\"#"+self.name.replace(" ", "%20")+"\">"+self.content.outputHTML(True)+"</a>"
 
     class Anchor:
         def __init__(self):
@@ -594,23 +759,25 @@ class Paragraph:
             self.content.debugDisplay(deep+1)
         def formatText(self, length):
             return self.content.formatText(length)+"[="+self.name+"]"
-        def outputHTML(self):
-            return "<a name=\""+self.name+"\">"+self.content.outputHTML()+"</a>"
+        def outputHTML(self, inlink = None):
+            return "<a id=\""+self.name.replace(" ", "%20")+"\">"+self.content.outputHTML()+"</a>"
 
     class NoteRef:
         def __init__(self):
+            global NOTEREF
             self.type = "noteref"
-            self.ref = None
+            NOTEREF += 1
+            self.ref = NOTEREF
         def debugDisplay(self, deep):
             debugDisplay("noteref", deep)
         def formatText(self, length):
             return "*"
-        def outputHTML(self):
+        def outputHTML(self, inlink = None):
             if self.ref != None:
-                ref = self.ref.count
+                ref = self.ref
             else:
                 ref = "0"
-            return "<a href=\"#ref"+ref+"\" name=\"toref"+ref+"\"><exp>"+ref+"</exp></a>"
+            return "<a href=\"#ref"+str(ref)+"\" id=\"toref"+str(ref)+"\"><sup>"+str(ref)+"</sup></a>"
 
     class Escape:
         def __init__(self):
@@ -620,6 +787,7 @@ class OrderedList:
     def __init__(self, line):
         self.content = [line]
         self.pars = []
+        self.type = "ordered list"
     def append(self, line):
         self.content.append(line.strip())
     def debugDisplay(self, deep):
@@ -650,7 +818,7 @@ class OrderedList:
                     i = i[1:]
                 r += " ' "+i+"\n"
         return r+"\n"
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         r = u"<ol>"
         for par in self.pars:
             r += "<li>"+par.outputHTML()+"</li>"
@@ -660,6 +828,7 @@ class UnorderedList:
     def __init__(self, line):
         self.content = [line]
         self.pars = []
+        self.type = "unordered list"
     def append(self, line):
         self.content.append(line.strip())
     def debugDisplay(self, deep):
@@ -690,7 +859,7 @@ class UnorderedList:
                     i = i[1:]
                 r += " ' "+i+"\n"
         return r+"\n"
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         r = u"<ul>"
         for par in self.pars:
             r += "<li>"+par.outputHTML()+"</li>"
@@ -698,9 +867,12 @@ class UnorderedList:
 
 class FootNote:
     def __init__(self, line):
+        global FOOTNOTE
         self.content = [line]
         self.pars = Documentation()
-        self.count = 0
+        FOOTNOTE.append(self)
+        self.count = len(FOOTNOTE)
+        self.type = "footnote"
     def append(self, line):
         self.content.append(line)
     def debugDisplay(self, deep):
@@ -720,15 +892,18 @@ class FootNote:
         for i in pars[1:]:
             r += "    " +i
         return " "+r.strip()+"\n"
-    def outputHTML(self):
-        r = u"<a href=\"#toref"+str(self.count)+"\" name=\"ref"+str(self.count)+"\">^</a> "
-        r += self.pars.outputHTML()
-        return r
+    def outputHTML(self, prefixed = None):
+        r = u"<p>\n<a href=\"#toref"+str(self.count)+"\" id=\"ref"+str(self.count)+"\">^ "+str(self.count)+":</a> "
+        r += self.pars.outputHTML(True)
+        return r+"<p>\n"
 
 
 class FootURL:
     def __init__(self, line):
+        global FOOTURL
         self.url = line[3:].strip()
+        FOOTURL.append(self)
+        self.type = "footurl"
     def append(self, line):
         self.url += line.strip()
     def debugDisplay(self, deep):
@@ -747,13 +922,14 @@ class FootURL:
                 r += "\n    "
                 count = 0
         return r+"\n"
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         return ""
 
 class Warn:
     def __init__(self, line):
         self.content = [line]
         self.pars = Documentation()
+        self.type = "warn"
     def append(self, line):
         self.content.append(line)
     def debugDisplay(self, deep):
@@ -782,13 +958,14 @@ class Warn:
         for i in lines:
             r += INDENT + "/!\\ "+i.ljust(length - MARGINS*2 - 8)+" /!\\\n"
         return r
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         r = "<div class=\"warning\">"+self.pars.outputHTML()+"</div>"
         return r
 
 class Image:
     def __init__(self, line):
         self.name = line
+        self.type = "image"
     def debugDisplay(self, deep):
         i = self.name
         debugDisplay("image", deep, i)
@@ -798,14 +975,78 @@ class Image:
         self.name = self.name[6:].strip()
     def formatText(self, length, prefixed = None):
         return "~Image "+self.name+"\n"
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         img = open(self.name).read()
         img = base64.b64encode(img)
-        return "<img src=\"data:image/*;base64,"+img+"\">"
+        name = path.basename(self.name)
+        return "<div class=\"img\"><img src=\"data:image/*;base64,"+img+"\" alt=\""+name+"\"></div>"
+
+class Remain:
+    def __init__(self, line):
+        global REFCOUNT
+        self.name = line
+        self.type = "remain"
+        REFCOUNT += 1
+        self.count = REFCOUNT
+    def debugDisplay(self, deep):
+        i = self.name
+        debugDisplay("remain", deep, i)
+    def important(self):
+        return len(self.name) > 0
+    def parse(self):
+        self.name = self.name[7:].strip()
+        CODE[self.name][0].references.append(self.count)
+    def formatText(self, length, prefixed = None):
+        return "~Remain "+self.name+"\n"
+    def outputHTML(self, prefixed = None):
+        r = u"<div class=\"remain\">&lt;Rappel du code <a href=\"#"+self.name.replace(" ", "%20")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        line = 1
+        for i in CODE[self.name]:
+            r += i.outputHTML(True, line)
+            line += len(i.resolved)
+        r += "&gt;</div>\n"
+        return r
+
+class Display:
+    def __init__(self, line):
+        global REFCOUNT
+        self.name = line
+        self.type = "display"
+        REFCOUNT += 1
+        self.count = REFCOUNT
+    def debugDisplay(self, deep):
+        i = self.name
+        debugDisplay("display", deep, i)
+    def important(self):
+        return len(self.name) > 0
+    def parse(self):
+        self.name = self.name[8:].strip()
+        CODE[self.name][0].references.append(self.count)
+    def formatText(self, length, prefixed = None):
+        return "~Display "+self.name+"\n"
+    def outputHTML(self, prefixed = None):
+        r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+self.name.replace(" ", "%20")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        if CODE[self.name][0].language == None:
+            format_language = DOCUMENT_LANGUAGE
+        else:
+            format_language = CODE[self.name][0].language
+        code = ""
+        for i in CODE[self.name]:
+            for j in i.resolved:
+                code += j+"\n"
+        try:
+            lexer = get_lexer_by_name(format_language.lower(), stripall=True)
+        except pygments.util.ClassNotFound:
+            lexer = get_lexer_by_name("text", stripall=True)
+        formatter = HtmlFormatter(linenos=True, cssclass="source")
+        r += highlight(code, lexer, formatter)
+        r += "&gt;</div>\n"
+        return r
 
 class Get:
     def __init__(self, line):
         self.name = line
+        self.type = "get"
     def debugDisplay(self, deep):
         i = self.name
         debugDisplay("get", deep, i)
@@ -815,12 +1056,13 @@ class Get:
         self.name = self.name[4:].strip()
     def formatText(self, length, prefixed = None):
         return "~Get "+self.name+"\n"
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         return ""
 
 class Include:
     def __init__(self, line):
         self.name = line
+        self.type = "include"
     def debugDisplay(self, deep):
         i = self.name
         debugDisplay("include", deep, i)
@@ -830,7 +1072,7 @@ class Include:
         self.name = self.name[8:].strip()
     def formatText(self, length, prefixed = None):
         return "~Include "+self.name+"\n"
-    def outputHTML(self):
+    def outputHTML(self, prefixed = None):
         return "<pre>"+codecs.open(self.name, 'r', encoding = "utf-8").read()+"</pre>"
 
 class TextBlock:
@@ -900,12 +1142,24 @@ class TextBlock:
                     block.append(element)
                 block.append(Include(line))
                 element = Paragraph()
+            elif begin(line, "~remain"):
+                mode = "remain"
+                if element.important():
+                    block.append(element)
+                block.append(Remain(line))
+                element = Paragraph()
+            elif begin(line, "~display"):
+                mode = "display"
+                if element.important():
+                    block.append(element)
+                block.append(Display(line))
+                element = Paragraph()
             elif begin(line, "/!\\") and mode != "warn":
                 mode = "warn"
                 if element.important():
                     block.append(element)
                 element = Warn(line)
-            elif mode in ["image", "get", "include", "ordered list", "unordered list"]:
+            elif mode in ["image", "get", "include", "remain", "display", "ordered list", "unordered list"]:
                 mode = "par"
                 if element.important():
                     block.append(element)
@@ -965,10 +1219,11 @@ class Documentation:
                 text += i+"\n"
             old = i.strip()
         return text
-    def outputHTML(self):
+    def outputHTML(self, prefixed = False):
         r = u""
         for i in self.pars:
-            r += i.outputHTML()
+            if i.type != "footnote":
+                r += i.outputHTML(prefixed)
         return r
 
 
@@ -1008,10 +1263,10 @@ class Title:
         r += "</title>\n"
         return r
     def outputHTML(self):
-        r = u"<div class=\"title\">\n"
+        r = u"<header>\n"
         for i in self.name:
             r += "\t<div>"+i+"</div>\n"
-        r += "</div>\n"
+        r += "</header>\n"
         return r
 
 class Introduction:
@@ -1067,6 +1322,10 @@ class Introduction:
         for i in self.content:
             r += i.outputHTML()
         return r
+    def resolv(self):
+        for i in self.content:
+            if i.type == "code":
+                i.resolv()
 
 class Authors:
     def __init__(self):
@@ -1089,6 +1348,11 @@ class Authors:
         for i in self.names:
             r += "<span>"+i+"</span>"
         return r+"</div>"
+    def outputHTMLMeta(self):
+        r = "<meta name=\"author\" content=\""
+        for i in self.names:
+            r += i+", "
+        return r[:-2]+"\">\n"
 
 
 class Document:
@@ -1141,6 +1405,7 @@ class Document:
 
     def parseStructure(self, level = 0):
         """ Place les lignes dans la structure du document. """
+        global DOCUMENT_LANGUAGE
         mode = "intro"
         introduction = True
         abstract = []
@@ -1193,6 +1458,7 @@ class Document:
                     mode = "code type"
                     line = sline[5:].strip()
                     self.code_type = line
+                    DOCUMENT_LANGUAGE = line
                 elif sline.lower() == "~abstract~":
                     mode = "beginabstract"
                     self.abstract = Document()
@@ -1337,23 +1603,132 @@ class Document:
                     text += i+"\n"
                 old = i.strip()
         return text
-    def outputHTML(self, top = True):
+    def outputHTML(self, top = True, ebook = False):
         r = u""
         if top:
-            r += u"<!doctype html><head><meta charset=\"utf-8\"><style>div{border: 1px solid red; margin: 10px;}</style>"
+            r += u"""<!doctype html>
+                     <head>
+                     <meta charset=\"utf-8\">
+                     <style>
+                        body {
+                            text-align: justify;
+                  """
+            if not ebook:
+                r += u"""
+                            position: absolute;
+                            width: 70%;
+                            left: 15%;
+                            top: 20px;
+                            padding-bottom: 100px;
+                      """
+            r += u"""
+                        }
+                        sup {
+                            font-size: 0.7em;
+                        }
+                        header {
+                            border: 2px solid black;
+                            padding: 40px;
+                            margin-bottom: 40px;
+                        }
+                        header div {
+                            text-align: center;
+                            font-size: 3em;
+                        }
+                        .authors {
+                            font-style: italic;
+                            text-align: center;
+                            margin: 5px;
+                        }
+                        .codetype {
+                            color: #888;
+                            text-align: center;
+                            margin: 5px;
+                        }
+                        .abstract {
+                        """
+            if not ebook:
+                r += u"""
+                            width: 90%;
+                            position: relative;
+                            left: 5%;
+                      """
+            r += u"""
+                            margin-top: 40px;
+                            margin-bottom: 40px;
+                        }
+                        .abstract h1 {
+                            text-align: center;
+                        }
+                        .warning {
+                            border: 2px solid #88f;
+                            padding: 5px;
+                            padding-left: 20px;
+                            padding-right: 20px;
+                            border-radius: 10px 10px;
+                            background-color: #ddf;
+                            margin-bottom: 10px;
+                        }
+                        .bold {
+                            font-weight: bold;
+                        }
+                        .italic {
+                            font-style: italic;
+                        }
+                        .underline {
+                            text-decoration: underline;
+                        }
+                        .overline {
+                            text-decoration: line-through;
+                        }
+                        .img {
+                            text-align: center;
+                        }
+                        .toc {
+                  """
+            if not ebook:
+                r += u"""
+                            width: 70%;
+                            position: relative;
+                            left: 15%;
+                     """
+            r += u"""
+                            padding: 20px;
+                            border: 2px solid black;
+                            border-radius: 2px;
+                            margin-bottom: 40px;
+                        }
+                        .toc h1 {
+                            text-align: center;
+                        }
+                        pre {
+                            margin: 0px;
+                        }
+                        .codechunk {
+                            border: 1px solid #ffa;
+                            border-radius: 10px;
+                            background-color: #ffb;
+                            margin: 10px;
+                            padding: 10px;
+                        }
+                     """+ HtmlFormatter().get_style_defs() +"""
+                     </style>
+                     """
             if self.title.important():
                 r += self.title.outputHTMLTitle()+"\n"
+            if self.authors.important():
+                r += self.authors.outputHTMLMeta()
             r += u"</head><body>\n"
         if self.title.important():
             r += self.title.outputHTML()+"\n"
         if self.name != None:
             r += "\n"
             p = self.getPosition()[1:]
-            r += "<h"+str(len(p))+">"
+            r += "<h"+str(len(p))+"><a id=\"sec"+self.name.replace(" ", "%20")+"\">"
             for i in p:
                 r += str(i)+"."
             r += " "+self.name
-            r += "</h"+str(len(p))+">"
+            r += "</a></h"+str(len(p))+">"
             r += "\n"
         r += "\n"
         if self.authors.important():
@@ -1367,6 +1742,10 @@ class Document:
             r += "\n"+u"<"+h+u">Résumé</"+h+">"+"\n\n"
             r += self.abstract.outputHTML(False)
             r += "</div>"
+        if top:
+            r += u"<div class=\"toc\"><h1>Table des matières</h1>\n"
+            r += self.outputHTMLToc()
+            r += "</div>"
         if self.introduction.important():
             r += "\n"
             r += self.introduction.outputHTML()
@@ -1375,13 +1754,51 @@ class Document:
             r += "\n"
             r += section.outputHTML(False)+"\n\n"
         if top:
+            r += "<hr>"
+            for i in FOOTNOTE:
+                r += i.outputHTML()
             r += "</body></html>"
         return r
+    def outputHTMLToc(self):
+        r = u""
+        r += "<ol>\n"
+        for i in self.sections:
+            if i.name != None:
+                r += "<li>"
+                r += "<a href=\"#sec"+i.name.replace(" ", "%20")+"\">"+i.name+"</a>\n"
+                r += i.outputHTMLToc()
+                r += "</li>"
+        r += "</ol>\n"
+        return r
+    def resolv(self):
+        if self.abstract != None:
+            self.abstract.resolv()
+        if self.introduction.important():
+            self.introduction.resolv()
+        for section in self.sections:
+            section.resolv()
+    def extractCode(self):
+        global CODE
+        srcdir = path.join(os.getcwd(), "src")
+        for i in CODE:
+            if not CODE[i][0].referenced:
+                filename = path.join(srcdir, i)
+                if not path.exists(path.dirname(filename)):
+                    os.makedirs(path.dirname(filename))
+                codecs.open(filename, "w", encoding="utf-8").write(CODE[i][0].outputCode())
 
 d = Document()
-d.fromFile(sys.argv[1])
-d.parse()
-print d.formatText()
-#print d.outputHTML()
-#d.debugDisplay()
+filename = sys.argv[1]
+if len(sys.argv) > 2:
+    d.fromOneFile(filename)
+    d.parse()
+    d.resolv()
+    codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
+else:
+    project = path.basename(filename)
+    d.fromFile(filename)
+    d.parse()
+    d.resolv()
+    d.extractCode()
+    codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
 

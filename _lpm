@@ -251,9 +251,9 @@ class Code:
             r = u""
         code = u""
         try:
-            lexer = get_lexer_by_name(format_language.lower(), stripall=True)
+            lexer = get_lexer_by_name(format_language.lower())
         except pygments.util.ClassNotFound:
-            lexer = get_lexer_by_name("text", stripall=True)
+            lexer = get_lexer_by_name("text")
         old_line = line
         formatter = HtmlFormatter(linenos=True, linenostart = line, cssclass="source")
         for i in self.code:
@@ -705,9 +705,9 @@ class Paragraph:
             else:
                 language = self.lang
             try:
-                lexer = get_lexer_by_name("python", stripall=True)
+                lexer = get_lexer_by_name("python")
             except pygments.util.ClassNotFound:
-                lexer = get_lexer_by_name("text", stripall=True)
+                lexer = get_lexer_by_name("text")
             formatter = HtmlFormatter(cssclass="source", nowrap = True)
             result = highlight(self.content, lexer, formatter).strip()
             return result

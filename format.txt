@@ -1,4 +1,6 @@
 
+[=description du format LPM] 
+
 = Le format de balisage LPM
 
 == Les bases de la syntaxe
@@ -163,13 +165,198 @@ Ce qui donne le code suivant :
 
 === Le résumé
 
+On débute  le  résumé   avec   la   commande  <<lpm>\~abstract\~>.  Nous
+écrivons ensuite une suite de  paragraphes,  puis fermons le résumé avec
+la commande <<lpm>\~\~\~>. 
+
+<Code (lpm): 
+~abstract~
+Ceci est un résumé.
+
+Avec **deux** paragraphes !
+~~~
+>
+
+Une fois formaté,  la commande <<lpm>\~Abstract\~>  se retrouve centrée,
+la première lettre en  capitale.  Le  <<lpm>\~\~\~>  qui ferme le résumé
+est lui aussi centré.  Les lignes des  blocs de textes du résumé sont un
+peu moins longues, et indentée, pour le résultat suivant : 
+
+<Code (lpm): 
+                               ~Abstract~
+
+    Ceci est un résumé.
+
+    Avec **deux** paragraphes !
+
+                                  ~~~
+>
+
 === La licence
+
+Le format de  la  licence  est  calqué  sur  celui  du  résumé,  mais en
+utilisant  la  commande  <<lpm>\~License\~>   plutôt   que  la  commande
+<<lpm>\~Abstract\~>.  Notez que  « License »  est  écrit  en anglais, et
+que contrairement au français,  le  //\[s\]//  se  note avec un **s** et
+non un **c**. 
+
+<Code (lpm): 
+                               ~License~
+
+    __**Licence Récursive LRL**__
+
+    //Copyright Tartempion © 1842//
+
+    Vous  avez  la  permission  d'utiliser,  copier,  modifier et/ou
+    distribuer ce travail aussi longtemps que :
+     # Vous respectez la licence
+
+    Cette licence est soumise à la licence LRL
+
+                                  ~~~
+>
 
 === Le ou les auteurs
 
+Il est possible de préciser  le  ou  les  auteurs du document grâce à la
+commande  <<lpm>\~authors>.  Cette commande  peut  apparaître  plusieurs
+fois,  et les auteurs seront regroupés et affichés sous le titre.  Si la
+commande apparaît plusieurs fois,  après  reformatage du document,  elle
+apparaîtra toujours plusieurs  fois.  Nous  partons  du  principe que si
+vous avez préféré  utiliser  plusieurs  fois  la  commande,  il  y a une
+raison. 
+
+<Code (lpm): 
+~authors Ludovic Broutille et Melanine Balzac.
+>
+
 === Le langage de programmation du projet
 
+Des blocs de code  seront  insérés  tout  au  long du document.  Ceux-ci
+peuvent être mis en valeur  par  la coloration syntaxique,  mais pour ce
+faire,  nous devons connaître le langage de programmation utilisé.  Nous
+pouvons définir ce langage au  cas  par cas,  mais pour nous épargner de
+le faire  à  chaque  fois,  nous  pouvons  aussi  définir  un langage de
+programmation par  défaut,  correspondant  au  langage  le  plus utilisé
+dans le document. Pour cela, nous utilisons la commande <<lpm>\~code>. 
+
+<Code (lpm): 
+~code haskell
+>
+
 == Formatage des paragraphes
+
+Comme   dit    dans    la    partie    (__Le    format    de    balisage
+LPM__)[description du format  LPM],  un  paragraphe  est définit par une
+suite de lignes non-vides.  Un paragraphe  commence  à la première ligne
+non-vide rencontrée,  et s'arrête dès  qu'il rencontre une ligne vide ou
+une commande.  Les  lignes   succeptibles   de   marquer   la  fin  d'un
+paragraphe sont : 
+ - les lignes formattées comme une liste,
+ - les lignes  contenant   une   commande   du   type   <<lpm>\~include>
+ ' (commençant par un <<lpm>\~>),
+ - les lignes marquant le début d'un bloc de code,
+ - les lignes marquant une url ou une note de bas de page,
+ - les lignes marquant un début de paragraphe important,
+ - les lignes marquant un début de section (débutant par <<lpm>\=>),
+ - les lignes vides.
+
+=== Formatage du texte
+
+À l'intérieur du paragraphe,  il est  possible d'utiliser des caractères
+qui vont  mettre  le   texte   **en   gras**,   //en   italique//,  __en
+souligné__, et même --en barré--. 
+
+Le paragraphe précédent ressemble donc à ceci : 
+
+<Code (lpm): 
+À l'intérieur du paragraphe,  il est  possible d'utiliser des caractères
+qui vont  mettre  le   texte   **en   gras**,   //en   italique//,  __en
+souligné__, et même --en barré--.
+>
+
+=== Liens et références
+
+Il est aussi possible  d'ajouter  des  liens.  Un  lien  est  noté entre
+crochets,  et s'applique au mot qui  précède,  ou bien au groupe contenu
+dans les  parenthèses  qui  précède  (auquel  cas  les  parenthèses sont
+supprimées du texte dans le  document généré).  Un lien contenant un mot
+est un lien intra-document.  Les liens  vers  l'exterieur sont notés par
+deux points,  puis rappelés  à  la  fin  du  paragraphe avec la commande
+<<lpm>\..:>.  Les liens dont le mot commence par  <<lpm>\=>  ne sont pas
+des liens,  mais des  ancres  vers  lesquelles  on peut pointer.  Ce qui
+donne : 
+
+<Code (lpm): 
+Un (lien vers l'exterieur)[..], un lien vers une ancre[une ancre].
+..:http://example.org/
+
+Du texte.
+
+L'ancre[=une ancre] en question.
+>
+
+Comme les liens vers  l'exterieur,  il  est  possible de créer des notes
+de bas de page.  Pour cela,  on  place une étoile  (seule,  deux étoiles
+correspondant  à  la  mise  en  gras)  à  côté  du  mot  que  l'on  veut
+commenter.  La   commande   <<lpm>\*:>   contiendra   le  commentaire en
+question,  et  sera  suivit  sur  la  même  ligne  et  les  suivantes du
+paragraphe contenant le commentaire. 
+
+<Code (lpm): 
+mon texte avec* une note de bas de page.
+*: //avec// est un anagramme de //cave//.
+>
+
+    /!\ Pour savoir quelle  note  de  bas  de page ou quelle URL /!\
+    /!\ correspond à  une  référence,  le  programme  assigne un /!\
+    /!\ nombre à chaque note de  bas  de  page ou chaque URL (il /!\
+    /!\ les compte),  ainsi qu'un  nombre  à  chaque  référence. /!\
+    /!\ Les références vers  une  URL  vont  pointer  vers l'URL /!\
+    /!\ auquel le même nombre  a  été  assigné,  et de même pour /!\
+    /!\ les notes de bas de  page.  Si  vous oubliez une note de /!\
+    /!\ bas de  page,   il   y   aura   un   décalage   dans les /!\
+    /!\ références !                                             /!\
+    /!\                                                          /!\
+    /!\ Il est considéré comme  une  bonne pratique de mettre la /!\
+    /!\ note ou l'URL  directement  derrière le paragraphe qui y /!\
+    /!\ fait référence,  mais  ce  n'est  pas  obligé.  Une note /!\
+    /!\ peut même préceder  le  texte  qui s'y réfère,  tant que /!\
+    /!\ le compte  (l'ordre  des  notes)   n'est  pas  perturbé. /!\
+    /!\ Toutefois, ce n'est pas vraiment conseillé.              /!\
+
+=== Les paragraphes importants
+
+Il peut être utile de mettre  en  avant un paragraphe,  comme le dernier
+paragraphe de la section précédente.  Pour celà,  on utilise la commande
+<<lpm>/!\\>.  Cette commande va  considérer  tout  le  paragraphe qui la
+suit comme  un  paragraphe  important.  Il  est  possible  de mettredeux
+paragraphes dans un même  bloc  important  en  plaçant la commande aussi
+sur la ligne vide qui les sépare.  Enfin,  dans la forme complète de ces
+blocs  (car  oui,  c'est  un  bloc   de   texte  qui  est  marqué  comme
+important),  chaque  ligne  du  bloc  commence  par  cette  commande, et
+termine aussi par  celle-ci.  Comme  les  résumés  et licences,  le bloc
+sera aussi un peu plus court et indenté. Ainsi, ce code : 
+
+<Code (lpm): 
+/!\Un paragraphe
+important
+/!\
+/!\Et un autre paragraphe important
+
+/!\Les deux paragraphes précédents sont dans le même bloc, et celui-ci 
+dans un nouveau bloc important.
+>
+
+Deviendra : 
+<code (lpm):
+    /!\ Un paragraphe important                                  /!\
+    /!\                                                          /!\
+    /!\ Et un autre paragraphe important                         /!\
+
+    /!\ Les deux  paragraphes  précédents  sont   dans  le  même /!\
+    /!\ bloc, et celui-ci dans un nouveau bloc important.        /!\
+>
 
 == Formatage des listes
 

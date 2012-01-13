@@ -977,10 +977,14 @@ class Image:
     def formatText(self, length, prefixed = None):
         return "~Image "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        img = open(self.name).read()
-        img = base64.b64encode(img)
-        name = path.basename(self.name)
-        return "<div class=\"img\"><img src=\"data:image/*;base64,"+img+"\" alt=\""+name+"\"></div>"
+        try:
+            img = open(self.name).read()
+            img = base64.b64encode(img)
+            name = path.basename(self.name)
+            return "<div class=\"img\"><img src=\"data:image/*;base64,"+img+"\" alt=\""+name+"\"></div>"
+        except IOError:
+            sys.stderr.write(u"Fichier non trouvé :"+self.name+"\n")
+            return "<div>Image not found</div>"
 
 class Remain:
     def __init__(self, line):
@@ -1074,7 +1078,11 @@ class Include:
     def formatText(self, length, prefixed = None):
         return "~Include "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        return "<pre>"+codecs.open(self.name, 'r', encoding = "utf-8").read()+"</pre>"
+        try:
+            return "<pre>"+codecs.open(self.name, 'r', encoding = "utf-8").read()+"</pre>"
+        except IOError:
+            sys.stderr.write(u"Fichier non trouvé : "+self.name+"\n")
+            return "<pre>File not found</pre>"
 
 class TextBlock:
     def __init__(self):
@@ -1380,14 +1388,18 @@ class Document:
         self.type = "document"
         filename = path.abspath(filename)
         basedir = path.dirname(filename)
-        f = codecs.open(filename, 'r', encoding="utf-8")
-        lines = f.readlines()
-        d = Document()
-        d.fromOneFile(filename)
-        d.parse()
-        CODE = {}
-        codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
-        f.close()
+        try:
+            f = codecs.open(filename, 'r', encoding="utf-8")
+            lines = f.readlines()
+            d = Document()
+            d.fromOneFile(filename)
+            d.parse()
+            CODE = {}
+            codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
+            f.close()
+        except IOError:
+            sys.stderr.write(u"Fichier non trouvé : "+filename+"\n")
+            lines = []
         for i in lines:
             if begin(i, "~get"):
                 filename = i.strip()[4:].strip()
@@ -1406,9 +1418,13 @@ class Document:
         """ Récupère le code source d'un fichier (sans interpreter ~Get) """
         filename = path.abspath(filename)
         basedir = path.dirname(filename)
-        f = codecs.open(filename, 'r', encoding="utf-8")
-        lines = f.readlines()
-        f.close()
+        try:
+            f = codecs.open(filename, 'r', encoding="utf-8")
+            lines = f.readlines()
+            f.close()
+        except IOError:
+            sys.stderr.write(u"Fichier non trouvé : "+filename+"\n")
+            lines = []
         for i in lines:
             self.lines.append(i)
 

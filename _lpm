@@ -890,7 +890,7 @@ class FootNote:
         pars = self.pars.formatText(length-4, True).split("\n")
         r = "*: "+pars[0]+"\n"
         for i in pars[1:]:
-            r += "    " +i
+            r += "    " +i+"\n"
         return " "+r.strip()+"\n"
     def outputHTML(self, prefixed = None):
         r = u"<p>\n<a href=\"#toref"+str(self.count)+"\" id=\"ref"+str(self.count)+"\">^ "+str(self.count)+":</a> "

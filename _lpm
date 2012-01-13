@@ -227,13 +227,13 @@ class Code:
             before = u""
             after = u""
         else:
-            name = "<span class=\"\codename\"><a id=\""+self.name.replace(" ", "%20")+str(self.index)+"\">"+self.name+"</a></span>"
+            name = "<span class=\"\codename\"><a id=\""+self.name.replace(" ", "_")+str(self.index)+"\">"+self.name+"</a></span>"
             if self.index != 1:
-                before = u"<a href=\"#"+self.name.replace(" ", "%20")+str(self.index-1)+"\"> &lt;-</a>"
+                before = u"<a href=\"#"+self.name.replace(" ", "_")+str(self.index-1)+"\"> &lt;-</a>"
             else:
                 before = u""
             if self.index < len(CODE[self.name]):
-                after = u"<a href=\"#"+self.name.replace(" ", "%20")+str(self.index+1)+"\"> -&gt;</a>"
+                after = u"<a href=\"#"+self.name.replace(" ", "_")+str(self.index+1)+"\"> -&gt;</a>"
             else:
                 after = u""
         references = u" "
@@ -350,7 +350,7 @@ class Code:
             r += "&lt;<a "
             if not remain:
                 r += "id=\"coderef"+str(self.count)+"\" "
-            r += "href=\"#"+self.name.replace(" ", "%20")+"1\">"
+            r += "href=\"#"+self.name.replace(" ", "_")+"1\">"
             r += self.name.replace("<", "&lt;")
             r += "</a></pre></td></tr></tbody></table>\n"
             return r
@@ -745,7 +745,7 @@ class Paragraph:
         def formatText(self, length):
             return self.content.formatText(length)+"["+self.name+"]"
         def outputHTML(self, inlink = None):
-            return "<a href=\"#"+self.name.replace(" ", "%20")+"\">"+self.content.outputHTML(True)+"</a>"
+            return "<a href=\"#"+self.name.replace(" ", "_")+"\">"+self.content.outputHTML(True)+"</a>"
 
     class Anchor:
         def __init__(self):
@@ -760,7 +760,7 @@ class Paragraph:
         def formatText(self, length):
             return self.content.formatText(length)+"[="+self.name+"]"
         def outputHTML(self, inlink = None):
-            return "<a id=\""+self.name.replace(" ", "%20")+"\">"+self.content.outputHTML()+"</a>"
+            return "<a id=\""+self.name.replace(" ", "_")+"\">"+self.content.outputHTML()+"</a>"
 
     class NoteRef:
         def __init__(self):
@@ -1003,7 +1003,7 @@ class Remain:
     def formatText(self, length, prefixed = None):
         return "~Remain "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        r = u"<div class=\"remain\">&lt;Rappel du code <a href=\"#"+self.name.replace(" ", "%20")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        r = u"<div class=\"remain\">&lt;Rappel du code <a href=\"#"+self.name.replace(" ", "_")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
         line = 1
         for i in CODE[self.name]:
             r += i.outputHTML(True, line)
@@ -1029,7 +1029,7 @@ class Display:
     def formatText(self, length, prefixed = None):
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+self.name.replace(" ", "%20")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+self.name.replace(" ", "_")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
         if CODE[self.name][0].language == None:
             format_language = DOCUMENT_LANGUAGE
         else:
@@ -1807,7 +1807,7 @@ class Document:
         if self.name != None:
             r += "\n"
             p = self.getPosition()[1:]
-            r += "<h"+str(len(p))+"><a id=\"sec"+self.name.replace(" ", "%20")+"\">"
+            r += "<h"+str(len(p))+"><a id=\"sec"+self.name.replace(" ", "_")+"\">"
             for i in p:
                 r += str(i)+"."
             r += " "+self.name
@@ -1852,7 +1852,7 @@ class Document:
         for i in self.sections:
             if i.name != None:
                 r += "<li>"
-                r += "<a href=\"#sec"+i.name.replace(" ", "%20")+"\">"+i.name+"</a>\n"
+                r += "<a href=\"#sec"+i.name.replace(" ", "_")+"\">"+i.name+"</a>\n"
                 r += i.outputHTMLToc()
                 r += "</li>"
         r += "</ol>\n"

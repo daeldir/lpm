@@ -246,7 +246,7 @@ class Code:
             format_language = self.language
             language = " <span class=\"codelang\">("+self.language+")</span>"
         if not remain:
-            r = u"<div class=\"codechunk\">&lt;Code"+language+": "+name+before+after+references+"\n"
+            r = u"<div class=\"codechunk\"><div class=\"codehead\">Code"+language+": "+name+before+after+references+"</div>\n"
         else:
             r = u""
         code = u""
@@ -271,7 +271,7 @@ class Code:
         formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
         r += highlight(code, lexer, formatter)
         if not remain:
-            r += "&gt;</div>\n"
+            r += "</div>\n"
         return r
     def resolv(self):
         global CODE
@@ -701,11 +701,9 @@ class Paragraph:
             return "<"+lang+escape(self.content)+">"
         def outputHTML(self, inlink = None):
             if self.lang == None:
-                lang = ""
                 language = DOCUMENT_LANGUAGE
             else:
                 language = self.lang
-                lang = "<span>"+self.lang+"</span>"
             try:
                 lexer = get_lexer_by_name("python", stripall=True)
             except pygments.util.ClassNotFound:
@@ -1786,6 +1784,10 @@ class Document:
                             background-color: #ffb;
                             margin: 10px;
                             padding: 10px;
+                        }
+                        .codehead {
+                            background-color: #fda;
+                            padding: 3px;
                         }
                      """+ HtmlFormatter().get_style_defs() +"""
                      </style>

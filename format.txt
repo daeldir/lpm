@@ -1,0 +1,179 @@
+
+= Le format de balisage LPM
+
+== Les bases de la syntaxe
+
+Il existe plusieur type de  balises  dans  le  langage LPM.  Les balises
+légères,  destinées à formatter le texte, les commandes,  qui permettent
+d'effectuer  une  action  lors  de  la  génération  du document,  et les
+balises de bloc, qui premettent de définir des blocs de texte. 
+
+=== Les blocs
+
+La manière la plus basique de définir  un  bloc est de laisser une ligne
+vide entre deux blocs de texte : 
+
+<Code (lpm): 
+voici un bloc de texte
+
+et un second bloc de texte
+sur deux lignes
+
+et un troisième bloc de texte
+>
+
+On appelle ces blocs de texte  des paragraphes.  Lorsque le fichier sera
+reformatté,  les lignes de ces  blocs  seront  fusionnées si le résultat
+n'est  pas  trop  long.  Ainsi,   l'exemple  ci-dessus  deviendra  après
+formattage : 
+
+<Code (lpm): 
+voici un bloc de texte
+
+et un second bloc de texte sur deux lignes
+
+et un troisième bloc de texte
+>
+
+Le second bloc ne fait  plus  qu'une ligne.  Au contraire,  si une ligne
+est trop longue, un retour à la ligne sera inséré. 
+
+Il existe d'autres manières  de  définir  des  blocs.  Lorsque l'on crée
+une liste,  ou que l'on insère un bloc de code, on crée des blocs,  dont
+le comportement est bien entendu différent de celui des paragraphes. 
+
+=== Les commandes
+
+Les commandes  tiennent  sur  une  ligne.  Elles  marquent  la  fin d'un
+paragraphe,  même s'il n'y a pas  de  ligne  vide  entre elles et le-dit
+paragraphe.  Elles commencent souvent par le caractère  <<lpm>\~>*.  Une
+commande peut permettre de  définir  une donnée du document  (langage du
+code source,  auteurs…),  ou d'inclure un autre fichier dans ce fichier.
+Voici un exemple de commande : 
+
+<Code (lpm): 
+~code python
+
+ceci est un paragraphe
+~include test.txt
+>
+
+Dans cet exemple,  le paragraphe  ne  fusionne  pas avec la commande qui
+le suit,  même si  la  ligne  n'est  pas  trop grande.  En effet,  **une
+commande reste une commande, seule sur une ligne**. 
+ *: Mais  pas  toujours.   Les   commandes   relatives   aux  références
+    commencent en général par le  symbole  lié  à l'élément auquel elles
+    se réfèrent.
+
+=== Les balises légères
+
+Les balises légères  sont  des  balises  qui  se  trouvent à l'intérieur
+d'une ligne.  Il peut y  en  avoir  plusieurs  sur une seule ligne.  Les
+balises  légères   agissent   à   l'intérieur   d'un   paragraphe.  Elle
+permettent de mettre en gras,  insérer  des liens… Le tout sans dégrader
+le texte par un  surplus  de  caractères.  Voici  un  exemple de balises
+légères : 
+
+<Code (lpm): 
+Ceci est un **texte en gras** suivit d'une référence vers une note de 
+bas de page.*
+>
+
+=== La forme simple et la forme complète du langage
+
+Le langage de balisage a  pour  objectif  de  rendre  le document source
+agréable  à  lire.  Pour  cela,   les   caractères  sont  utilisés  pour
+« dessiner » les  décorations  du  texte.  Cette  manière  de  faire est
+esthétique, mais peu pratique à écrire à la main.  Aussi,  pour certains
+marquages,  il existe  une  forme  abrégée,  dite  « simple »,  qui sera
+transformée par  le  programme  en  forme complète,  plus « jolie ».  Le
+programme accepte en entrée indépendamment  l'une ou l'autre forme.  Par
+exemple,  nous marquons le titre  du  livre  de cette manière  (la forme
+simple) : 
+
+<Code (lpm): 
+**
+* Un titre
+**
+>
+
+<Code (lpm): 
+************
+* Un titre *
+************
+>
+
+Sachant que le programme finit par centrer les titres, ce qui donne : 
+
+<Code (lpm): 
+                            ************
+                            * Un titre *
+                            ************
+>
+
+Ces trois manières de noter  un  titre sont absolument équivalentes pour
+le programme, et n'existent que pour simplifier la vie du programmeur. 
+
+== Structure d'un document
+
+Un document possède un titre,  un ou plusieurs auteurs,  une licence, et
+un résumé.  En plus de cela,  il est composé de plusieurs sections,  qui
+permettent de structurer le document. 
+
+=== Le titre
+
+Le titre correspond au titre  du  document.  Il  doit se trouver au tout
+début de celui-ci.  Le titre  est  écrit  dans un cadre d'étoiles.  S'il
+fait plusieurs lignes,  le cadre a  largeur  de la plus grande ligne, et
+les autres lignes sont centrées : 
+
+<Code (lpm): 
+                ***************************************
+		*        Le titre du document :       *
+		*                                     *
+		* Ce document est un document de test *
+		*                                     *
+		***************************************
+>
+
+Il est possible de simplifier  le  titre,  lors  de la rédaction,  en le
+marquant de la sorte : 
+ - Une ligne contenant aux  moins  deux  étoiles,  sans autre caractères
+ ' (à part peut-être des espaces  au  début  et  à  la  fin de la ligne)
+ ' marque le début du titre.
+ - Après cela, les lignes commencent par une étoile,  puis le texte.  La
+ ' dernière étoile de la ligne  est  ignorée  (elle est considérée comme
+ ' faisant partie du cadre).  Si vous  voulez  avoir une ligne finissant
+ ' par une étoile  (en plus de celle du cadre),  vous devrez écrire deux
+ ' étoiles.
+ - Après toutes ces lignes,  une  nouvelle  ligne contenant deux étoiles
+ ' consécutives ou  plus,  et  sans  autre  caractères  marque la fin du
+ ' titre.
+
+Ce qui donne le code suivant : 
+
+<Code (lpm): 
+**
+* Le titre du document :
+*
+* Ce document est un document de test
+*
+**
+>
+
+=== Le résumé
+
+=== La licence
+
+=== Le ou les auteurs
+
+=== Le langage de programmation du projet
+
+== Formatage des paragraphes
+
+== Formatage des listes
+
+== Commandes d'inclusion de fichiers
+
+== Gestion du code
+

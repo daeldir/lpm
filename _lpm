@@ -1383,7 +1383,7 @@ class Document:
     def fromFile(self, file_name):
         """ Récupère le code source d'un fichier (interprète ~Get) et remplace
         les chemins de fichiers par leur chemin absolu. """
-        global CODE
+        global CODE, FOOTNOTE, URLREF, NOTEREF, FOOTURL, REFCOUNT
         self.type = "document"
         filename = path.abspath(file_name)
         basedir = path.dirname(filename)
@@ -1392,7 +1392,12 @@ class Document:
         d = Document()
         d.fromOneFile(filename)
         d.parse()
+        FOOTNOTE = []
+        NOTEREF = 0 
+        URLREF = 0
+        FOOTURL = []
         CODE = {}
+        REFCOUNT = 0
         codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
         f.close()
         for i in lines:

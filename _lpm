@@ -10,6 +10,7 @@ from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
+sys.stderr = codecs.getwriter("utf-8")(sys.stderr) 
 
 DEFAULT_LENGTH = 72
 INDENT = "    "
@@ -1381,32 +1382,32 @@ class Document:
         self.lines = []
         self.original_depth = 0
 
-    def fromFile(self, filename):
+    def fromFile(self, file_name):
         """ Récupère le code source d'un fichier (interprète ~Get) et remplace
         les chemins de fichiers par leur chemin absolu. """
         global CODE
         self.type = "document"
-        filename = path.abspath(filename)
+        filename = path.abspath(file_name)
         basedir = path.dirname(filename)
-        try:
-            f = codecs.open(filename, 'r', encoding="utf-8")
-            lines = f.readlines()
-            d = Document()
-            d.fromOneFile(filename)
-            d.parse()
-            CODE = {}
-            codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
-            f.close()
-        except IOError:
-            sys.stderr.write(u"Fichier non trouvé : "+filename+"\n")
-            lines = []
+        f = codecs.open(filename, 'r', encoding="utf-8")
+        lines = f.readlines()
+        d = Document()
+        d.fromOneFile(filename)
+        d.parse()
+        CODE = {}
+        codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
+        f.close()
         for i in lines:
             if begin(i, "~get"):
                 filename = i.strip()[4:].strip()
                 if filename != "":
-                    document = Document()
-                    document.fromFile(path.join(basedir, filename))
-                    self.lines += document.lines
+                    try:
+                        document = Document()
+                        document.fromFile(path.join(basedir, filename))
+                        self.lines += document.lines
+                    except IOError:
+                        sys.stderr.write(u"Fichier non trouvé : "+filename+"\n")
+                        self.lines.append(i)
             else:
                 if begin(i, "~include"):
                     i = "~include "+path.join(basedir, i[8:].strip())
@@ -1500,6 +1501,11 @@ class Document:
                         self.abstract.parseStructure(level+1)
                     else:
                         self.abstract.lines.append(line)
+                elif mode in ["endabstract", "endlicence"]:
+                    if introduction:
+                        mode = "intro"
+                    else:
+                        mode = "sectionpar"
                 elif sline.lower() == "~licence~":
                     mode = "beginlicence"
                     self.licence = Document()
@@ -1863,16 +1869,11 @@ class Document:
 
 d = Document()
 filename = sys.argv[1]
-if len(sys.argv) > 2:
-    d.fromOneFile(filename)
-    d.parse()
-    d.resolv()
-    codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
-else:
-    project = path.basename(filename)
-    d.fromFile(filename)
-    d.parse()
-    d.resolv()
-    d.extractCode()
-    codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
+project = path.basename(filename)
+d.fromFile(filename)
+d.parse()
+d.resolv()
+d.extractCode()
+codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
+#d.debugDisplay()
 

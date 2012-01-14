@@ -1029,12 +1029,12 @@ class Remain:
     def formatText(self, length, prefixed = None):
         return "~Remain "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        r = u"<div class=\"remain\">&lt;Rappel du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        r = u"<div class=\"codechunk\"><div class=\"codehead\">Rappel du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :</div>"
         line = 1
         for i in CODE[self.name]:
             r += i.outputHTML(True, line)
             line += len(i.resolved)
-        r += "&gt;</div>\n"
+        r += "</div>\n"
         return r
 
 class Display:
@@ -1057,7 +1057,7 @@ class Display:
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):
         global COLOR_ERRORS
-        r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        r = u"<div class=\"codechunk\"><div class=\"codehead\">Sortie du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :</div>"
         if CODE[self.name][0].language == None:
             format_language = DOCUMENT_LANGUAGE
         else:
@@ -1074,7 +1074,7 @@ class Display:
             lexer = get_lexer_by_name("text")
         formatter = HtmlFormatter(linenos=True, cssclass="source")
         r += highlight(code, lexer, formatter)
-        r += "&gt;</div>\n"
+        r += "</div>\n"
         return r
 
 class Get:

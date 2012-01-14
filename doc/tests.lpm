@@ -1,0 +1,68 @@
+= Un fichier pour tester le programme
+
+Nous  allons   ici   créer   un   document   permettant   de  tester les
+fonctionnalités du programme. 
+
+Ce document sera composé de  trois fichiers,  permettant ainsi de tester
+les commandes d'inclusion de fichier. 
+
+Le premier  fichier  sera  nommé  //test//  et  placé  dans  un  dossier
+//tests//.  Son titre tiendra sur  plusieurs  lignes afin de vérifier la
+génération de cadre autour de celui-ci. 
+
+<Code (lpm): tests/test
+**
+* Le titre du document :
+* Ce document est un document de test
+*
+* Avec un titre chiant
+*
+**
+
+>
+
+Ce fichier contiendra,  pour la  forme,  majoritairement  du python.  Il
+sera  écrit  par  deux   individus   nommés  Tartempion  et  Mélanine de
+Balzac : 
+
+<Code (lpm): tests/test
+~Authors Tartempion
+~Authors Mélanine de Balzac
+~Code python
+
+>
+
+Le résumé contiendra deux  lorem  ipsum,  dont  un  sera considéré comme
+important : 
+
+<Code (lpm): tests/test
+~abstract~
+/!\Lorem     ipsum   dolor   sit amet, consectetur adipiscing elit.
+Etiam neque lectus, iaculis vel fringilla varius, molestie vitae lorem.
+Nunc sed porttitor orci.  Nullam mattis gravida tellus, et hendrerit
+libero porttitor eget. Nam blandit, sapien in molestie suscipit, metus
+sapien tincidunt sem, id imperdiet eros orci ac risus. Nunc vel est
+enim. Vestibulum blandit, leo ac luctus lobortis, lectus nunc faucibus
+nisl, quis interdum augue lectus bibendum orci. Morbi in rutrum ante.
+Donec accumsan est vel tellus viverra euismod at eu tortor. Nam justo
+ligula, faucibus ac eleifend vitae, dignissim vitae augue. Sed eget urna
+venenatis nisi aliquet pulvinar nec eu nulla. Etiam porta placerat nisi
+sit amet laoreet. Praesent sollicitudin suscipit vestibulum. Proin non
+elementum ipsum. Duis quis risus posuere purus pellentesque placerat in
+vitae tortor.  Morbi a massa gravida nibh ullamcorper interdum. Aenean
+ac sapien nec sapien pharetra ullamcorper.
+
+Aliquam dictum facilisis enim sit amet convallis. Curabitur placerat
+nunc sit amet risus mollis pretium aliquam neque ultrices. Vestibulum
+pretium, nisl posuere fringilla semper, eros ipsum congue eros, bibendum
+vestibulum mauris orci sit amet diam. Ut sed lectus eget quam tristique
+egestas at a justo. Duis in molestie mi. Maecenas viverra adipiscing
+nunc, sed facilisis nulla accumsan rutrum. Mauris mattis fermentum nulla
+sit amet cursus. Proin purus magna, euismod a condimentum vitae, posuere
+sit amet dui. Vivamus molestie lectus non quam viverra non tristique
+tellus pellentesque. Proin porta consequat sem eu bibendum. In at magna
+nisi.
+~~~
+
+>
+

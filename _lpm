@@ -1721,6 +1721,24 @@ class Document:
                       """
             r += u"""
                         }
+                        h1 {
+                            font-size: 2.0em;
+                        }
+                        h2 {
+                            font-size: 1.8em;
+                        }
+                        h3 {
+                            font-size: 1.6em;
+                        }
+                        h4 {
+                            font-size: 1.4em;
+                        }
+                        h5 {
+                            font-size: 1.2em;
+                        }
+                        h6 {
+                            font-size: 1.0em;
+                        }
                         sup {
                             font-size: 0.7em;
                         }
@@ -1731,7 +1749,7 @@ class Document:
                         }
                         header div {
                             text-align: center;
-                            font-size: 3em;
+                            font-size: 3.0em;
                         }
                         .authors {
                             font-style: italic;

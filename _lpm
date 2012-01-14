@@ -61,6 +61,13 @@ def escape(txt):
         r += txt[i]
     return r
 
+def refEscape(txt):
+    txt = txt.encode("ascii", "replace")
+    txt = txt.replace(" ", "_")
+    txt = txt.replace("?", "_")
+    txt = txt.replace("'", "_")
+    txt = txt.replace(",", "_")
+    return txt
 def addSpaceAfter(line, c, direction):
     l = len(line)
     if direction == 1:
@@ -229,13 +236,13 @@ class Code:
             before = u""
             after = u""
         else:
-            name = "<span class=\"\codename\"><a id=\""+self.name.replace(" ", "_")+str(self.index)+"\">"+self.name+"</a></span>"
+            name = "<span class=\"\codename\"><a id=\""+refEscape(self.name)+str(self.index)+"\">"+self.name+"</a></span>"
             if self.index != 1:
-                before = u"<a href=\"#"+self.name.replace(" ", "_")+str(self.index-1)+"\"> &lt;-</a>"
+                before = u"<a href=\"#"+refEscape(self.name)+str(self.index-1)+"\"> &lt;-</a>"
             else:
                 before = u""
             if self.index < len(CODE[self.name]):
-                after = u"<a href=\"#"+self.name.replace(" ", "_")+str(self.index+1)+"\"> -&gt;</a>"
+                after = u"<a href=\"#"+refEscape(self.name)+str(self.index+1)+"\"> -&gt;</a>"
             else:
                 after = u""
         references = u" "
@@ -354,7 +361,7 @@ class Code:
             r += "&lt;<a "
             if not remain:
                 r += "id=\"coderef"+str(self.count)+"\" "
-            r += "href=\"#"+self.name.replace(" ", "_")+"1\">"
+            r += "href=\"#"+refEscape(self.name)+"1\">"
             r += self.name.replace("<", "&lt;")
             r += "</a></pre></td></tr></tbody></table>\n"
             return r
@@ -754,7 +761,7 @@ class Paragraph:
         def formatText(self, length):
             return self.content.formatText(length)+"["+self.name+"]"
         def outputHTML(self, inlink = None):
-            return "<a href=\"#"+self.name.replace(" ", "_")+"\">"+self.content.outputHTML(True)+"</a>"
+            return "<a href=\"#"+refEscape(self.name)+"\">"+self.content.outputHTML(True)+"</a>"
 
     class Anchor:
         def __init__(self):
@@ -769,7 +776,7 @@ class Paragraph:
         def formatText(self, length):
             return self.content.formatText(length)+"[="+self.name+"]"
         def outputHTML(self, inlink = None):
-            return "<a id=\""+self.name.replace(" ", "_")+"\">"+self.content.outputHTML()+"</a>"
+            return "<a id=\""+refEscape(self.name)+"\">"+self.content.outputHTML()+"</a>"
 
     class NoteRef:
         def __init__(self):
@@ -1012,7 +1019,7 @@ class Remain:
     def formatText(self, length, prefixed = None):
         return "~Remain "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        r = u"<div class=\"remain\">&lt;Rappel du code <a href=\"#"+self.name.replace(" ", "_")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        r = u"<div class=\"remain\">&lt;Rappel du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
         line = 1
         for i in CODE[self.name]:
             r += i.outputHTML(True, line)
@@ -1039,7 +1046,7 @@ class Display:
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):
         global COLOR_ERRORS
-        r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+self.name.replace(" ", "_")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
+        r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
         if CODE[self.name][0].language == None:
             format_language = DOCUMENT_LANGUAGE
         else:
@@ -1825,7 +1832,7 @@ class Document:
         if self.name != None:
             r += "\n"
             p = self.getPosition()[1:]
-            r += "<h"+str(len(p))+"><a id=\"sec"+self.name.replace(" ", "_")+"\">"
+            r += "<h"+str(len(p))+"><a id=\"sec"+refEscape(self.name)+"\">"
             for i in p:
                 r += str(i)+"."
             r += " "+self.name
@@ -1870,7 +1877,7 @@ class Document:
         for i in self.sections:
             if i.name != None:
                 r += "<li>"
-                r += "<a href=\"#sec"+i.name.replace(" ", "_")+"\">"+i.name+"</a>\n"
+                r += "<a href=\"#sec"+refEscape(i.name)+"\">"+i.name+"</a>\n"
                 r += i.outputHTMLToc()
                 r += "</li>"
         r += "</ol>\n"
@@ -1900,7 +1907,7 @@ d.parse()
 d.resolv()
 d.extractCode()
 codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
-codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(True))
+codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
 for i in COLOR_ERRORS:
     sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
 #d.debugDisplay()

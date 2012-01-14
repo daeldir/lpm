@@ -482,6 +482,8 @@ class Paragraph:
             elif mode[-1].type in ["link", "anchor"]:
                 if c == "]":
                     mode = self.parseChange(mode)
+                    mode.append(self.Text())
+                    mode = self.parseChange(mode)
                 else:
                     mode[-1].add(c)
             elif c == "\\":
@@ -498,11 +500,15 @@ class Paragraph:
                     mode.append(self.Italic())
                 else:
                     mode = self.parseChange(mode)
+                    mode.append(self.Text())
+                    mode = self.parseChange(mode)
                 i += 1
             elif self.line[i:i+2] == "__":
                 if mode[-1].type != "underline":
                     mode.append(self.Underline())
                 else:
+                    mode = self.parseChange(mode)
+                    mode.append(self.Text())
                     mode = self.parseChange(mode)
                 i += 1
             elif self.line[i:i+2] == "--":
@@ -510,11 +516,15 @@ class Paragraph:
                     mode.append(self.Overline())
                 else:
                     mode = self.parseChange(mode)
+                    mode.append(self.Text())
+                    mode = self.parseChange(mode)
                 i += 1
             elif self.line[i:i+2] == "**":
                 if mode[-1].type != "bold":
                     mode.append(self.Bold())
                 else:
+                    mode = self.parseChange(mode)
+                    mode.append(self.Text())
                     mode = self.parseChange(mode)
                 i += 1
             elif c == "*":
@@ -545,6 +555,8 @@ class Paragraph:
                 mode.append(self.Bracket())
             elif c == ")" and mode[-1].type == "bracket":
                 if i < len(self.line)-1 and self.line[i+1] != "[":
+                    mode = self.parseChange(mode)
+                    mode.append(self.Text())
                     mode = self.parseChange(mode)
             elif c == "<":
                 mode.append(self.Code())

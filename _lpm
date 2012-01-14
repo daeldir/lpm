@@ -1654,7 +1654,7 @@ class Document:
         # On remplace les doubles lignes vides par des lignes vides uniques
         mode = "doc"
         text = u""
-        old = None
+        old = ""
         for i in r.split("\n"):
             if mode == "code":
                 text += i+"\n"
@@ -1664,7 +1664,7 @@ class Document:
                     old = ""
             else:
                 if not (old == "" and i.strip() == ""):
-                    if i != "" and i[0] == "<":
+                    if begin(i, "<code"):
                         mode = "code"
                     text += i+"\n"
                 old = i.strip()

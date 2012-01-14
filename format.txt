@@ -1,4 +1,3 @@
-
 [=description du format LPM] 
 
 = Le format de balisage LPM
@@ -6,7 +5,7 @@
 == Les bases de la syntaxe
 
 Il existe plusieur type de  balises  dans  le  langage LPM.  Les balises
-légères,  destinées à formatter le texte, les commandes,  qui permettent
+légères,  destinées à formater le texte,  les commandes,  qui permettent
 d'effectuer  une  action  lors  de  la  génération  du document,  et les
 balises de bloc, qui premettent de définir des blocs de texte. 
 
@@ -25,9 +24,9 @@ et un troisième bloc de texte
 >
 
 On appelle ces blocs de texte  des paragraphes.  Lorsque le fichier sera
-reformatté,  les lignes de ces  blocs  seront  fusionnées si le résultat
+reformaté,  les lignes de ces  blocs  seront  fusionnées  si le résultat
 n'est  pas  trop  long.  Ainsi,   l'exemple  ci-dessus  deviendra  après
-formattage : 
+formatage : 
 
 <Code (lpm): 
 voici un bloc de texte
@@ -115,6 +114,15 @@ Sachant que le programme finit par centrer les titres, ce qui donne :
 
 Ces trois manières de noter  un  titre sont absolument équivalentes pour
 le programme, et n'existent que pour simplifier la vie du programmeur. 
+
+=== Échappement de caractères
+
+Lorsque nous utilisons  des  caractères  qui  devraient être interprétés
+par LPM,  mais que nous les  voulons  tels  quels,  il est nécessaire de
+les échapper.  Ceci se fait  à  la  mode  Unix :  tout caractère précédé
+d'un  \\  sera  rendu   tel   quel,   sans   être  interprété.  Un  mode
+d'échappement spécial existe  pour  les  blocs  de  code,  mais  il sera
+détaillé plus tard, avec les blocs de code. 
 
 == Structure d'un document
 
@@ -252,7 +260,7 @@ suite de lignes non-vides.  Un paragraphe  commence  à la première ligne
 non-vide rencontrée,  et s'arrête dès  qu'il rencontre une ligne vide ou
 une commande.  Les  lignes   succeptibles   de   marquer   la  fin  d'un
 paragraphe sont : 
- - les lignes formattées comme une liste,
+ - les lignes formatées comme une liste,
  - les lignes  contenant   une   commande   du   type   <<lpm>\~include>
  ' (commençant par un <<lpm>\~>),
  - les lignes marquant le début d'un bloc de code,
@@ -349,7 +357,8 @@ dans un nouveau bloc important.
 >
 
 Deviendra : 
-<code (lpm):
+
+<Code (lpm): 
     /!\ Un paragraphe important                                  /!\
     /!\                                                          /!\
     /!\ Et un autre paragraphe important                         /!\
@@ -360,7 +369,292 @@ Deviendra :
 
 == Formatage des listes
 
+LPM permet   de   créer   des   listes    numérotées   et   des   listes
+non-numérotées.  Les listes numérotées  sont  marquées  par une suite de
+lignes commençant par  <<lpm>\#>,  chaque  <<lpm>\#>  marquant  le début
+d'un élément de la  liste.  Les  listes non-numérotées sont marquées par
+une ligne  commençant  par  <<lpm>\->,   chaque  <<lpm>\->  marquant, de
+même, le début d'un élément de la liste. 
+
+Si un élément de la liste tient  sur  plus d'une ligne,  il est possible
+de continuer sur la ligne  suivante,  sans  débuter de nouvel élément de
+liste,  en commençant la ligne par  <<lpm>\'>  plutôt que par <<lpm>\->.
+En réalité,  une ligne commençant par <<lpm>\->  ou <<lpm>\#>  et suivie
+de lignes commençant par  <<lpm>\'>  devient,  si  on  enlève le premier
+caractère  de  ces  lignes,  une  suite  de  blocs  de  textes,  pouvant
+contenir d'autres listes, des paragraphes… 
+
+<Code (lpm): 
+ - une liste non numérotée
+ - un deuxième élément
+
+ # une liste numérotée
+ ' le premier élément tenant sur plusieurs lignes
+ # Le deuxième élément contient une liste non-numérotée
+ ' - Premier élément d'une sous-liste
+ ' - Deuxième élément de la sous-liste
+ ' ' sur plusieurs lignes
+ # Le troisième élément contient deux paragraphes
+ '
+ ' C'est le deuxième paragraphe du troisième élément.
+>
+
 == Commandes d'inclusion de fichiers
 
+Plusieurs  commandes  permettent  d'insérer  un  autre  fichier  dans le
+document.  Ces commandes prennent en  paramètre  le  chemin et le nom du
+fichier à insérer,  relatif  à  la  position  du  fichier dans lequel la
+commande apparaît. 
+
+Prenons  comme  exemple,  pour  illustrer  ce  principe,  l'arborescence
+suivante : 
+ - document.txt
+ - includes 
+ ' - canard.txt
+ ' - coco.txt
+
+Si le fichier //document.txt//  veut  inclure //canard.txt//,  il faudra
+utiliser la  commande  <<lpm>\~get includes/canard.txt>.  Maintenant, si
+le fichier //canard.txt//  veut  inclure  //coco.txt//,  il utilisera la
+commande <<lpm>\~get coco.txt>,  et non  <<lpm>\~get includes/coco.txt>.
+Ce qui compte ici est la  position  du  fichier sur lequel on travaille,
+et non  celle  du  fichier  sur  lequel   aura  été  lancé  la  commande
+<<sh>lpm>. 
+
+Il est possible d'insérer  une  image  dans  la documentation grâce à la
+commande <<lpm>\~image> : 
+
+<Code (lpm): 
+~image img/lolcat.jpg
+>
+
+On peut aussi insérer un fichier  texte  brut dans la documentation avec
+la commande <<lpm>\~include> : 
+
+<Code (lpm): 
+~include rfc/rfc1149.txt
+>
+
+Enfin,  on peut inclure un fichier  LPM,  qui  sera lu et formatté avant
+d'être ajouté dans la documentation : 
+
+<Code (lpm): 
+~include partie-2.lpm
+>
+
+Cette  dernière  commande  est  très   importante,  car  elle  permet de
+fractionner la source de  la  documentation en plusieurs petit fichiers,
+facilement éditables dans  un  éditeur  de texte.  Elle permet aussi, en
+supposant que l'on a un  fichier  par section,  de créer une « table des
+matières » dans le  fichier  principal,  et  de régorganiser le document
+juste en modifiant l'ordre de ces inclusions. 
+
 == Gestion du code
+
+=== Définition des blocs de code
+
+Une fonctionnalité importante du  langage  LPM  est  la  gestion du code
+source.  Il est ainsi possible d'inclure  facilement du code source dans
+le document : 
+
+<Code (lpm): 
+\<code:
+import os
+print os.getcwd()
+\>
+>
+
+Qui va donner : 
+
+<Code: 
+import os
+print os.getcwd()
+>
+
+En plus  de  cela,   il   est   possible   de   préciser  le  langage de
+programmation utilisé dans le bloc de code, ce qui permet : 
+ # de préciser,  pour le lecteur,  le langage  de  ce qu'il est en train
+ ' de lire,
+ # d'appliquer une coloration syntaxique adaptée au langage.
+
+<Code (lpm): 
+\<code (haskell):
+fibs = 0 : 1 : (zipWith (+) fibs (tail fibs))
+fib n = fibs !! n
+\>
+>
+
+Deviendra : 
+
+<Code (haskell): 
+fibs = 0 : 1 : (zipWith (+) fibs (tail fibs))
+fib n = fibs !! n
+>
+
+Il est possible de nommer un bloc de code : 
+
+<Code (lpm): 
+\<code (c): test.c
+#include <stdio.c>
+void main(){
+	printf("Hello, world!\n");
+}
+\>
+>
+
+Et pour finir,  à l'interieur  d'un  bloc  de  code,  il est possible de
+faire référence à un bloc de code nommé : 
+
+<Code (lpm): 
+\<code (c): test.c
+#include <stdio.c>
+void main(){
+\	<implémentation de main
+}
+\>
+>
+
+=== Programmation lettrée, la toile de code
+
+Cette dernière fonctionnalité nous  ammène  à  aborder le principe de la
+programmation lettrée : nous écrivons  de petits morceaux de code,  dans
+lesquels nous incluons des  références  vers  d'autres morceaux de code.
+Il est aussi possible de  commencer  un  bloc de code,  puis de rajouter
+plus tard du code  dans  celui-ci  en  créant  un  nouveau  bloc de code
+portant le même  nom.  Cette  manière  de  présenter le code,  emmêlé et
+avec des références,  fait penser  au  Web  et  ses liens hypertexte, et
+bien que la programmation lettrée  aie  été  inventée bien avant le Web,
+sont auteur avait déjà saisi  le concept  de toile d'idées créée par les
+références et nommé son invention Web : la toile. 
+
+Ainsi, avec la collection de blocs de code suivante : 
+
+<Code (lpm): 
+\<code (c): test.c
+#include <stdio.c>
+\>
+>
+
+<Code (lpm): 
+\<code (c): test.c
+void main(){
+\	<implémentation de main
+}
+\>
+>
+
+<Code (lpm): 
+\<code (c): implémentation de main
+printf("Hello, world!");
+\>
+>
+
+Le morceau de code  //test.c//  sera  réunifié,  puis  la référence vers
+//implémentation de main// sera  résolue  et remplacée par le morceau de
+code portant ce  nom.  Toutes  les  lignes  du  code ainsi inséré seront
+indentées  d'autant  de  caractères  que  ce  qui  précède  la  commande
+référençant  le  bloc.   Cette   fonctionnalité   est   nécessaire  pour
+permettre d'obtenir  un  code  source  lisible  d'une  part,  et d'autre
+part,  pour supporter  certains  langages  dans lesquels l'indentation a
+un sens  (il serait  impossible  d'écrire  du  python  en  programmation
+lettrée sans ça). 
+
+Afin de générer le code  source,  le  programme va regarder les blocs de
+code nommés.  Pour ceux qui  n'ont  jamais été référencés,  le programme
+considère qu'ils doivent être  sortis  dans  un fichier texte portant le
+nom du bloc de code. 
+
+Dans l'exemple précédent,  //test.c// n'est  jamais  inclu dans un autre
+bloc  de  code,  et  un   fichier   sera   donc  créé  portant  ce  nom.
+//implémentation de main//,  par contre,  est inséré  dans un autre bloc
+de code, et il ne sera donc pas extrait dans un fichier.* 
+ *: En l'occurence,  il le sera,  mais  seulement  parce  que le morceau
+    dans lequel il est inclu,  //test.c//,  est lui même extrait dans un
+    fichier.
+
+=== Échappement de caractères dans les blocs de code
+
+Si une ligne  de  code  commence  par  <<lpm>\<>,  elle sera interprétée
+comme une référence vers  un  autre  bloc de code.  Si elle commence par
+<<lpm>\>>,  elle sera interprétée  comme  une  sortie  du  bloc de code.
+Pour empêcher cela,  on peut  échapper  la ligne,  en la débutant par le
+caractère  <<lpm>\\>.  Contrairement  à  l'échappement  traditionnel, ce
+caractère,  dans les blocs de code,  va  échapper la ligne entière,  qui
+peut ensuite contenir n'importe quoi, et non pas juste un caractère. 
+
+Ainsi : 
+
+<Code (lpm): 
+\<code:
+import os
+\\<coco
+\>
+>
+
+Va donner : 
+
+<Code (lpm): 
+import os
+\<coco
+>
+
+Et pour afficher  ce  bloc  de  code,  il  a  fallut  échapper  la ligne
+commençant  par  <<lpm>\\>,  //non   pas   en   échappant  le  caractère
+<<lpm>\\>,  mais  bien  la  ligne   entière//.  Le  code  utilisé  était
+celui-ci : 
+
+<Code (lpm): 
+\<code (lpm):
+\\<code:
+import os
+\\\<coco
+\\>
+\>
+>
+
+=== Morceaux de code dans les paragraphes
+
+Il est possible d'indiquer qu'une  portion  de  texte à l'interieur d'un
+paragraphe  est  du  code.   Ceci   permet   d'appliquer  la  coloration
+syntaxique à ces  morceaux  de  code.  Nous  ne  somme alors pas dans un
+bloc de code,  et l'échappement  se  fait  cette  fois  à  la mode Unix,
+caractère par  caractère.  Nous  marquons  un  passage  de  code dans un
+texte   en   l'entourant    des    signes   inférieur   et   supérieur :
+<<lpm>\<import os\>>.  Il est  possible  de  spécifier  le langage de ce
+morceau de code en  ajoutant,  directement  après le signe inférieur, le
+langage     entouré      lui      aussi      des      même      signes :
+<<lpm>\<\<C\>printf("Wouhou!")\>>. 
+
+Enfin,  pour  illustrer  l'échappement  caractère  par caractère,  voici
+comment    a    été    noté    le     dernier    morceau    de    code :
+<<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
+
+=== Récapitulatif de code
+
+Il peut être utile,  après avoir décrit un  bloc  de code petit à petit,
+de présenter un récapitulatif  de  ce  code.  Deux  commandes permettent
+d'afficher le code qui a été généré : 
+
+La première commande permet de rappeler  le  contenu  d'un bloc de code,
+et affiche tout le code de  ce  bloc,  même si celui-ci était morcelé en
+plusieurs blocs portant le même nom : 
+
+<Code (lpm): 
+~remain morceau de code
+>
+
+La seconde  commande  permet  non  seulement  d'afficher  un  morceau de
+code,  mais surtout  d'afficher  celui-ci  sans  aucune  référence  vers
+d'autres morceaux de code,  c'est  à  dire  qu'il  les remplace par leur
+contenu.  Ainsi,  utiliser cette commande  sur  un  bloc  destiné à être
+sortit dans un fichier  revient  à  insérer  dans le document le contenu
+de ce fichier.  Mais  il  est  possible,  bien  sûr,  d'insérer juste un
+morceau de  code,  la  commande  fonctionnant  sur  ceux-ci,  et non pas
+exclusivement sur les blocs destinés à être sortis dans un fichier. 
+
+Cette commande est celle-ci : 
+
+<Code (lpm): 
+~display morceau de code
+>
 

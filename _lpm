@@ -1492,8 +1492,16 @@ class Document:
         if infile != outfile:
             codecs.open(filename+".clean", "w", encoding="utf-8").write(outfile)
         f.close()
+        mode = "normal"
         for i in lines:
-            if begin(i, "~get"):
+            if begin(i, "<code"):
+                mode = "code"
+                self.lines.append(i)
+            if mode == "code":
+                if i.split() == ">":
+                    mode = "normal"
+                self.lines.append(i)
+            elif begin(i, "~get"):
                 filename = i.strip()[4:].strip()
                 if filename != "":
                     try:
@@ -1514,7 +1522,10 @@ class Document:
                     toFile = path.join(os.getcwd(), "src", files[1])
                     if not path.exists(path.dirname(toFile)):
                         os.makedirs(path.dirname(toFile))
-                    open(toFile, "w").write(open(fromFile).read())
+                    try:
+                        open(toFile, "w").write(open(fromFile, "r").read())
+                    except IOError:
+                        sys.stderr.write(u"Problème en copiant :\n\t de "+fromFile+u"\n\t à  "+toFile+"\n")
                 self.lines.append(i)
 
     def fromOneFile(self, filename):

@@ -383,7 +383,8 @@ class Code:
             if self.name in CODE:
                 for i in CODE[self.name]:
                     i.referenced = True
-                    i.references.append(self.count)
+                    if not self.count in i.references:
+                        i.references.append(self.count)
                     for j in i.resolv():
                         r.append(self.indentation+j)
             else:
@@ -1023,7 +1024,8 @@ class Remain:
         return len(self.name) > 0
     def parse(self):
         self.name = self.name[7:].strip()
-        CODE[self.name][0].references.append(self.count)
+        if not self.count in CODE[self.name][0].references:
+            CODE[self.name][0].references.append(self.count)
     def formatText(self, length, prefixed = None):
         return "~Remain "+self.name+"\n"
     def outputHTML(self, prefixed = None):
@@ -1049,7 +1051,8 @@ class Display:
         return len(self.name) > 0
     def parse(self):
         self.name = self.name[8:].strip()
-        CODE[self.name][0].references.append(self.count)
+        if not self.count in CODE[self.name][0].references:
+            CODE[self.name][0].references.append(self.count)
     def formatText(self, length, prefixed = None):
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):
@@ -1423,8 +1426,6 @@ class Document:
         NOTEREF = 0 
         URLREF = 0
         FOOTURL = []
-        for i in CODE:
-            CODE[i][0].references = []
         CODE = {}
         CODEREF_ERRORS = []
         REFCOUNT = 0

@@ -731,7 +731,7 @@ class Paragraph:
                 lexer = get_lexer_by_name("text")
             formatter = HtmlFormatter(cssclass="source", nowrap = True)
             result = highlight(self.content, lexer, formatter).strip()
-            return result
+            return "<span class=\"textcode\">"+result+"</span>"
 
     class URLRef:
         def __init__(self):
@@ -1820,6 +1820,9 @@ class Document:
                         .codehead {
                             background-color: #fda;
                             padding: 3px;
+                        }
+                        .textcode {
+                            font-family: monospace;
                         }
                         li p {
                             margin: 0px;

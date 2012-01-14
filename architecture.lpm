@@ -19,6 +19,7 @@ toutes les données nécessaires au fonctionnement du programme.
 >
 
 ==== Début du programme python et imports
+
 Il débute  bien  entendu  en   spécifiant  quel  interpréteur  utiliser,
 l'encodage,  et quels modules seront utilisés.  Nous  ne notons pas tout
 de suite quels modules nous  allons utiliser,  mais les modules suivants
@@ -38,6 +39,10 @@ Nous importons  <path>  directement plutôt que  de se réferer toujours à
 <os.path>, car nous allons beaucoup utiliser ce module. 
 
 ==== Les variables globales
+
+===== test
+
+====== h6
 
 Les variables   globales   sont   de    deux   genre :   les   variables
 « template »,  contenant les feuilles de style,  le code HTML réutilisé…
@@ -142,10 +147,10 @@ par le programme :
 ~Display variables globales
 
 ==== La suite du programme
-Le programme contient ensuite quelque fonctions utilitaires, qui peuvent servir
-à différents points de celui-ci. Nous décrirons ces fonctions au fur et à
-mesure, quand nous en aurons besoin. Viennent ensuite les classes, puis le
-programme se met en action en instanciant les classes pour lire le fichier et
-travailler dessus.
 
+Le programme  contient  ensuite   quelque  fonctions  utilitaires,   qui
+peuvent servir  à  différents  points  de  celui-ci.  Nous décrirons ces
+fonctions au fur et  à  mesure,  quand  nous en aurons besoin.  Viennent
+ensuite les classes,  puis le programme  se met en action en instanciant
+les classes pour lire le fichier et travailler dessus. 
 

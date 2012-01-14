@@ -1,0 +1,47 @@
+== Support de l'unicode
+
+Le support de l'unicode  en  python  2  est  une horreur.  Il faut faire
+attention à bien utiliser  des  chaînes  de type  <unicode>  au lieu des
+chaînes de type <str>,  et spécifier le type des fichiers ouverts,  dont
+la sortie standard et  la  sortie d'erreur  (et l'entrée standard,  mais
+nous ne sommes pas concernés ici, puisque nous ne la lisons pas). 
+
+Nous  commençons  par  importer   le   module  <codecs>,  et  spécifions
+l'encodage de la sortie standard et de la sortie d'erreur. 
+
+<Code: imports
+import codecs
+sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
+sys.stderr = codecs.getwriter("utf-8")(sys.stderr)
+>
+
+Ensuite, nous créons une fonction utilitaire pour lire un fichier : 
+
+<Code: fonctions utilitaires
+def read(filename):
+	f = codecs.open(filename, 'r', encoding = "utf-8")
+	return f.read()
+>
+
+//Pour  rappel,  il  n'est  pas  nécessaire  de  fermer  manuellement le
+fichier,  celui-ci sera fermé à la destruction de l'objet  <f>,  c'est à
+dire à la sortie de la fonction, <f> n'étant plus utilisé.// 
+
+De la même  manière,  nous  créons  une  fonctions  renvoyant les lignes
+d'un fichier : 
+
+<Code: fonctions utilitaires
+def readlines(filename):
+	f = codecs.open(filename, 'r', encoding = "utf-8")
+	return f.readlines()
+>
+
+Enfin, nous créons une fonction permettant de sauvegarder un fichier : 
+
+<Code: fonctions utilitaires
+def write(filename, text):
+	f = codecs.open(filename, 'w', encoding = "utf-8")
+	f.write(text)
+
+>
+

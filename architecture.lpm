@@ -38,16 +38,6 @@ from os import path
 Nous importons  <path>  directement plutôt que  de se réferer toujours à
 <os.path>, car nous allons beaucoup utiliser ce module. 
 
-Afin d'éviter d'avoir  des  problèmes  d'encodage,  nous importons aussi
-le module <codecs>,  et spécifions l'encodage de  la sortie standard et de
-la sortie d'erreur. 
-
-<Code: imports
-import codecs
-sys.stdout = codecs.getwriter("utf-8")(sys.stdout)
-sys.stderr = codecs.getwriter("utf-8")(sys.stderr)
->
-
 === Les variables globales
 
 Les variables   globales   sont   de    deux   genre :   les   variables
@@ -144,8 +134,8 @@ par exemple  les  morceaux  de  code  référencés  non-existants,  ou les
 langages utilisés qui ne peuvent pas être colorisés syntaxiquement. 
 
 <Code: variables d'erreur
-COLOR_ERROR = []
-CODEREF_ERROR = []
+COLOR_ERRORS = []
+CODEREF_ERRORS = []
 >
 
 À ce point,  voici un  récapitulatif  des  variables  globales utilisées

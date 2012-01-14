@@ -1794,6 +1794,9 @@ class Document:
                             background-color: #fda;
                             padding: 3px;
                         }
+                        li p {
+                            margin: 0px;
+                        }
                      """+ HtmlFormatter().get_style_defs() +"""
                      </style>
                      """

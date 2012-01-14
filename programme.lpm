@@ -40,6 +40,7 @@ théoriquement les seules dépendances du programme.
 = Implémentation
 
 ~Get architecture.lpm
+~Get unicode.lpm
 ~Get actions_principales.lpm
 ~Get gestion_des_documents.lpm
 ~Get gestion_du_code.lpm

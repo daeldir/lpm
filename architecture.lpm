@@ -1,4 +1,4 @@
-=== Architecture du programme
+== Architecture du programme
 
 Le programme est constitué d'un  seul  script python.  Celui-ci contient
 toutes les données nécessaires au fonctionnement du programme. 
@@ -18,7 +18,7 @@ toutes les données nécessaires au fonctionnement du programme.
 
 >
 
-==== Début du programme python et imports
+=== Début du programme python et imports
 
 Il débute  bien  entendu  en   spécifiant  quel  interpréteur  utiliser,
 l'encodage,  et quels modules seront utilisés.  Nous  ne notons pas tout
@@ -38,11 +38,7 @@ from os import path
 Nous importons  <path>  directement plutôt que  de se réferer toujours à
 <os.path>, car nous allons beaucoup utiliser ce module. 
 
-==== Les variables globales
-
-===== test
-
-====== h6
+=== Les variables globales
 
 Les variables   globales   sont   de    deux   genre :   les   variables
 « template »,  contenant les feuilles de style,  le code HTML réutilisé…
@@ -75,7 +71,7 @@ difficile à lire).
 <variables d'erreur
 >
 
-===== Variables de configuration
+==== Variables de configuration
 
 Les variables  de  configuration  contiennent  la  taille  du  texte par
 défaut  (en caractères),  la taille des marges,  une chaîne de caractère
@@ -93,7 +89,7 @@ DOCUMENT_LANGUAGE = "text"
 Parmis  ces  variables,  seule  <DOCUMENT_LANGUAGE>  peut  être modifiée
 dans le document, grâce à la commande <<lpm>\~code>. 
 
-===== Variables de référence
+==== Variables de référence
 
 Il existe trois types de référence dans le programme : 
  - les notes de bas de page,
@@ -130,7 +126,7 @@ références elles mêmes  à  côter  d'un  bloc  de  code,  afin d'annoncer
 CODE = {}
 >
 
-===== Variables d'erreur
+==== Variables d'erreur
 
 Les variables d'erreur contiennent des  erreurs  qui peuvent se répeter,
 mais que nous ne voulons  signaler  qu'une fois.  Ces erreurs concernent
@@ -146,7 +142,7 @@ CODEREF_ERROR = []
 par le programme : 
 ~Display variables globales
 
-==== La suite du programme
+=== La suite du programme
 
 Le programme  contient  ensuite   quelque  fonctions  utilitaires,   qui
 peuvent servir  à  différents  points  de  celui-ci.  Nous décrirons ces

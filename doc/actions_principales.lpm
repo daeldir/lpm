@@ -67,7 +67,7 @@ for i in CODEREF_ERRORS:
 >
 
 <error>  est une fonction utilitaire affichant  un message sur la sortie
-d'erreur. Voici sa définitions : 
+d'erreur. Voici sa définition : 
 
 <Code: fonctions utilitaires
 def error(message):

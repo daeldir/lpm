@@ -1,0 +1,151 @@
+=== Architecture du programme
+
+Le programme est constitué d'un  seul  script python.  Celui-ci contient
+toutes les données nécessaires au fonctionnement du programme. 
+
+<Code: lpm
+<début d'un programme python
+
+<imports
+
+<variables globales
+
+<fonctions utilitaires
+
+<définition des classes
+
+<actions principales
+
+>
+
+==== Début du programme python et imports
+Il débute  bien  entendu  en   spécifiant  quel  interpréteur  utiliser,
+l'encodage,  et quels modules seront utilisés.  Nous  ne notons pas tout
+de suite quels modules nous  allons utiliser,  mais les modules suivants
+au moins semblent « logiques », utilisés très souvent : 
+
+<Code: début d'un programme python
+#!/usr/bin/env python2
+# -*- encoding: utf-8 -*-
+>
+
+<Code: imports
+import sys, os
+from os import path
+>
+
+Nous importons  <path>  directement plutôt que  de se réferer toujours à
+<os.path>, car nous allons beaucoup utiliser ce module. 
+
+==== Les variables globales
+
+Les variables   globales   sont   de    deux   genre :   les   variables
+« template »,  contenant les feuilles de style,  le code HTML réutilisé…
+Et les variables « système »,  utilisées dans  le programme pour stocker
+des informations qui doivent être accessibles de n'importe où. 
+
+<Code: variables globales
+<variables système
+
+<variables template
+>
+
+Parmis les variables système,  on  peut  encore distinguer trois type de
+variables : les variables  de configuration,  certaines étant constantes
+et pouvant  être  modifiée   dans   le   code   source  pour  adapter le
+comportement du programme à  ses  besoins,  d'autres étant modifiées par
+des commandes dans le  document  passé  en  paramètre,  les variables de
+stockage,  qui sont utilisées pour stocker  les  morceaux de code et les
+références,   et   les    variables    d'erreur,   qui   contiennent les
+informations  relatives  aux  erreurs  non  fatales  rencontrées  par le
+programme,  et qui sans passer par ces variables,  seraient affichées en
+double  (ce qui serait  inutile  et  rendrait  la  sortie  d'erreur plus
+difficile à lire). 
+
+<Code: variables système
+<variables de configuration
+
+<variables de référence
+
+<variables d'erreur
+>
+
+===== Variables de configuration
+
+Les variables  de  configuration  contiennent  la  taille  du  texte par
+défaut  (en caractères),  la taille des marges,  une chaîne de caractère
+représentant cette marge quand on doit la placer à gauche  (bref,  quand
+on indente un paragraphe),  et  le  langage  de  programmation majeur du
+document. 
+
+<Code: variables de configuration
+DOCUMENT_WIDTH = 72
+INDENTATION = "    "
+MARGINS = len(INDENTATION)
+DOCUMENT_LANGUAGE = "text"
+>
+
+Parmis  ces  variables,  seule  <DOCUMENT_LANGUAGE>  peut  être modifiée
+dans le document, grâce à la commande <<lpm>\~code>. 
+
+===== Variables de référence
+
+Il existe trois types de référence dans le programme : 
+ - les notes de bas de page,
+ - les URLs
+ - les morceaux de codes.
+
+Chaque référence de  chaque  type  est  identifiée  par un numéro.  Nous
+avons une variable  pour  chaque  type  de  référence nous permettant de
+compter ces référence et de leur assigner un numéro correct. 
+
+<Code: variables de référence
+NOTEREFS = 0
+URLREFS = 0
+CODEREFS = 0
+>
+
+Dans le cas des URLs et des  notes  de bas de page,  elles sont retenues
+dans  un  tableau.  Une  note  ou  une  URL  pointera  vers  la note/URL
+contenue  dans  le  tableau  à  l'index  correspondant  au  numéro de la
+référence. 
+
+<Code: variables de référence
+FOOTNOTES = []
+FOOTURLS = []
+>
+
+Dans le cas  des  morceaux  de  code,  nous  utilisons  un dictionnaire,
+permettant de se référer  au  morceau  de  code  par son nom.  Le numéro
+associé  à  chaque  référence  permet   de   faire  des  liens  vers les
+références elles mêmes  à  côter  d'un  bloc  de  code,  afin d'annoncer
+« dans quel bloc de code celui-ci est-il utilisé ? ». 
+
+<Code: variables de référence
+CODE = {}
+>
+
+===== Variables d'erreur
+
+Les variables d'erreur contiennent des  erreurs  qui peuvent se répeter,
+mais que nous ne voulons  signaler  qu'une fois.  Ces erreurs concernent
+par exemple  les  morceaux  de  code  référencés  non-existants,  ou les
+langages utilisés qui ne peuvent pas être colorisés syntaxiquement. 
+
+<Code: variables d'erreur
+COLOR_ERROR = []
+CODEREF_ERROR = []
+>
+
+À ce point,  voici un  récapitulatif  des  variables  globales utilisées
+par le programme : 
+~Display variables globales
+
+==== La suite du programme
+Le programme contient ensuite quelque fonctions utilitaires, qui peuvent servir
+à différents points de celui-ci. Nous décrirons ces fonctions au fur et à
+mesure, quand nous en aurons besoin. Viennent ensuite les classes, puis le
+programme se met en action en instanciant les classes pour lire le fichier et
+travailler dessus.
+
+

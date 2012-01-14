@@ -143,7 +143,7 @@ a()
 <morceau de c mal formaté
 >
 
-<Code (C): test2.c
+<Code (c): test2.c
 /* Ce code sera extrait dans test2.c, et formaté en C */
 <morceau de c bien formaté
 printf("une ligne\n");
@@ -158,7 +158,7 @@ print "L'indentation est conservée"
  * sera mal formaté */
 >
 
-<Code (C): morceau de c bien formaté
+<Code (c): morceau de c bien formaté
 /* Ce morceau de code est référencé par un code considéré comme du C et sera
  * bien formaté. */
 >
@@ -195,7 +195,7 @@ Display :
 ~Display test.py
 
 On peut mettre des blocs de --code **dans un** paragraphe-- (<import os>),
-spécifier le langage (<<C>#include \<stdio.h\>>), et échapper les caractères
+spécifier le langage (<<c>#include \<stdio.h\>>), et échapper les caractères
 qui sont utilisés par lpm (<\<\<python\>--test\>>). On peut aussi finir un bloc
 de code par \\ en l'échappant : <test \\>.
 

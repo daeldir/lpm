@@ -439,7 +439,7 @@ Enfin,  on peut inclure un fichier  LPM,  qui  sera lu et formatté avant
 d'être ajouté dans la documentation : 
 
 <Code (lpm): 
-~include partie-2.lpm
+~get partie-2.lpm
 >
 
 Cette  dernière  commande  est  très   importante,  car  elle  permet de
@@ -448,6 +448,18 @@ facilement éditables dans  un  éditeur  de texte.  Elle permet aussi, en
 supposant que l'on a un  fichier  par section,  de créer une « table des
 matières » dans le  fichier  principal,  et  de régorganiser le document
 juste en modifiant l'ordre de ces inclusions. 
+
+Pour finir, nous désirons parler d'une commande qui n'inclue pas, à proprement parler, de fichier dans la documentation, mais plutôt dans le code source généré. C'est la commande <<lpm>~copy>.
+
+<Code (lpm):
+~copy image.jpg data/image.jpg
+>
+
+Cette commande prend deux fichiers en paramètres. Elle copiera le fichier passé
+en premier, et dont le positionnement est relatif à celui du fichier en cours
+d'édition, dans le fichier passé en second, dont la position sera relative au
+dossier dans lequel sera placé le code source. Les espaces et autres caractères
+pouvant poser problème doivent être echappés avec \\.
 
 == Gestion du code
 

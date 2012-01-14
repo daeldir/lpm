@@ -24,6 +24,7 @@ CODE = {}
 REFCOUNT = 0
 
 DOCUMENT_LANGUAGE = "text"
+COLOR_ERRORS = []
 
 # Fonctions utiles
 def detect_starline(line):
@@ -222,6 +223,7 @@ class Code:
         r += ">\n"
         return r
     def outputHTML(self, remain = False, line = 1):
+        global COLOR_ERRORS
         if self.name == None:
             name = u""
             before = u""
@@ -251,8 +253,10 @@ class Code:
             r = u""
         code = u""
         try:
-            lexer = get_lexer_by_name(format_language.lower())
+            lexer = get_lexer_by_name(format_language)
         except pygments.util.ClassNotFound:
+            if not format_language in COLOR_ERRORS:
+                COLOR_ERRORS.append(format_language)
             lexer = get_lexer_by_name("text")
         old_line = line
         formatter = HtmlFormatter(linenos=True, linenostart = line, cssclass="source")
@@ -702,6 +706,7 @@ class Paragraph:
                 lang = "<"+self.lang+">"
             return "<"+lang+escape(self.content)+">"
         def outputHTML(self, inlink = None):
+            global COLOR_ERRORS
             if self.lang == None:
                 language = DOCUMENT_LANGUAGE
             else:
@@ -709,6 +714,8 @@ class Paragraph:
             try:
                 lexer = get_lexer_by_name(language)
             except pygments.util.ClassNotFound:
+                if not language in COLOR_ERRORS:
+                    COLOR_ERRORS.append(language)
                 lexer = get_lexer_by_name("text")
             formatter = HtmlFormatter(cssclass="source", nowrap = True)
             result = highlight(self.content, lexer, formatter).strip()
@@ -1031,6 +1038,7 @@ class Display:
     def formatText(self, length, prefixed = None):
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):
+        global COLOR_ERRORS
         r = u"<div class=\"remain\">&lt;Sortie du code <a href=\"#"+self.name.replace(" ", "_")+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :"
         if CODE[self.name][0].language == None:
             format_language = DOCUMENT_LANGUAGE
@@ -1041,9 +1049,11 @@ class Display:
             for j in i.resolved:
                 code += j+"\n"
         try:
-            lexer = get_lexer_by_name(format_language.lower(), stripall=True)
+            lexer = get_lexer_by_name(format_language)
         except pygments.util.ClassNotFound:
-            lexer = get_lexer_by_name("text", stripall=True)
+            if not format_language in COLOR_ERRORS:
+                COLOR_ERRORS.append(format_language)
+            lexer = get_lexer_by_name("text")
         formatter = HtmlFormatter(linenos=True, cssclass="source")
         r += highlight(code, lexer, formatter)
         r += "&gt;</div>\n"
@@ -1400,7 +1410,10 @@ class Document:
         FOOTURL = []
         CODE = {}
         REFCOUNT = 0
-        codecs.open(filename+".clean", "w", encoding="utf-8").write(d.formatText())
+        infile = codecs.open(filename, encoding="utf-8").read()
+        outfile = d.formatText()
+        if infile != outfile:
+            codecs.open(filename+".clean", "w", encoding="utf-8").write(outfile)
         f.close()
         for i in lines:
             if begin(i, "~get"):
@@ -1850,6 +1863,8 @@ class Document:
             for i in FOOTNOTE:
                 r += i.outputHTML()
             r += "</body></html>"
+            for i in COLOR_ERRORS:
+                sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
         return r
     def outputHTMLToc(self):
         r = u""

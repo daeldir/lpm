@@ -449,17 +449,20 @@ supposant que l'on a un  fichier  par section,  de créer une « table des
 matières » dans le  fichier  principal,  et  de régorganiser le document
 juste en modifiant l'ordre de ces inclusions. 
 
-Pour finir, nous désirons parler d'une commande qui n'inclue pas, à proprement parler, de fichier dans la documentation, mais plutôt dans le code source généré. C'est la commande <<lpm>~copy>.
+Pour finir,  nous désirons  parler  d'une  commande  qui n'inclue pas, à
+proprement parler,  de fichier dans  la documentation,  mais plutôt dans
+le code source généré. C'est la commande <<lpm>\~copy>. 
 
-<Code (lpm):
+<Code (lpm): 
 ~copy image.jpg data/image.jpg
 >
 
-Cette commande prend deux fichiers en paramètres. Elle copiera le fichier passé
-en premier, et dont le positionnement est relatif à celui du fichier en cours
-d'édition, dans le fichier passé en second, dont la position sera relative au
-dossier dans lequel sera placé le code source. Les espaces et autres caractères
-pouvant poser problème doivent être echappés avec \\.
+Cette commande  prend  deux  fichiers  en  paramètres.  Elle  copiera le
+fichier passé  en  premier,  et  dont  le  positionnement  est relatif à
+celui du fichier en cours  d'édition,  dans  le fichier passé en second,
+dont la position sera  relative  au  dossier  dans  lequel sera placé le
+code source.  Les espaces  et  autres  caractères pouvant poser problème
+doivent être echappés avec \\. 
 
 == Gestion du code
 

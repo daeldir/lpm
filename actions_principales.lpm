@@ -1,0 +1,81 @@
+== Actions principales du programme
+
+Au lancement,  le programme  analyse  ses  paramètres  pour  savoir quel
+fichier il va analyser.  Si aucun paramètre n'a été passé,  le programme
+quitte en affichant un  message  d'erreur.  De  même si le fichier passé
+en paramètre n'existe pas. 
+
+<Code: actions principales
+if len(sys.argv) < 2:
+	sys.stderr.write(u"Erreur : aucun fichier passé en paramètre")
+	sys.exit()
+
+document_file = sys.argv[1]
+if not path.exists(document_file):
+	sys.stderr.write(document_file+u" n'existe pas.")
+	sys.exit()
+
+>
+
+Nous déterminons maintenant le nom  du document à extraire,  et générons
+les chemins de fichier vers  lesquels  nous  extrairons la documentation
+et les sources : 
+
+<Code: actions principales
+project = path.basename(document_file)
+current_dir = os.getcwd()
+html_file = path.join(current_dir, project+".html")
+ebook_file = path.join(current_dir, project+".ebook_ready.html")
+
+>
+
+//Le fichier  en  __.ebook_ready.html__  permet  de  générer  un fichier
+html dont la css est  un peu simplifiée,  afin d'être utilisable pour le
+convertir en  ebook  (les  propriétés  modifiant  la  largeur  d'un bloc
+passent mal sur les petits écrans).// 
+
+Nous créons  ensuite  un  document  vierge,  puis  chargeons le document
+passé en  paramètre  dans  ce  document  vierge,  et nous l'analysons et
+reconstituons les morceaux de code : 
+
+<Code: actions principales
+document = Document()
+document.load(document_file)
+document.parse()
+document.resolv()
+
+>
+
+Maintenant, nous extrayons le code, puis la documentation : 
+
+<Code: actions principales
+document.extract_code()
+write(html_file, document.output_html())
+write(ebook_file, document.output_html(ebook = True))
+
+>
+
+Enfin,  nous affichons les  erreurs  que  nous  avons enregistré jusqu'à
+maintenant : 
+
+<Code: actions principales
+for i in COLOR_ERRORS:
+    error(u"Pas de coloration syntaxique pour le langage %s." % i)
+for i in CODEREF_ERRORS:
+    error(u"<Code: %s n'existe pas." % i)
+
+>
+
+<error>  est une fonction utilitaire affichant  un message sur la sortie
+d'erreur. Voici sa définitions : 
+
+<Code: fonctions utilitaires
+def error(message):
+    sys.stderr.write(message+u"\n")
+
+>
+
+Au final,  voici  tout  ce  que  nous  faisons  lorsque  nous lançons le
+programme : 
+~Display actions principales
+

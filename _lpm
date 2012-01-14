@@ -28,6 +28,24 @@ COLOR_ERRORS = []
 CODEREF_ERRORS = []
 
 # Fonctions utiles
+def splitPath(line):
+    r = []
+    esc = False
+    l = ""
+    for i in line:
+        if esc:
+            l += i
+            esc = False
+        elif i == "\\":
+            esc = True
+        elif i == " ":
+            r.append(l)
+            l = ""
+        else:
+            l += i
+    r.append(l)
+    return r
+
 def detect_starline(line):
     if len(line) < 2:
         return False
@@ -1053,6 +1071,24 @@ class Remain:
         r += "</div>\n"
         return r
 
+class Copy:
+    def __init__(self, line):
+        self.name = line
+        self.file1 = ""
+        self.file2 = ""
+        self.type = "copy"
+    def debugDisplay(self, deep):
+        i = self.name
+        debugDisplay("copy", deep, i)
+    def important(self):
+        return len(self.name) > 0
+    def parse(self):
+        self.name = self.name[5:].strip()
+    def formatText(self, length, prefixed = None):
+        return "~Copy "+self.name+"\n"
+    def outputHTML(self, prefixed = None):
+        return ""
+
 class Display:
     def __init__(self, line):
         global REFCOUNT
@@ -1196,6 +1232,12 @@ class TextBlock:
                     block.append(element)
                 block.append(Include(line))
                 element = Paragraph()
+            elif begin(line, "~copy"):
+                mode = "copy"
+                if element.important():
+                    block.append(element)
+                block.append(Copy(line))
+                element = Paragraph()
             elif begin(line, "~remain"):
                 mode = "remain"
                 if element.important():
@@ -1213,7 +1255,7 @@ class TextBlock:
                 if element.important():
                     block.append(element)
                 element = Warn(line)
-            elif mode in ["image", "get", "include", "remain", "display", "ordered list", "unordered list"]:
+            elif mode in ["image", "get", "include", "remain", "display", "copy", "ordered list", "unordered list"]:
                 mode = "par"
                 if element.important():
                     block.append(element)
@@ -1466,6 +1508,13 @@ class Document:
                     i = "~include "+path.join(basedir, i[8:].strip())
                 if begin(i, "~image"):
                     i = "~image "+path.join(basedir, i[6:].strip())
+                if begin(i, "~copy"):
+                    files = splitPath(i[5:].strip())
+                    fromFile = path.join(basedir, files[0])
+                    toFile = path.join(os.getcwd(), "src", files[1])
+                    if not path.exists(path.dirname(toFile)):
+                        os.makedirs(path.dirname(toFile))
+                    open(toFile, "w").write(open(fromFile).read())
                 self.lines.append(i)
 
     def fromOneFile(self, filename):

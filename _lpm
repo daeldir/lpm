@@ -707,7 +707,7 @@ class Paragraph:
             else:
                 language = self.lang
             try:
-                lexer = get_lexer_by_name("python")
+                lexer = get_lexer_by_name(language)
             except pygments.util.ClassNotFound:
                 lexer = get_lexer_by_name("text")
             formatter = HtmlFormatter(cssclass="source", nowrap = True)

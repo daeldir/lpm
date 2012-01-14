@@ -57,7 +57,8 @@
     
                                   ~~~                                   
 
-~Get format.lpm
-~Get programme.lpm
-~Get licence.lpm
+~Get doc/format.lpm
+~Get doc/programme.lpm
+~Get doc/tests.lpm
+~Get doc/licence.lpm
 

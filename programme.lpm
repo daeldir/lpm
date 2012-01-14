@@ -39,3 +39,10 @@ théoriquement les seules dépendances du programme.
 
 == Implémentation du programme
 
+~Get architecture.lpm
+~Get fonctions_utilitaires.lpm
+~Get actions_principales.lpm
+~Get gestion_des_documents.lpm
+~Get gestion_du_code.lpm
+~Get gestion_de_la_documentation.lpm
+

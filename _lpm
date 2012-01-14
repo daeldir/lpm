@@ -266,6 +266,7 @@ class Code:
                 COLOR_ERRORS.append(format_language)
             lexer = get_lexer_by_name("text")
         old_line = line
+        begin_line = line
         formatter = HtmlFormatter(linenos=True, linenostart = line, cssclass="source")
         for i in self.code:
             if i.type != "reference":
@@ -273,14 +274,17 @@ class Code:
                 line += 1
             else:
                 formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
+                begin_line = line
                 if i.name in CODE:
                     line += len(CODE[i.name][0].resolved)
-                old_line = line
-                r += highlight(code, lexer, formatter)
+                if code != "":
+                    r += highlight(code, lexer, formatter)
                 code = u""
-                r += i.outputHTML(remain)
+                r += i.outputHTML(remain) % begin_line
+                old_line = line
         formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
-        r += highlight(code, lexer, formatter)
+        if code != "":
+            r += highlight(code, lexer, formatter)
         if not remain:
             r += "</div>\n"
         return r
@@ -356,7 +360,7 @@ class Code:
         def formatText(self, length):
             return self.indentation+"<"+self.name+"\n"
         def outputHTML(self, remain = False):
-            r = "<table class=\"coderef\"><tbody><tr><td><pre>&nbsp;&nbsp;</pre><td><pre>"
+            r = "<table class=\"coderef\"><tbody><tr><td><pre>%d</pre><td><pre>"
             r += self.indentation.replace(" ", "&nbsp;").replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
             r += "&lt;<a "
             if not remain:
@@ -368,8 +372,9 @@ class Code:
         def outputCode(self):
             global CODE
             r = u""
-            for i in CODE[self.name][0].outputCode().split("\n"):
-                r += self.indentation+i+"\n"
+            if self.name in CODE:
+                for i in CODE[self.name][0].outputCode().split("\n"):
+                    r += self.indentation+i+"\n"
             return r
         def resolv(self):
             r = []

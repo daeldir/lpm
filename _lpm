@@ -1863,8 +1863,6 @@ class Document:
             for i in FOOTNOTE:
                 r += i.outputHTML()
             r += "</body></html>"
-            for i in COLOR_ERRORS:
-                sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
         return r
     def outputHTMLToc(self):
         r = u""
@@ -1902,5 +1900,8 @@ d.parse()
 d.resolv()
 d.extractCode()
 codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
+codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(True))
+for i in COLOR_ERRORS:
+    sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
 #d.debugDisplay()
 

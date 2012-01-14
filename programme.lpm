@@ -1,0 +1,41 @@
+= Le programme lpm
+
+== Utilisation du programme
+
+Le programme  s'utilise  de  manière   très   simple :  nous  lançons la
+commande  <<bash>lpm>  suivie  du   nom   du   fichier  contenant  notre
+document.  Nous  ne  passons  qu'un  seul  fichier.  Si  le document est
+séparé  en  plusieurs  sous-fichiers,  le  programme  ira  les  chercher
+automatiquement. 
+
+Le programme fait trois choses : 
+ - Il crée  un  fichier   HTML   contenant   la  documentation  affichée
+ ' correctement,  portant le nom du  fichier passé en paramètre auquel a
+ ' été ajoutée  l'extension  //.html//.  Le  fichier  se  trouve dans le
+ ' répertoire courant (d'où a été lancé lpm).
+ - Il crée un  dossier  //src//  contenant  tout  les  fichiers  sources
+ ' extraits  de  la  documentation.   Il   crée   des  sous  dossiers si
+ ' nécessaire. Ce dossier se trouve aussi dans le répertoire courant.
+ - Enfin,  il crée,  pour chaque fichier  composant la documentation, un
+ ' fichier  //.clean//,  contenant  un   code   source  équivalent  mais
+ ' formaté correctement  (texte  justifié,  blocs  importants  indentés,
+ ' titre centré,  lignes de  72 caractères…).  Dans l'idéal,  il devrait
+ ' remplacer le fichier original,  mais  ceci ne se fera automatiquement
+ ' que lorsque  nous  serons  sûr  que  le  programme  est  suffisamment
+ ' exempt  de  bugs  pour  ne  rien  risquer  de  perdre  (rappelons que
+ ' l'utilisation d'un gestionnaire  de  version  peut  éviter  les pires
+ ' cas).
+
+== Dépendances du programme
+
+Le programme est écrit  en  python,  et  nécessite  donc un interpréteur
+python.  Il n'est pas écrit en python3,  et  nous ne savons pas s'il est
+compatible avec celui-ci. 
+
+Le programme utilise  aussi  pour  la  coloration  syntaxique  le module
+pygments[..],  qui est donc  nécessaire  pour  la  sortie HTML.  Ce sont
+théoriquement les seules dépendances du programme. 
+..: http://pygments.org/
+
+== Implémentation du programme
+

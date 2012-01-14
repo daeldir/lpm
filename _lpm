@@ -25,6 +25,7 @@ REFCOUNT = 0
 
 DOCUMENT_LANGUAGE = "text"
 COLOR_ERRORS = []
+CODEREF_ERRORS = []
 
 # Fonctions utiles
 def detect_starline(line):
@@ -377,6 +378,7 @@ class Code:
                     r += self.indentation+i+"\n"
             return r
         def resolv(self):
+            global CODEREF_ERRORS
             r = []
             if self.name in CODE:
                 for i in CODE[self.name]:
@@ -385,7 +387,8 @@ class Code:
                     for j in i.resolv():
                         r.append(self.indentation+j)
             else:
-                sys.stderr.write("<Code: "+self.name+" does not exists\n")
+                if not self.name in CODEREF_ERRORS:
+                    CODEREF_ERRORS.append(self.name)
             return r
 
 class Paragraph:
@@ -1407,7 +1410,7 @@ class Document:
     def fromFile(self, file_name):
         """ Récupère le code source d'un fichier (interprète ~Get) et remplace
         les chemins de fichiers par leur chemin absolu. """
-        global CODE, FOOTNOTE, URLREF, NOTEREF, FOOTURL, REFCOUNT
+        global CODE, FOOTNOTE, URLREF, NOTEREF, FOOTURL, REFCOUNT, CODEREF_ERRORS
         self.type = "document"
         filename = path.abspath(file_name)
         basedir = path.dirname(filename)
@@ -1420,7 +1423,10 @@ class Document:
         NOTEREF = 0 
         URLREF = 0
         FOOTURL = []
+        for i in CODE:
+            CODE[i][0].references = []
         CODE = {}
+        CODEREF_ERRORS = []
         REFCOUNT = 0
         infile = codecs.open(filename, encoding="utf-8").read()
         outfile = d.formatText()
@@ -1918,5 +1924,7 @@ codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").writ
 codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
 for i in COLOR_ERRORS:
     sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
+for i in CODEREF_ERRORS:
+    sys.stderr.write("<Code: "+i+" n'existe pas.\n")
 #d.debugDisplay()
 

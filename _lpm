@@ -213,8 +213,8 @@ class Code:
 
     def important(self):
         """ Renvoie False si le morceau de code est vide et n'a pas de nom. """
-        if self.name != None:
-            return True
+        #if self.name != None:
+        #    return True
         for i in self.raw_code:
             # Le strip nous empêche d'écrire des codes anonymes en whitespace.
             # Tant pis.

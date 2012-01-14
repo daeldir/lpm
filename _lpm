@@ -444,12 +444,16 @@ class Paragraph:
                 word += i
         split.append(word)
 
-        for i in split:
-            if len(l)+len(i)+1 < length:
-                l += i+" "
+        for i in range(len(split)):
+            if len(l)+len(split[i])+1 < length:
+                if i < len(split)-2 and begin(split[i+1], "<code") and len(l)+len(split[i])+len(split[i+1])+3 > length:
+                    t2.append(l)
+                    l = split[i]+" "
+                else:
+                    l += split[i]+" "
             else:
                 t2.append(l)
-                l = i+" "
+                l = split[i]+" "
         t2.append(l)
         r = u""
         for i in t2[:-1]:

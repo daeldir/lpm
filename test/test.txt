@@ -208,3 +208,4 @@ Ou en le parsant :
 
 ~Get test2.txt
 
+~Copy image.jpg data/lolcat3.jpg

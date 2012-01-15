@@ -66,7 +66,7 @@ nisi.
 
 >
 
-Ensuite, nous créons une section, et une sous-section :
+Ensuite, nous créons une section, et une sous-section : 
 
 <Code (lpm): tests/test
 = Section
@@ -76,8 +76,8 @@ Introduction de la section
 == Sous-section
 >
 
-Cette sous-section contiendra encore des sous-sections testant le
-fonctionnement des listes :
+Cette  sous-section  contiendra  encore   des  sous-sections  testant le
+fonctionnement des listes : 
 
 <Code (lpm): tests/test
 === Listes
@@ -113,7 +113,7 @@ Il y a aussi :
 
 >
 
-Nous testons ensuite les références (notes de bas de page et URLs) :
+Nous testons ensuite les références (notes de bas de page et URLs) : 
 
 <Code (lpm): tests/test
 == Renvois
@@ -136,8 +136,8 @@ L'ancre renvoie ici[=une ancre].
 
 >
 
-Nous présentons ensuite différentes manière de formater les paragraphes
-et le texte qu'ils contiennent :
+Nous   présentons   ensuite   différentes    manière   de   formater les
+paragraphes et le texte qu'ils contiennent : 
 
 <Code (lpm): tests/test
 == La gueule des paragraphes et du texte
@@ -164,15 +164,15 @@ Les mots peuvent être **gras**, //italiques//, __soulignés__ ou
 
 >
 
-Nous pouvons aussi insérer des images. Pour cela, nous devons avoir
-placé une image dans le repertoire de test :
-~copy data/image.jpg tests/image.jpg
+Nous pouvons aussi insérer  des  images.  Pour  cela,  nous devons avoir
+placé une image dans le repertoire de test : 
+~Copy data/image.jpg tests/image.jpg
 
 <Code (lpm): tests/test
 ~Image ./image.jpg
 >
 
-Nous parlons ensuite des blocs de code :
+Nous parlons ensuite des blocs de code : 
 
 <Code (lpm): tests/test
 = Code
@@ -227,7 +227,7 @@ Plein de retours à la ligne :
 \>
 >
 
-Nous abordons ensuite le thème des rappels de code :
+Nous abordons ensuite le thème des rappels de code : 
 
 <Code (lpm): tests/test
 La commande \~Remain rappelle un morceau de code, la commande \~Display
@@ -242,7 +242,8 @@ Display :
 ~Display test.py
 >
 
-Puis nous parlons des morceaux de code dans les paragraphes :
+Puis nous parlons des morceaux de code dans les paragraphes : 
+
 <Code (lpm): tests/test
 On peut mettre des blocs de --code **dans un** paragraphe-- 
 (<import os>), spécifier le langage (<<c>#include \<stdio.h\>>), et
@@ -251,8 +252,8 @@ On peut mettre des blocs de --code **dans un** paragraphe--
 l'échappant : <test \\>.
 >
 
-Enfin, notre dernier travail consiste à tester les inclusions de
-fichier :
+Enfin,  notre  dernier  travail  consiste  à  tester  les  inclusions de
+fichier : 
 
 <Code (lpm): tests/test
 = Inclusion de fichiers
@@ -269,8 +270,8 @@ Et on peut insérer un fichier das le code source généré.
 
 >
 
-Nous créons ici nos deux autres fichier, dont le premier va inclure le
-second afin de tester les inclusions de fichier récursives :
+Nous créons ici nos deux  autres fichier,  dont le premier va inclure le
+second afin de tester les inclusions de fichier récursives : 
 
 <Code (lpm): tests/test2.txt
 ===Une sous section à insérer

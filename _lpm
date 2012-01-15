@@ -294,12 +294,14 @@ class Code:
             else:
                 formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
                 begin_line = line
+                code_length = 0
                 if i.name in CODE:
                     line += len(CODE[i.name][0].resolved)
+                    code_length = len(CODE[i.name][0].resolved)
                 if code != "":
                     r += highlight(code, lexer, formatter)
                 code = u""
-                r += i.outputHTML(remain) % begin_line
+                r += i.outputHTML(remain) % code_length #begin_line
                 old_line = line
         formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
         if code != "":
@@ -379,7 +381,7 @@ class Code:
         def formatText(self, length):
             return self.indentation+"<"+self.name+"\n"
         def outputHTML(self, remain = False):
-            r = "<table class=\"coderef\"><tbody><tr><td><pre>%d</pre><td><pre>"
+            r = "<table class=\"coderef\"><tbody><tr><td><pre class=\"reference\">%d</pre><td><pre>"
             r += self.indentation.replace(" ", "&nbsp;").replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
             r += "&lt;<a "
             if not remain:
@@ -1922,6 +1924,9 @@ class Document:
                         .codehead {
                             background-color: #fda;
                             padding: 3px;
+                        }
+                        pre.reference{
+                            color: #888;
                         }
                         .textcode {
                             font-family: monospace;

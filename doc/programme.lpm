@@ -42,6 +42,7 @@ théoriquement les seules dépendances du programme.
 ~Get architecture.lpm
 ~Get unicode.lpm
 ~Get actions_principales.lpm
+~Get structure_dun_document.lpm
 ~Get gestion_des_documents.lpm
 ~Get gestion_du_code.lpm
 ~Get gestion_de_la_documentation.lpm

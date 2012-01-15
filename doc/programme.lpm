@@ -46,3 +46,8 @@ théoriquement les seules dépendances du programme.
 ~Get gestion_du_code.lpm
 ~Get gestion_de_la_documentation.lpm
 
+== Code final :
+
+Voici à quoi ressemble le code une fois totalement assemblé : 
+~Display lpm
+

@@ -338,7 +338,7 @@ mon texte avec* une note de bas de page.
 Il peut être utile de mettre  en  avant un paragraphe,  comme le dernier
 paragraphe de la section précédente.  Pour celà,  on utilise la commande
 <<lpm>/!\\>.  Cette commande va  considérer  tout  le  paragraphe qui la
-suit comme  un  paragraphe  important.  Il  est  possible  de mettredeux
+suit comme un  paragraphe  important.  Il  est  possible  de mettre deux
 paragraphes dans un même  bloc  important  en  plaçant la commande aussi
 sur la ligne vide qui les sépare.  Enfin,  dans la forme complète de ces
 blocs  (car  oui,  c'est  un  bloc   de   texte  qui  est  marqué  comme

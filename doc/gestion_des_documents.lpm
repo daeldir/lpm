@@ -1,9 +1,9 @@
 == Gestion des documents
 
-Dans cette partie, nous traitons de la gestion des documents. Nous
-expliquerons ici comment nous chargeons un document, et le découpons en
-sous parties, en blocs de code et en blocs de documentation. Pour cela,
-nous définirons trois classes :
+Dans cette partie,  nous  traitons  de  la  gestion des documents.  Nous
+expliquerons ici comment  nous  chargeons  un document,  et le découpons
+en sous parties,  en blocs de  code  et en blocs de documentation.  Pour
+cela, nous définirons trois classes : 
 
 <Code: gestion des documents
 <classe Introduction
@@ -12,72 +12,372 @@ nous définirons trois classes :
 >
 
 === La classe Document
-la classe <Document> est une sous-classe de <Section>, un document étant
-une section qui a réussit. Nous parlons d'elle en premier car c'est la
-première classe que nous utilisons dans le programme. Ce qui nous
-intéresse ici n'est d'ailleurs pas son travail en tant que section,
-mais bien son travail en tant que document.
 
-<code: classe Document
+la classe  <Document>  est une  sous-classe  de  <Section>,  un document
+étant une section qui  a  réussit.  Nous  parlons  d'elle en premier car
+c'est la première classe que  nous  utilisons dans le programme.  Ce qui
+nous  intéresse  ici  n'est  d'ailleurs  pas  son  travail  en  tant que
+section, mais bien son travail en tant que document. 
+
+<Code: classe Document
 <classes utiles à la classe Document
 
 class Document(Section):
-    def __init__(self, file_name, format_text = False):
+    def __init__(self, file_name):
         Section.__init__(self)
         <variables spécifiques au document
         <à la création d'un document
-    def parse(self):
+    def parse(self, resolve_references):
         <extraire les informations spécifiques au document
-        Section.parse(self)
+        Section.parse(self, resolve_references)
+    def format_text(self):
+        <formater un document
+    def output_html(self):
+        <sortir un document en html
 >
 
-Notre document possède quelques atout en plus que la section : un titre,
-des auteurs, un résumé, une licence. Le titre et les auteurs sont
-conservés dans une classe sur mesure, d'où la référence vers un bloc de
-code //classes utiles à la classe Document//. Voici comment sont
-initialisées les variables supplémentaires de la classe Document :
+Notre document  possède  quelques  atout  en  plus  que  la section : un
+titre,  des auteurs,  un résumé,  une licence.  Le  titre et les auteurs
+sont conservés dans une  classe  sur  mesure,  d'où la référence vers un
+bloc de code //classes  utiles  à  la  classe Document//.  Voici comment
+sont  initialisées   les   variables   supplémentaires   de   la  classe
+Document : 
 
-<code: variables spécifiques au document
+<Code: variables spécifiques au document
 self.title = Title()
 self.authors = Authors()
 self.abstract = None
 self.license = None
 >
 
-À la création d'un document, nous faisons plusieurs actions :
- - tout d'abord, nous cherchons les commandes <<lpm>~Get> pour insérer
- '  leur contenu dans le document,*
- - ceci fait, nous analysons le document pour en extraire la structure,
- - enfin, nous résolvons les références, c'est à dire que nous
- ' déterminons le nom des références et, dans le cas du code, remplaçons les
- ' références par leur contenu.
-*: Nous désirons, pour le formatage du fichier source lui même, ignorer
-  les <<lpm>~Get>. Pour cette raison, nous les analysons //sauf si//
-  nous avons spécifié que c'est inutile. De la même manière, il n'est
-  pas nécessaire de résoudre les référence quand le but n'est que de
-  formater le texte.
+À la création d'un document, nous faisons plusieurs actions : 
+ - tout  d'abord,  nous  cherchons   les   commandes  <<lpm>\~Get>  pour
+ ' insérer leur contenu dans le document,*
+ - ceci  fait,  nous   analysons   le   document   pour  en  extraire la
+ ' structure,
+ - enfin,  nous  résolvons  les  références,   c'est  à  dire  que  nous
+ ' déterminons  le  nom  des  références  et,   dans  le  cas  du  code,
+ ' remplaçons les références par leur contenu.
+
+ *: Nous  désirons,  pour  le  formatage  du  fichier  source  lui même,
+    ignorer les  <<lpm>\~Get>.  Pour cette  raison,  nous analysons deux
+    fois le fichier.  Une fois sans avoir remplacé les  <<lpm>\~Get>, et
+    une fois en l'ayant fait.  Nous  ne résolvons les références qu'à la
+    deuxième analyse.
 
 <Code: à la création d'un document
 <charger le fichier
-if not format_text:
-    <analyser les fichiers inclus
-self.parse()
-if not format_text:
-    self.resolv()
+
+<formater le fichier source
+
+<analyser les fichiers inclus
+
+<analyser le document entier
 >
 
-Nous attaquons ici véritablement les spécificités de la classe
-<Document>. Si vous n'avez pas encore deviné, voici ce qu'elle fait en
-plus que la classe <Section> :
- - elle charge le fichier passé en paramètre (et les fichiers qu'il
+Nous  attaquons  ici  véritablement   les   spécificités  de  la  classe
+<Document>.  Si vous n'avez pas encore deviné,  voici ce qu'elle fait en
+plus que la classe <Section> : 
+ - elle charge le fichier  passé  en  paramètre  (et  les fichiers qu'il
  ' inclue),
- - elle extrait le titre, le résumé, la licence et les auteurs du
- ' document.
+ - elle extrait le  titre,  le  résumé,  la  licence  et  les auteurs du
+ ' document,
+ - elle propose  un  fichier  source  reformaté  pour  une  lecture plus
+ ' agréable.
 
-Après ça, notre classe va se comporter comme une section normale.
+Après ça, notre classe va se comporter comme une section normale. 
+
+==== Formater le fichier source
+
+Lorsque nous chargeons  un  document,  nous  formatons le fichier source
+de ce document et sauvegardons  à  côté  de  celui-ci  le résultat de ce
+formatage  (s'il est différent  du  fichier original),  ce qui permettra
+de vérifier qu'aucune erreur ne  s'est  glissée  dans le fichier formaté
+avant de remplacer le fichier original par celui-ci. 
+
+<Code: formater le fichier source
+self.parse()
+output_text = self.format_text()
+input_text = read(file_name)
+if output_text != input_text:
+    write(file_name+".clean", output_text)
+>
 
 ==== Charger le fichier
 
+Nous chargeons le fichier.  Cette  partie  est  assez simple : nous nous
+contentons  d'extraire  les  lignes   du   fichier  dans  une  variable,
+<self.lines>  (qui est  héritée  de  la classe  <Section>,  voir  (cette
+partie)[self.line dans les sections] pour comprendre son usage :) 
+
+<Code: charger le fichier
+file_name = path.abspath(file_name)
+dir_name = path.dirname(file_name)
+self.lines = readlines(file_name)
+>
+
+//Nous utilisons le chemin  absolu  vers  le fichier.  Nous en profitons
+d'ailleurs pour récupérer le nom  du  dossier dans lequel se situe notre
+fichier.// 
+
+Une fois  ces  lignes  chargées,  nous   devons  nous  débrouiller  pour
+charger les  fichiers  référencés  dans  ce  fichier,  et en insérer les
+lignes dans le document  en  cours.  Pour  compliquer la chose,  si nous
+incluons un fichier,  nous voulons que  les  commandes de celui-ci ayant
+pour  paramètre  des   noms   de   fichier   soient  modifiées,  afin de
+transformer le nom de fichier  relatif  en  nom de fichier absolu : nous
+ne connaissons en effet la position  du  fichier  en cours de chargement
+que dans cette  partie  du  programme,  mais  nous  devrons  traiter ces
+chemins relativement au fichier  en  cours  de  traitement,  ce qui peut
+poser des problèmes  si  le  fichier  est  dans  un dossier différent du
+répertoire de travail (où la commande a été lancée). 
+
+<Code: analyser les fichiers inclus
+new_lines = []
+mode = "text"
+for line in self.document_lines:
+    <analyse des fichiers inclus : gérer les blocs de code
+    <gérer les ~Get
+    <gérer les ~Include et ~Image
+    <gérer les ~Copy
+    <gérer les autres cas
+self.lines = new_lines
+>
+
+//Nous commençons un bloc  <if>/<elif>  dans la partie __gérer les blocs
+de code__,  qui  continue  dans  les   parties  __gérer  les  \~Get__ et
+__gérer les \~Include,  \~Image et \~Copy__.  Le petit <else> qui traîne
+ici n'est  que  la  conclusion   de   cette   masquarade  si  habilement
+dissimulée.// 
+
+Ceci fait, nous analysons pour de bon le document : 
+
+<Code: analyser le document entier
+self.parse()
+self.resolv()
+>
+
+===== Gérer les blocs de code
+
+Vous avez pu  remarquer  que  nous  avons  définit une variable  <mode>.
+Sont  but  est  simple :  nous   permettre  de  ne  pas  interpréter les
+<<lpm>\~Get>  et autres joyeusetés lorsqu'ils  font  partie d'un bloc de
+code (les blocs de code ne sont **jamais interprétés**). 
+
+Avant toute chose,  si cette variable contient la chaîne <"code">,  nous
+ne faisons qu'une chose : vérifier  si  on  sort de ce mode.  Toutes les
+autres actions seront conditionnées par un <elif>  ou un <else>,  ce qui
+fait qu'elles ne seront jamais exécutées si le mode est <"code">. 
+
+<Code: analyse des fichiers inclus : gérer les blocs de code
+if mode == "code":
+    if i.strip() == ">":
+        mode = "text"
+    new_lines.append(line)
+>
+
+//On sort du mode  <"code">  si la ligne contient juste un <"\>">.  Quoi
+qu'il arrive,  nous ajoutons la ligne aux lignes du document final,  car
+nous en aurons encore l'usage.// 
+
+Si nous ne sommes pas  encore  en  mode  <"code">,  il faut vérifier que
+nous n'y entrons pas : 
+
+<Code: analyse des fichiers inclus : gérer les blocs de code
+elif begin(line, "<code"):
+    mode = "code"
+    new_lines.append(line)
+>
+
+===== Gérer les ~Get
+
+Si la ligne commence par  <<lpm>\~Get>,  nous créons un  <Document>  qui
+contient le contenu pointé  par  <<lpm>\~Get>,  puis nous lui « volons »
+ses lignes en les insérant  dans  le  document en cours.  Dans le cas où
+le fichier n'existe pas, nous affichons une erreur. 
+
+<Code: gérer les ~Get
+elif begin(line, "~get"):
+    line = line.strip()
+    get_file = line.[4:].strip()
+    get_file_abs = path.join(dir_name, get_file)
+    if get_file == "":
+        error("Un get n'a pas d'argument.")
+    elif not path.exists(get_file_abs):
+        error("Fichier non trouvé : %s" % get_file_abs)
+    else:
+        document = Document(get_file_abs)
+        new_lines += document.lines
+>
+
+===== Gérer les ~Include et ~Image
+
+Si la ligne commence par <<lpm>\~Include>  ou <<lpm>\~Image>,  nous nous
+contentons de  modifier  le  chemin  d'accès  au  fichier pointé pour le
+rendre absolu.  Nous utilisons deux blocs  <elif>,  car vous remarquerez
+que les deux commandes ne font  pas  la  même taille,  ce qui est gênant
+pour récupérer le chemin de  fichier  (Une solution à base de  <split()>
+existe,  mais ne serait intéressante  que  si  nous avions plus de cas à
+gérer.  Ici,  l'utiliser reviendrais  à  complexifier  le  système  pour
+rien.). 
+
+<Code: gérer les ~Include et ~Image
+elif begin(line, "~include"):
+    file_path = path.join(dir_name, i[8:].strip()
+    new_line.append("~include "+file_path)
+elif begin(line, "~image"):
+    file_path = path.join(dir_name, i[6:].strip()
+    new_line.append("~image "+file_path)
+>
+
+===== Gérer les ~Copy
+
+Dans  le  cas   de   la   commande   <<lpm>\~Copy>,   elle   est,  comme
+<<lpm>\~Get>,  traitée tout  de  suite.  Son  fonctionnement  est un peu
+spécial par rapport aux autres  commandes,  car  elle prend en paramètre
+deux noms de fichier.  De plus,  la ligne contenant cette commande n'est
+pas retenue. 
+
+<Code: gérer les ~Copy
+elif begin(line, "~copy"):
+    <~Copy: déterminer les fichiers
+    <~Copy: le fichier source existe ?
+>
+
+Nous commençons par extraire  les  chemins  de  fichier  de la commande.
+Ces chemins peuvent  contenir  des  espaces  à  condition  qu'ils soient
+échappées  (chaque espace doit être précédé d'un <<lpm>\\>).  //(voir la
+fonction <split_path()> (plus loin)[fonction split_path].)// 
+
+<Code: ~Copy: déterminer les fichiers
+files = split_path(line[5:].strip())
+from_file = path.join(basedir, files[0])
+to_file = path.join(os.getcwd(), "src", files[1])
+>
+
+Nous vérifions ensuite que le  fichier à copier existe.  De même pour le
+dossier de destination, que nous créons si ce n'est pas le cas. 
+
+<Code: ~Copy: le fichier source existe ?
+if not path.exists(from_file):
+    error("Fichier non trouvé : %s" % from_file)
+else:
+    <~Copy: si le fichier source existe
+>
+
+<Code: ~Copy: si le fichier source existe
+if not path.exists(path.dirname(to_file)):
+    os.makedirs(path.dirname(to_file))
+>
+
+Maintenant,  que nous savons que le fichier source existe,  ainsi que le
+repertoire de destination, nous n'avons plus qu'à copier : 
+
+<Code: ~Copy: si le fichier source existe
+write(to_file, read(from_file))
+>
+
+Cette partie de code ressemble donc à ceci : 
+~Display gérer les ~Copy
+
+Enfin,    nous    avons    utilisé     la    fonction    <split_path()>.
+[=fonction split_path] Voici sont fonctionnement : 
+
+<Code: fonctions utilitaires
+def split_path(line):
+    res = []
+    escaping = False
+    word = u""
+    for c in line:
+        if escaping: 
+            word += c
+            escaping = False
+        elif c == "\\":
+            escaping = True
+        elif c == " ":
+            res.append(word)
+            word = u""
+        else:
+            word += c
+    res.append(word)
+    return res
+>
+
+//Cette fonction fonctionne comme un  <split(" ")>,  à ceci près que les
+caractères précédés d'un <<lpm>\\> sont ignorés.// 
+
+===== Gérer les autres cas
+
+Si nous n'avons pas croisé de <<lpm>\~Get>,  <<lpm>\~include>  ou autre,
+nous nous contentons d'ajouter la ligne dans les lignes finales : 
+
+<Code: gérer les autres cas
+else:
+    new_lines.append(line)
+>
+
+[=fonction begin] 
+
+===== La fonction begin()
+
+La fonction  <begin()>,  utilisée dans les  morceaux  de code précédents
+et tout au long  du  programme,  vérifie  si  une  ligne commence par un
+texte,  ou par l'un  des  textes  fournits  en  paramètre.  Elle accepte
+comme  paramètre  une  chaîne  de  caractères  ou  un tableau.  Voici sa
+définition : 
+
+<Code: fonctions utilitaires
+def begin(line, texts):
+    <begin: gérer deux types de paramètre
+    for text in texts:
+        <begin: vérifier si la ligne commence par ce texte
+    return False
+>
+
+//Nous  retournerons  <True>  dans   la   boucle   <for>,  si  le  texte
+correspond.  Si nous atteignons la fin  de la boucle,  c'est que rien ne
+correspond, nous retournons donc <False>.// 
+
+Pour  gérer  les  deux  types  de  paramètre,  nous  nous  contentons de
+vérifier si le paramètre  est  une  chaine de caractère,  et si c'est le
+cas, de le remplacer par un tableau contenant seulement cette chaîne. 
+
+<Code: begin: gérer deux types de paramètre
+if type(texts) == str:
+    texts = [str]
+>
+
+Pour vérifier que  la  ligne  débute  par  le texte,  nous vérifons tout
+d'abord qu'elle est plus grande que  ce texte  (elle ne peux pas débuter
+par ce texte si elle est plus courte que lui).  Ensuite,  nous comparons
+les premiers caractères de la ligne avec le texte : 
+
+<Code: begin: vérifier si la ligne commence par ce texte
+line = line.strip().lower()
+text = text.strip().lower()
+if len(line) >= len(text):
+    if line[:len(text)] == text:
+        return True
+>
+
+//Nous utilisons cette  fonctions  pour  vérifier  qu'une ligne commence
+par une commande.  Les  commandes  sont  insensibles  à la casse.  Comme
+aucun  autre  cas  demandant  d'être  sensible   à  la  casse  ne  s'est
+présenté,  nous nous  épargnons  de  futures  mises  en minuscule en les
+pratiquant ici. La même remarque s'applique à propos du <strip()>.// 
+
+==== Récapitulatif de la création d'un document
+
+Pour récapituler, voici ce qui se passe quand on crée un document : 
+~Display à la création d'un document
+
 ==== Extraire les informations spécifiques au document
 
+Pour  extraire  les  informations   spécifiques   au  document,  nous le
+parcourons une fois  en  entier,  lui  tirant  sa substantifique moëlle.
+Quand une ligne est spécifique  au document,  nous l'analysons,  et nous
+la retirons des lignes connues du  document.  À la fin de cette lecture,
+le document  sait  qui  il  est,   ce   qu'il   est,  et  les  lignes ne
+contiennent plus que  des  informations  pouvant  être  analysées par la
+fonction originale de <Section>. 
 

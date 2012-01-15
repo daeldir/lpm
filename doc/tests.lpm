@@ -66,3 +66,234 @@ nisi.
 
 >
 
+Ensuite, nous créons une section, et une sous-section :
+
+<Code (lpm): tests/test
+= Section
+
+Introduction de la section
+
+== Sous-section
+>
+
+Cette sous-section contiendra encore des sous-sections testant le
+fonctionnement des listes :
+
+<Code (lpm): tests/test
+=== Listes
+
+==== Listes non-numérotées
+
+- Les listes non numérotées
+- Les autres
+
+==== Listes numérotées
+Ou, si vous préférez :
+# Les listes numérotées
+# Les autres
+
+==== Imbrication de listes
+Il y a aussi :
+- des listes numérotées dans des listes non numérotées
+' # avec plusieurs éléments
+' # comme ça
+- des listes non numérotées dans des listes numérotées
+' - avec autant d'éléments
+' - que précédemment
+# et aussi des liste non numérotées
+' dans des listes numérotées
+' - de ce style
+# Puis pour ne pas surprendre :
+' # des liste numérotées dans des
+' ' listes numérotées
+# Et un élément très très très très long pour voir comment les retours
+' à la ligne sont gérés. Et qui en plus contient
+'
+' /!\ un paragraphe important.
+
+>
+
+Nous testons ensuite les références (notes de bas de page et URLs) :
+
+<Code (lpm): tests/test
+== Renvois
+Il y a les notes de bas de page*, les liens[..], les (liens ancrés)[une 
+ancre] qui peuvent contenir plusieurs mots.
+
+*: Comme ça
+..: http://fr.wikipedia.org/wiki/Lien_hypertexte
+
+Nulla aliquet adipiscing justo, ultricies blandit erat congue at. Sed
+sapien dui, convallis et sollicitudin ac, volutpat ut diam. Cras sed
+consequat ipsum.  Sed commodo sodales leo nec tempus. Pellentesque id
+nisi dui. Nam in est accumsan odio sagittis scelerisque sed at nibh.
+Pellentesque vulputate sodales risus, et auctor erat imperdiet at. Sed
+malesuada, nunc vitae faucibus cursus, turpis nulla fringilla sapien,
+nec varius nisl dolor a nunc. Vivamus sed tellus tortor, in aliquet
+odio.
+
+L'ancre renvoie ici[=une ancre].
+
+>
+
+Nous présentons ensuite différentes manière de formater les paragraphes
+et le texte qu'ils contiennent :
+
+<Code (lpm): tests/test
+== La gueule des paragraphes et du texte
+
+/!\ Les paragraphes peuvent être formatés pour être rendus plus
+importants. /!\
+/!\
+/!\ Praesent tincidunt posuere velit. Fusce sed eros sed turpis lacinia
+rhoncus. Suspendisse potenti. Nulla feugiat, nisi vitae egestas
+tincidunt, tortor sapien porta risus, id scelerisque quam massa a
+lectus. Etiam et sapien orci. Donec convallis lorem quis eros tincidunt
+rutrum eu sit amet lectus.  Donec eget facilisis nunc. Nulla aliquam
+nibh eget dolor vestibulum non placerat lacus aliquet. Curabitur
+viverra, quam non luctus porttitor, lacus ipsum egestas risus, et luctus
+dui diam et ligula. Quisque nulla augue, semper nec commodo vel,
+consequat eget neque. Integer volutpat, mi eget interdum lobortis, lorem
+ligula accumsan elit, at imperdiet tellus turpis sit amet justo.
+
+/!\ Les deux paragraphes précédents sont dans un seul bloc important,
+mais celui-ci en est séparé.
+
+Les mots peuvent être **gras**, //italiques//, __soulignés__ ou
+--barrés--.
+
+>
+
+Nous pouvons aussi insérer des images. Pour cela, nous devons avoir
+placé une image dans le repertoire de test :
+~copy data/image.jpg tests/image.jpg
+
+<Code (lpm): tests/test
+~Image ./image.jpg
+>
+
+Nous parlons ensuite des blocs de code :
+
+<Code (lpm): tests/test
+= Code
+Dans cette partie, nous traiterons de la gestion du code dans le
+document
+
+\<Code: test.py
+""" Ce code sera extrait dans le fichier test.py, et formaté en python
+"""
+def a():
+\    <morceau de python
+a()
+\>
+
+\<Code: test.py
+""" Ce code sera ajouté à la suite de test.py """
+\>
+
+\<Code: test.c
+/* Ce code sera extrait dans test.c, mais formaté en python */
+\>
+
+\<Code (c): test2.c
+/* Ce code sera extrait dans test2.c, et formaté en C */
+printf("une ligne\n");
+\>
+
+\<Code: morceau de python
+print "L'indentation est conservée"
+\>
+
+\<Code:
+""" 
+Ce morceau de code affiche du python, mais n'est jamais extrait de
+ce
+document
+"""
+\>
+
+\<Code (lpm):
+\\<Code:
+= Explication
+Voici comment on inclue un bloc de code :
+\\\<Code:
+coco
+\\\>
+Plein de retours à la ligne :
+
+
+
+\\>
+\>
+>
+
+Nous abordons ensuite le thème des rappels de code :
+
+<Code (lpm): tests/test
+La commande \~Remain rappelle un morceau de code, la commande \~Display
+affiche un morceau de code (dans le premier cas, on affiche ce qui a
+déjà été affiché, dans le second, on affiche le code tel qu'il sera
+sortit)
+
+Remain :
+~Remain test.py
+
+Display :
+~Display test.py
+>
+
+Puis nous parlons des morceaux de code dans les paragraphes :
+<Code (lpm): tests/test
+On peut mettre des blocs de --code **dans un** paragraphe-- 
+(<import os>), spécifier le langage (<<c>#include \<stdio.h\>>), et
+échapper les caractères qui sont utilisés par lpm
+(<\<\<python\>--test\>>). On peut aussi finir un bloc de code par \\ en
+l'échappant : <test \\>.
+>
+
+Enfin, notre dernier travail consiste à tester les inclusions de
+fichier :
+
+<Code (lpm): tests/test
+= Inclusion de fichiers
+On peut insérer un fichier sans le parser :
+
+~Include test2.txt
+
+Ou en le parsant :
+
+~Get test2.txt
+
+Et on peut insérer un fichier das le code source généré.
+~Copy image.jpg data/lolcat3\ avec\ espaces.jpg
+
+>
+
+Nous créons ici nos deux autres fichier, dont le premier va inclure le
+second afin de tester les inclusions de fichier récursives :
+
+<Code (lpm): tests/test2.txt
+===Une sous section à insérer
+
+/!\ Contenant un paragraphe important.
+
+~Get test3.txt
+
+>
+
+<Code (lpm): tests/test3.txt
+~license~
+__**LRL Recursive Licence**__
+
+Copyright Tartempion (c) 1850
+Copyright Mélanine de Balzac (c) 1786
+
+Permission is granted to use, copy, modify and/or distribute this work
+as long as :
+
+# You follow the license
+
+This license is under LRL Recursive license.
+~~~
+>
+

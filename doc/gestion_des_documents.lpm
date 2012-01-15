@@ -1,0 +1,83 @@
+== Gestion des documents
+
+Dans cette partie, nous traitons de la gestion des documents. Nous
+expliquerons ici comment nous chargeons un document, et le découpons en
+sous parties, en blocs de code et en blocs de documentation. Pour cela,
+nous définirons trois classes :
+
+<Code: gestion des documents
+<classe Introduction
+<classe Section
+<classe Document
+>
+
+=== La classe Document
+la classe <Document> est une sous-classe de <Section>, un document étant
+une section qui a réussit. Nous parlons d'elle en premier car c'est la
+première classe que nous utilisons dans le programme. Ce qui nous
+intéresse ici n'est d'ailleurs pas son travail en tant que section,
+mais bien son travail en tant que document.
+
+<code: classe Document
+<classes utiles à la classe Document
+
+class Document(Section):
+    def __init__(self, file_name, format_text = False):
+        Section.__init__(self)
+        <variables spécifiques au document
+        <à la création d'un document
+    def parse(self):
+        <extraire les informations spécifiques au document
+        Section.parse(self)
+>
+
+Notre document possède quelques atout en plus que la section : un titre,
+des auteurs, un résumé, une licence. Le titre et les auteurs sont
+conservés dans une classe sur mesure, d'où la référence vers un bloc de
+code //classes utiles à la classe Document//. Voici comment sont
+initialisées les variables supplémentaires de la classe Document :
+
+<code: variables spécifiques au document
+self.title = Title()
+self.authors = Authors()
+self.abstract = None
+self.license = None
+>
+
+À la création d'un document, nous faisons plusieurs actions :
+ - tout d'abord, nous cherchons les commandes <<lpm>~Get> pour insérer
+ '  leur contenu dans le document,*
+ - ceci fait, nous analysons le document pour en extraire la structure,
+ - enfin, nous résolvons les références, c'est à dire que nous
+ ' déterminons le nom des références et, dans le cas du code, remplaçons les
+ ' références par leur contenu.
+*: Nous désirons, pour le formatage du fichier source lui même, ignorer
+  les <<lpm>~Get>. Pour cette raison, nous les analysons //sauf si//
+  nous avons spécifié que c'est inutile. De la même manière, il n'est
+  pas nécessaire de résoudre les référence quand le but n'est que de
+  formater le texte.
+
+<Code: à la création d'un document
+<charger le fichier
+if not format_text:
+    <analyser les fichiers inclus
+self.parse()
+if not format_text:
+    self.resolv()
+>
+
+Nous attaquons ici véritablement les spécificités de la classe
+<Document>. Si vous n'avez pas encore deviné, voici ce qu'elle fait en
+plus que la classe <Section> :
+ - elle charge le fichier passé en paramètre (et les fichiers qu'il
+ ' inclue),
+ - elle extrait le titre, le résumé, la licence et les auteurs du
+ ' document.
+
+Après ça, notre classe va se comporter comme une section normale.
+
+==== Charger le fichier
+
+==== Extraire les informations spécifiques au document
+
+

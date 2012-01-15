@@ -18,6 +18,20 @@ toutes les données nécessaires au fonctionnement du programme.
 
 >
 
+Lors de  la  définition  des  classes,  nous  les  découperons  en trois
+catégories :  les  classes  de  gestion   du  document,  les  classes de
+gestion des blocs  de  code,  et  les  classes  de  gestion des blocs de
+documentation : 
+
+<Code: définition des classes
+<gestion des blocs de code
+<gestion des blocs de documentation
+<gestion des documents
+>
+
+//Les classes de gestion des documents  sont  placées à la fin car elles
+font appel aux classes de gestion du code et de la documentation.// 
+
 === Début du programme python et imports
 
 Il débute  bien  entendu  en   spécifiant  quel  interpréteur  utiliser,

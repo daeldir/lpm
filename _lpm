@@ -1103,8 +1103,9 @@ class Display:
         return len(self.name) > 0
     def parse(self):
         self.name = self.name[8:].strip()
-        if not self.count in CODE[self.name][0].references:
-            CODE[self.name][0].references.append(self.count)
+        if self.name in CODE:
+            if not self.count in CODE[self.name][0].references:
+                CODE[self.name][0].references.append(self.count)
     def formatText(self, length, prefixed = None):
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):

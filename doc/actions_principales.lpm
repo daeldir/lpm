@@ -7,12 +7,12 @@ en paramètre n'existe pas.
 
 <Code: actions principales
 if len(sys.argv) < 2:
-	sys.stderr.write(u"Erreur : aucun fichier passé en paramètre")
+	error(u"Erreur : aucun fichier passé en paramètre")
 	sys.exit()
 
 document_file = sys.argv[1]
 if not path.exists(document_file):
-	sys.stderr.write(document_file+u" n'existe pas.")
+	error(document_file+u" n'existe pas.")
 	sys.exit()
 
 >
@@ -39,10 +39,7 @@ passé en  paramètre  dans  ce  document  vierge,  et nous l'analysons et
 reconstituons les morceaux de code : 
 
 <Code: actions principales
-document = Document()
-document.load(document_file)
-document.parse()
-document.resolv()
+document = Document(document_file)
 
 >
 

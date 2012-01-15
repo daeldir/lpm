@@ -144,12 +144,6 @@ for line in self.document_lines:
 self.lines = new_lines
 >
 
-//Nous commençons un bloc  <if>/<elif>  dans la partie __gérer les blocs
-de code__,  qui  continue  dans  les   parties  __gérer  les  \~Get__ et
-__gérer les \~Include,  \~Image et \~Copy__.  Le petit <else> qui traîne
-ici n'est  que  la  conclusion   de   cette   masquarade  si  habilement
-dissimulée.// 
-
 Ceci fait, nous analysons pour de bon le document : 
 
 <Code: analyser le document entier

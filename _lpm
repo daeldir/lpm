@@ -1498,7 +1498,7 @@ class Document:
                 mode = "code"
                 self.lines.append(i)
             elif mode == "code":
-                if i.split() == ">":
+                if i.strip() == ">":
                     mode = "normal"
                 self.lines.append(i)
             elif begin(i, "~get"):

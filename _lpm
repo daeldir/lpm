@@ -1904,7 +1904,7 @@ class Document:
                             margin: 0px;
                         }
                         .codechunk {
-                            border: 1px solid #ffa;
+                            border: 1px solid #fda;
                             border-radius: 10px;
                             background-color: #ffb;
                             margin: 10px;
@@ -1912,6 +1912,7 @@ class Document:
                         }
                         .codehead {
                             background-color: #fda;
+                            border-radius: 5px;
                             padding: 3px;
                             margin-bottom: 10px;
                         }
@@ -1920,6 +1921,10 @@ class Document:
                         }
                         .textcode {
                             font-family: monospace;
+                            background-color: #ffb;
+                            border: 1px solid #fda;
+                            padding-left: 3px;
+                            padding-right: 3px;
                         }
                         li p {
                             margin: 0px;

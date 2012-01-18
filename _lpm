@@ -284,26 +284,15 @@ class Code:
             if not format_language in COLOR_ERRORS:
                 COLOR_ERRORS.append(format_language)
             lexer = get_lexer_by_name("text")
-        old_line = line
-        begin_line = line
-        formatter = HtmlFormatter(linenos=True, linenostart = line, cssclass="source")
+        formatter = HtmlFormatter()
         for i in self.code:
             if i.type != "reference":
                 code += i.outputHTML()
-                line += 1
             else:
-                formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
-                begin_line = line
-                code_length = 0
-                if i.name in CODE:
-                    line += len(CODE[i.name][0].resolved)
-                    code_length = len(CODE[i.name][0].resolved)
                 if code != "":
                     r += highlight(code, lexer, formatter)
                 code = u""
-                r += i.outputHTML(remain) % code_length #begin_line
-                old_line = line
-        formatter = HtmlFormatter(linenos=True, linenostart = old_line, cssclass="source")
+                r += i.outputHTML(remain)
         if code != "":
             r += highlight(code, lexer, formatter)
         if not remain:
@@ -381,14 +370,14 @@ class Code:
         def formatText(self, length):
             return self.indentation+"<"+self.name+"\n"
         def outputHTML(self, remain = False):
-            r = "<table class=\"coderef\"><tbody><tr><td><pre class=\"reference\">%d</pre><td><pre>"
+            r = "<div><pre>"
             r += self.indentation.replace(" ", "&nbsp;").replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
-            r += "&lt;<a "
+            r += "<a "
             if not remain:
                 r += "id=\"coderef"+str(self.count)+"\" "
             r += "href=\"#"+refEscape(self.name)+"1\">"
             r += self.name.replace("<", "&lt;")
-            r += "</a></pre></td></tr></tbody></table>\n"
+            r += "</a></pre></div>\n"
             return r
         def outputCode(self):
             global CODE
@@ -769,7 +758,7 @@ class Paragraph:
                 if not language in COLOR_ERRORS:
                     COLOR_ERRORS.append(language)
                 lexer = get_lexer_by_name("text")
-            formatter = HtmlFormatter(cssclass="source", nowrap = True)
+            formatter = HtmlFormatter(nowrap = True)
             result = highlight(self.content, lexer, formatter).strip()
             return "<span class=\"textcode\">"+result+"</span>"
 
@@ -1127,7 +1116,7 @@ class Display:
             if not format_language in COLOR_ERRORS:
                 COLOR_ERRORS.append(format_language)
             lexer = get_lexer_by_name("text")
-        formatter = HtmlFormatter(linenos=True, cssclass="source")
+        formatter = HtmlFormatter()
         r += highlight(code, lexer, formatter)
         r += "</div>\n"
         return r
@@ -1924,9 +1913,10 @@ class Document:
                         .codehead {
                             background-color: #fda;
                             padding: 3px;
+                            margin-bottom: 10px;
                         }
-                        pre.reference{
-                            color: #888;
+                        .codechunk div {
+                            line-height: 1.1em;
                         }
                         .textcode {
                             font-family: monospace;

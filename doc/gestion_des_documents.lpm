@@ -213,7 +213,7 @@ le fichier n'existe pas, nous affichons une erreur.
 <Code: gérer les ~Get
 elif begin(line, "~get"):
     line = line.strip()
-    get_file = line.[4:].strip()
+    get_file = line[4:].strip()
     get_file_abs = path.join(dir_name, get_file)
     if get_file == "":
         error("Un get n'a pas d'argument.")
@@ -244,10 +244,10 @@ rien.).
 
 <Code: gérer les ~Include et ~Image
 elif begin(line, "~include"):
-    file_path = path.join(dir_name, i[8:].strip()
+    file_path = path.join(dir_name, i[8:].strip())
     new_line.append("~include "+file_path)
 elif begin(line, "~image"):
-    file_path = path.join(dir_name, i[6:].strip()
+    file_path = path.join(dir_name, i[6:].strip())
     new_line.append("~image "+file_path)
 >
 

@@ -1947,10 +1947,12 @@ class Document:
         if self.name != None:
             r += "\n"
             p = self.getPosition()[1:]
-            r += "<h"+str(len(p))+"><a id=\"sec"+refEscape(self.name)+"\">"
+            position = ""
             for i in p:
-                r += str(i)+"."
-            r += " "+self.name
+                position += str(i)+"."
+            position = position[:-1]
+            r += "<h"+str(len(p))+"><a id=\"sec"+refEscape(position+self.name)+"\">"
+            r += position+". "+self.name
             r += "</a></h"+str(len(p))+">"
             r += "\n"
         r += "\n"
@@ -1992,7 +1994,12 @@ class Document:
         for i in self.sections:
             if i.name != None:
                 r += "<li>"
-                r += "<a href=\"#sec"+refEscape(i.name)+"\">"+i.name+"</a>\n"
+                p = i.getPosition()[1:]
+                position = ""
+                for j in p:
+                    position += str(j)+"."
+                position = position[:-1]
+                r += "<a href=\"#sec"+refEscape(position+i.name)+"\">"+i.name+"</a>\n"
                 r += i.outputHTMLToc()
                 r += "</li>"
         r += "</ol>\n"

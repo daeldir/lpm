@@ -34,10 +34,10 @@ font appel aux classes de gestion du code et de la documentation.//
 
 === Début du programme python et imports
 
-Il débute  bien  entendu  en   spécifiant  quel  interpréteur  utiliser,
-et quels modules seront utilisés.  Nous  ne notons pas tout
-de suite quels modules nous  allons utiliser,  mais les modules suivants
-au moins semblent « logiques », car utilisés très souvent : 
+Il débute bien entendu  en  spécifiant  quel  interpréteur utiliser,  et
+quels modules seront utilisés.  Nous ne  notons  pas tout de suite quels
+modules  nous  allons  utiliser,  mais  les  modules  suivants  au moins
+semblent « logiques », car utilisés très souvent : 
 
 <Code: début d'un programme python
 #!/usr/bin/env python2
@@ -132,21 +132,21 @@ FOOTURLS = []
 Dans le cas  des  morceaux  de  code,  nous  utilisons  un dictionnaire,
 permettant de se référer  au  morceau  de  code  par son nom.  Le numéro
 associé  à  chaque  référence  permet   de   faire  des  liens  vers les
-références elles mêmes  à  côté  d'un  bloc  de  code,  afin d'annoncer
+références elles  mêmes  à  côté  d'un  bloc  de  code,  afin d'annoncer
 « dans quel bloc de code celui-ci est-il utilisé ? ». 
 
 <Code: variables de référence
 CODE = {}
 >
 
-Enfin, nous parserons les fichiers deux fois : une fois pour générer un
-fichier mieux formaté, et une fois pour générer la documentation. Lors
-du parsing, nous commençons déjà à retenir quels objets contiennent des
-références. Si nous le faisons pour les deux parsings successifs, nous
-compterons chaque référence deux fois. Afin d'éviter cela, nous
-utilisons une variable globale, <RESOLVE_REFERENCES>, positionnée à
-<False> au départ, et que nous passerons à <True> lorsque nous serons
-prêts à compter les références pour de bon.
+Enfin,  nous parserons les fichiers  deux  fois :  une fois pour générer
+un fichier mieux formaté,  et  une  fois  pour générer la documentation.
+Lors  du  parsing,  nous   commençons   déjà   à  retenir  quels  objets
+contiennent des références.  Si nous le  faisons  pour les deux parsings
+successifs,  nous compterons chaque référence  deux fois.  Afin d'éviter
+cela,  nous  utilisons   une   variable  globale,  <RESOLVE_REFERENCES>,
+positionnée à  <False>  au  départ,  et  que  nous  passerons  à  <True>
+lorsque nous serons prêts à compter les références pour de bon. 
 
 <Code: variables de référence
 RESOlVE_REFERENCES = False
@@ -168,14 +168,17 @@ CODEREF_ERRORS = []
 par le programme : 
 ~Display variables globales
 
-/!\Ces variables globales ont été réfléchies et semblaient la meilleure
-solution pour éviter de complexifier le code. **Elles ne sont pas
-//thread-safe//.** Si vous décidez pour une raison ou une autre de faire
-fonctionner plusieurs parties de ce code en parallèle, veuillez bien
-faire attention à ces variables (notamment <RESOLVE_REFERENCES>). Si
-vous trouvez un moyen simple de vous passer de ces variables qui
-n'augmente pas la complexité du code, et ne diminue pas sa lisibilité,
-nous vous saurons gré de nous la faire parvenir.
+    /!\ Ces variables    globales    ont    été    réfléchies et /!\
+    /!\ semblaient  la   meilleure   solution   pour   éviter de /!\
+    /!\ complexifier    le    code.    **Elles    ne    sont pas /!\
+    /!\ //thread-safe//.** Si vous  décidez  pour  une raison ou /!\
+    /!\ une autre de faire  fonctionner  plusieurs parties de ce /!\
+    /!\ code en parallèle,  veuillez  bien faire attention à ces /!\
+    /!\ variables  (notamment  <RESOLVE_REFERENCES>).   Si  vous /!\
+    /!\ trouvez  un  moyen   simple   de   vous   passer  de ces /!\
+    /!\ variables qui n'augmente pas  la complexité du code,  et /!\
+    /!\ ne diminue pas sa  lisibilité,  nous vous saurons gré de /!\
+    /!\ nous la faire parvenir.                                  /!\
 
 === La suite du programme
 

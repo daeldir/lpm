@@ -27,21 +27,24 @@ class Document(Section):
         Section.__init__(self)
         <variables spécifiques au document
         <à la création d'un document
+
     def parse(self):
         <extraire les informations spécifiques au document
         Section.parse(self, resolve_references)
+
     def format_text(self):
         <formater un document
+
     def output_html(self):
         <sortir un document en html
 >
 
-//La fonction d'initialisation de la classe <Document> prend un argument
-optionnel, <parse>. Cet argument est utilisé par la fonction elle même :
-au moment de charger les fichiers incluts par <<lpm>\~Get>, <__init__()>
-crée un <Document> et récupère les lignes qu'il a chargé. Cette fonction
-permet d'éviter de parser le document pour rien (seules les lignes
-incluses nous intéressent).//
+//La  fonction  d'initialisation  de   la   classe  <Document>  prend un
+argument optionnel,  <parse>.  Cet argument est  utilisé par la fonction
+elle  même :   au   moment   de   charger   les   fichiers   incluts par
+<<lpm>\~Get>,  <\__init\__()> crée un <Document>  et récupère les lignes
+qu'il a chargé.  Cette fonction  permet  d'éviter  de parser le document
+pour rien (seules les lignes incluses nous intéressent).// 
 
 Notre document  possède  quelques  atout  en  plus  que  la section : un
 titre,  des auteurs,  un résumé,  une licence.  Le  titre et les auteurs
@@ -89,8 +92,8 @@ plus que la classe <Section> :
  ' inclue),
  - elle extrait le  titre,  le  résumé,  la  licence  et  les auteurs du
  ' document,
- - elle propose  un  fichier  source  reformaté  pour  une  lecture plus
- ' agréable.
+ - elle propose un  fichier  source  reformaté  de chaque fichier inclus
+ ' et du fichier original, pour une lecture plus agréable.
 
 Après ça, notre classe va se comporter comme une section normale. 
 
@@ -161,12 +164,12 @@ if parse:
     self.resolv()
 >
 
-//Jusqu'à maintenant, nous avons récupéré des fichiers sans jamais
-résoudre les références (certaines références sont résolues au moment du
-parsing, et comme nous parsons le fichier deux fois, nous devons éviter
-de commencer à résoudre les références la première fois). La variable
-globale <RESOLVE_REFERENCES> permet d'indiquer que cette fois, c'est bon,
-on doit prendre en compte les références.//
+//Jusqu'à maintenant,  nous  avons  récupéré  des  fichiers  sans jamais
+résoudre les références  (certaines références  sont  résolues au moment
+du parsing,  et comme nous parsons  le  fichier  deux fois,  nous devons
+éviter de commencer à  résoudre  les  références  la première fois).  La
+variable  globale  <RESOLVE_REFERENCES>  permet   d'indiquer  que  cette
+fois, c'est bon, on doit prendre en compte les références.// 
 
 ===== Gérer les blocs de code
 
@@ -220,6 +223,13 @@ elif begin(line, "~get"):
         document = Document(get_file_abs, parse = False)
         new_lines += document.lines
 >
+
+//Nous ne faisons que charger  le  fichier pour récupérer ses lignes (et
+celles des fichiers qu'il  inclue),  nous pouvons nous passer d'analyser
+la structure du  document  que  contient  ce  fichier,  car  nous allons
+l'analyser dans le document en  cours.  C'est pour cette raison que nous
+passons l'argument  <parse  =  False> :  l'analyse  étant inutile,  nous
+gagnons du temps en ne la faisant pas.// 
 
 ===== Gérer les ~Include et ~Image
 
@@ -292,7 +302,7 @@ Cette partie de code ressemble donc à ceci :
 ~Display gérer les ~Copy
 
 Enfin,    nous    avons    utilisé     la    fonction    <split_path()>.
-[=fonction split_path] Voici sont fonctionnement : 
+[=fonction split_path] Voici son fonctionnement : 
 
 <Code: fonctions utilitaires
 def split_path(line):
@@ -315,7 +325,7 @@ def split_path(line):
 
 >
 
-//Cette fonction fonctionne comme un  <split(" ")>,  à ceci près que les
+//Cette fonction  agit  comme  un  <split("  ")>,  à  ceci  près que les
 caractères précédés d'un <<lpm>\\> sont ignorés.// 
 
 ===== Gérer les autres cas
@@ -327,6 +337,11 @@ nous nous contentons d'ajouter la ligne dans les lignes finales :
 else:
     new_lines.append(line)
 >
+
+===== Analyser les fichiers inclus
+
+Voici au final comment nous analysons les fichiers inclus : 
+~Display analyser les fichiers inclus
 
 [=fonction begin] 
 
@@ -356,7 +371,7 @@ cas, de le remplacer par un tableau contenant seulement cette chaîne.
 
 <Code: begin: gérer deux types de paramètre
 if type(texts) == str:
-    texts = [str]
+    texts = [texts]
 >
 
 Pour vérifier que  la  ligne  débute  par  le texte,  nous vérifons tout
@@ -377,6 +392,21 @@ par une commande.  Les  commandes  sont  insensibles  à la casse.  Comme
 aucun  autre  cas  demandant  d'être  sensible   à  la  casse  ne  s'est
 présenté,  nous nous  épargnons  de  futures  mises  en minuscule en les
 pratiquant ici. La même remarque s'applique à propos du <strip()>.// 
+
+Voici la fonction entière : 
+
+<Code: 
+def begin(line, texts):
+    if type(texts) == str:
+        texts = [texts]
+    for text in texts:
+        line = line.strip().lower()
+        text = text.strip().lower()
+        if len(line) >= len(text):
+            if line[:len(text)] == text:
+                return True
+    return False
+>
 
 ==== Récapitulatif de la création d'un document
 

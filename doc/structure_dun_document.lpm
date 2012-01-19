@@ -63,9 +63,11 @@ l'introduction.
 
 === Les blocs de code
 
-Il n'est pas nécessaire de  s'étendre  sur  les blocs de code ici.  Nous
-les détaillerons  lors  de  l'implémentation,  mais  leur  structure est
-assez simple pour ne pas demander plus d'explication. 
+Les blocs de codes sont composés  d'une  suite  de lignes de codes et de
+références vers d'autres blocs de  code.  Un  bloc de code peut avoir un
+nom  (pour des références futures)  et nous pouvons spécifier au cas par
+cas le langage de programmation d'un  bloc  de code  (qui par défaut est
+celui du projet). 
 
 === La documentation
 
@@ -89,8 +91,7 @@ paragraphe.
     /!\ Même  s'il  est   théoriquement  possible  d'insérer des /!\
     /!\ notes de bas de page,  des  URLs,  ou des commandes dans /!\
     /!\ les listes    et    les    paragraphes   importants,  le /!\
-    /!\ comportement pourrait  être  imprévisible  (mis  à  part /!\
-    /!\ peut  être  pour   inclure   des   images).  C'est  donc /!\
+    /!\ comportement  pourrait  être  imprévisible.  C'est  donc /!\
     /!\ fortement déconseillé.  Et de  toute  façon peu intuitif /!\
     /!\ pour les  futures  lectures,  une  commande étant censée /!\
     /!\ se trouver seule sur une ligne.                          /!\
@@ -113,9 +114,10 @@ texte brut.
 
 Nous avons donc un **document**,  contenant des **sections**,  contenant
 une **introduction** et  des  sous-sections.  L'introduction contient du
-**code**  et  de   la   **documentation**,   et   celle-ci  contient des
-**paragraphes**,  des **listes**,  des  **paragraphes importants**,  des
-**notes de  bas  de  page**,  des  **URLs**  et  des **commandes**.  Les
+**code**  (contenant des **lignes  de  code**  et  des **références vers
+des blocs de code**)  et de  la **documentation**,  et celle-ci contient
+des **paragraphes**,  des  **listes**,  des  **paragraphes importants**,
+des **notes de bas de  page**,  des  **URLs** et des **commandes**.  Les
 paragraphes contiennent des  **blocs  de  texte  brut**,  et des **blocs
 formatés**.  Les autres  éléments  de  la  documentation contiennent des
 paragraphes ou de la documentation. 
@@ -150,7 +152,9 @@ Présenté avec plus de formes, voici la structure d'un document :
  ' - Introduction 
  ' ' - Documentations 
  ' ' ' - \[…\]
- ' ' - Codes
+ ' ' - Codes 
+ ' ' ' - Lignes de code
+ ' ' ' - Références vers des blocs de code
  ' - Sections 
  ' ' - Nom
  ' ' - Numéro
@@ -163,7 +167,7 @@ Présenté avec plus de formes, voici la structure d'un document :
     /!\ Ceci ne représente  pas  l'arborescence des classes.  La /!\
     /!\ plupart des éléments présentés  ici  n'ont pas de classe /!\
     /!\ parente commune  (à part peut-être  <object>),  et même, /!\
-    /!\ la class  <Document>  hérite  de   la  classe  <Section> /!\
+    /!\ la classe  <Document>  hérite  de  la  classe  <Section> /!\
     /!\ alors  que  notre   arborescence  //montre  l'inverse//. /!\
     /!\ Bref,  ne confondez  pas  l'arborescence  du document et /!\
     /!\ celle des classes.                                       /!\

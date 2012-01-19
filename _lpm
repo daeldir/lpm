@@ -371,7 +371,7 @@ class Code:
             return self.indentation+"<"+self.name+"\n"
         def outputHTML(self, remain = False):
             r = "<div><pre>"
-            r += self.indentation.replace(" ", "&nbsp;").replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;")
+            r += self.indentation
             r += "<a "
             if not remain:
                 r += "id=\"coderef"+str(self.count)+"\" "
@@ -1925,6 +1925,7 @@ class Document:
                             border: 1px solid #fda;
                             padding-left: 3px;
                             padding-right: 3px;
+                            white-space:nowrap;
                         }
                         hr {
                             color: #ffb;

@@ -48,11 +48,30 @@ Maintenant, nous extrayons le code, puis la documentation* :
     n'y a pas besoin de les créer explicitement ici.
 
 <Code: actions principales
-document.extract_code()
+<extraction du code source
 write(html_file, document.output_html())
 write(ebook_file, document.output_html(ebook = True))
 
 >
+
+Chaque bloc de  code  nommé  est  retenu dans la variable  <CODE>.  Pour
+extraire le code source,  nous parcourons  chaque bloc de code nommé, et
+s'il n'a jamais été référencé, nous l'extrayons : 
+
+<Code: extraction du code source
+for name in CODE:
+    if not CODE[name][0].referenced:
+        source_file = path.join(os.getcwd(), "src", name)
+        write(source_file, "\n".join(CODE[name][0].resolved))
+>
+
+//<CODE\[name\]>  est séparé en  plusieurs  blocs  (quand le même nom de
+bloc a été utilisé plusieurs  fois).  Nous  sauvegardons dans le premier
+bloc  le  résultat  obtenu  en  résolvant  les  références.  Ce résultat
+(<CODE\[name\]\[0\].resolved>)  est retenu en  tant que tableau,  chaque
+élément correspondant à une ligne  de  code.  Pour écrire le code source
+dans un fichier,  nous joignons  tout  ces  éléments  par un retour à la
+ligne (<"\\n".join(list of str)>).// 
 
 Enfin,  nous affichons les  erreurs  que  nous  avons enregistré jusqu'à
 maintenant : 
@@ -76,5 +95,5 @@ def error(message):
 
 Au final,  voici  tout  ce  que  nous  faisons  lorsque  nous lançons le
 programme : 
-~Remain actions principales
+~Display actions principales
 

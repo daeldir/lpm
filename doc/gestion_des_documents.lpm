@@ -23,11 +23,11 @@ section, mais bien son travail en tant que document.
 <classes utiles à la classe Document
 
 class Document(Section):
-    def __init__(self, file_name):
+    def __init__(self, file_name, parse = True):
         Section.__init__(self)
         <variables spécifiques au document
         <à la création d'un document
-    def parse(self, resolve_references):
+    def parse(self):
         <extraire les informations spécifiques au document
         Section.parse(self, resolve_references)
     def format_text(self):
@@ -35,6 +35,13 @@ class Document(Section):
     def output_html(self):
         <sortir un document en html
 >
+
+//La fonction d'initialisation de la classe <Document> prend un argument
+optionnel, <parse>. Cet argument est utilisé par la fonction elle même :
+au moment de charger les fichiers incluts par <<lpm>\~Get>, <__init__()>
+crée un <Document> et récupère les lignes qu'il a chargé. Cette fonction
+permet d'éviter de parser le document pour rien (seules les lignes
+incluses nous intéressent).//
 
 Notre document  possède  quelques  atout  en  plus  que  la section : un
 titre,  des auteurs,  un résumé,  une licence.  Le  titre et les auteurs
@@ -147,9 +154,19 @@ self.lines = new_lines
 Ceci fait, nous analysons pour de bon le document : 
 
 <Code: analyser le document entier
-self.parse()
-self.resolv()
+if parse:
+    global RESOLVE_REFERENCES
+    RESOLVE_REFERENCES = True
+    self.parse()
+    self.resolv()
 >
+
+//Jusqu'à maintenant, nous avons récupéré des fichiers sans jamais
+résoudre les références (certaines références sont résolues au moment du
+parsing, et comme nous parsons le fichier deux fois, nous devons éviter
+de commencer à résoudre les références la première fois). La variable
+globale <RESOLVE_REFERENCES> permet d'indiquer que cette fois, c'est bon,
+on doit prendre en compte les références.//
 
 ===== Gérer les blocs de code
 
@@ -200,7 +217,7 @@ elif begin(line, "~get"):
     elif not path.exists(get_file_abs):
         error("Fichier non trouvé : %s" % get_file_abs)
     else:
-        document = Document(get_file_abs)
+        document = Document(get_file_abs, parse = False)
         new_lines += document.lines
 >
 
@@ -295,6 +312,7 @@ def split_path(line):
             word += c
     res.append(word)
     return res
+
 >
 
 //Cette fonction fonctionne comme un  <split(" ")>,  à ceci près que les

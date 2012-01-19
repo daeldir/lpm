@@ -6,7 +6,13 @@ chaînes de type <str>,  et spécifier le type des fichiers ouverts,  dont
 la sortie standard et  la  sortie d'erreur  (et l'entrée standard,  mais
 nous ne sommes pas concernés ici, puisque nous ne la lisons pas). 
 
-Nous  commençons  par  importer   le   module  <codecs>,  et  spécifions
+Nous  commençons  par spécifier l'encodage de notre fichier source :
+
+<Code: début d'un programme python
+# -*- encoding: utf-8 -*-
+>
+
+Puis nous importons   le   module  <codecs>,  et  spécifions
 l'encodage de la sortie standard et de la sortie d'erreur. 
 
 <Code: imports

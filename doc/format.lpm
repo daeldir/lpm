@@ -7,7 +7,7 @@
 Il existe plusieur type de  balises  dans  le  langage LPM.  Les balises
 légères,  destinées à formater le texte,  les commandes,  qui permettent
 d'effectuer  une  action  lors  de  la  génération  du document,  et les
-balises de bloc, qui premettent de définir des blocs de texte. 
+balises de bloc, qui permettent de définir des blocs de texte. 
 
 === Les blocs
 
@@ -25,8 +25,12 @@ et un troisième bloc de texte
 
 On appelle ces blocs de texte  des paragraphes.  Lorsque le fichier sera
 reformaté,  les lignes de ces  blocs  seront  fusionnées  si le résultat
-n'est  pas  trop  long.  Ainsi,   l'exemple  ci-dessus  deviendra  après
+n'est  pas  trop  long.*  Ainsi,   l'exemple  ci-dessus  deviendra  après
 formatage : 
+*: Le fichier source de la documentation est reformaté afin de tenir
+dans 72 colonnes (des lignes de 72 caractères maximum). Le texte des paragraphes est
+justifié. Les blocs de code ne sont bien sûr pas modifiés, même si leurs
+lignes dépassent 72 caractères. 
 
 <Code (lpm): 
 voici un bloc de texte
@@ -49,7 +53,8 @@ Les commandes  tiennent  sur  une  ligne.  Elles  marquent  la  fin d'un
 paragraphe,  même s'il n'y a pas  de  ligne  vide  entre elles et le-dit
 paragraphe.  Elles commencent souvent par le caractère  <<lpm>\~>*.  Une
 commande peut permettre de  définir  une donnée du document  (langage du
-code source,  auteurs…),  ou d'inclure un autre fichier dans ce fichier.
+code source,  auteurs…),  ou d'inclure un autre fichier à ce point du
+texte.
 Voici un exemple de commande : 
 
 <Code (lpm): 
@@ -98,6 +103,8 @@ simple) :
 **
 >
 
+Ou, de manière plus lourde :
+
 <Code (lpm): 
 ************
 * Un titre *
@@ -134,16 +141,16 @@ permettent de structurer le document.
 
 Le titre correspond au titre  du  document.  Il  doit se trouver au tout
 début de celui-ci.  Le titre  est  écrit  dans un cadre d'étoiles.  S'il
-fait plusieurs lignes,  le cadre a  largeur  de la plus grande ligne, et
+fait plusieurs lignes,  le cadre a la largeur  de la plus grande ligne, et
 les autres lignes sont centrées : 
 
 <Code (lpm): 
                 ***************************************
-		*        Le titre du document :       *
-		*                                     *
-		* Ce document est un document de test *
-		*                                     *
-		***************************************
+                *        Le titre du document :       *
+                *                                     *
+                * Ce document est un document de test *
+                *                                     *
+                ***************************************
 >
 
 Il est possible de simplifier  le  titre,  lors  de la rédaction,  en le
@@ -235,7 +242,7 @@ vous avez préféré  utiliser  plusieurs  fois  la  commande,  il  y a une
 raison. 
 
 <Code (lpm): 
-~authors Ludovic Broutille et Melanine Balzac.
+~authors Ludovic Broutille et Mélanine de Balzac.
 >
 
 === Le langage de programmation du projet
@@ -243,7 +250,7 @@ raison.
 Des blocs de code  seront  insérés  tout  au  long du document.  Ceux-ci
 peuvent être mis en valeur  par  la coloration syntaxique,  mais pour ce
 faire,  nous devons connaître le langage de programmation utilisé.  Nous
-pouvons définir ce langage au  cas  par cas,  mais pour nous épargner de
+pouvons définir ce langage au  cas  par cas,  et pour nous épargner de
 le faire  à  chaque  fois,  nous  pouvons  aussi  définir  un langage de
 programmation par  défaut,  correspondant  au  langage  le  plus utilisé
 dans le document. Pour cela, nous utilisons la commande <<lpm>\~code>. 
@@ -329,7 +336,7 @@ mon texte avec* une note de bas de page.
     /!\ Il est considéré comme  une  bonne pratique de mettre la /!\
     /!\ note ou l'URL  directement  derrière le paragraphe qui y /!\
     /!\ fait référence,  mais  ce  n'est  pas  obligé.  Une note /!\
-    /!\ peut même préceder  le  texte  qui s'y réfère,  tant que /!\
+    /!\ peut même précéder  le  texte  qui s'y réfère,  tant que /!\
     /!\ le compte  (l'ordre  des  notes)   n'est  pas  perturbé. /!\
     /!\ Toutefois, ce n'est pas vraiment conseillé.              /!\
 
@@ -339,12 +346,13 @@ Il peut être utile de mettre  en  avant un paragraphe,  comme le dernier
 paragraphe de la section précédente.  Pour celà,  on utilise la commande
 <<lpm>/!\\>.  Cette commande va  considérer  tout  le  paragraphe qui la
 suit comme un  paragraphe  important.  Il  est  possible  de mettre deux
-paragraphes dans un même  bloc  important  en  plaçant la commande aussi
+paragraphes dans un même  bloc  important  en  plaçant cette commande
+devant les deux paragraphes ainsi que
 sur la ligne vide qui les sépare.  Enfin,  dans la forme complète de ces
 blocs  (car  oui,  c'est  un  bloc   de   texte  qui  est  marqué  comme
 important),  chaque  ligne  du  bloc  commence  par  cette  commande, et
 termine aussi par  celle-ci.  Comme  les  résumés  et licences,  le bloc
-sera aussi un peu plus court et indenté. Ainsi, ce code : 
+sera un peu plus court et indenté. Ainsi, ce code : 
 
 <Code (lpm): 
 /!\Un paragraphe
@@ -435,7 +443,7 @@ la commande <<lpm>\~include> :
 ~include rfc/rfc1149.txt
 >
 
-Enfin,  on peut inclure un fichier  LPM,  qui  sera lu et formatté avant
+Enfin,  on peut inclure un fichier  LPM,  qui  sera lu et formaté avant
 d'être ajouté dans la documentation : 
 
 <Code (lpm): 
@@ -462,7 +470,7 @@ fichier passé  en  premier,  et  dont  le  positionnement  est relatif à
 celui du fichier en cours  d'édition,  dans  le fichier passé en second,
 dont la position sera  relative  au  dossier  dans  lequel sera placé le
 code source.  Les espaces  et  autres  caractères pouvant poser problème
-doivent être echappés avec \\. 
+doivent être échappés avec <<lpm>\\>. 
 
 == Gestion du code
 
@@ -626,6 +634,11 @@ import os
 \\>
 \>
 >
+
+//On voit bien ici que l'on n'a échappé que le <<lpm>\\>, et pas le
+<<lpm>\\\<>, qui aurait dû être échappé <<lpm>\\\\\\\<> (au lieu de
+<<lpm>\\\\\<>) si nous échappions caractère par caractère et non ligne
+par ligne.//
 
 === Morceaux de code dans les paragraphes
 

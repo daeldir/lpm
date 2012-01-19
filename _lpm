@@ -248,7 +248,7 @@ class Code:
             r += i.formatText(length)
         r += ">\n"
         return r
-    def outputHTML(self, remain = False, line = 1):
+    def outputHTML(self, remain = False):
         global COLOR_ERRORS
         if self.name == None:
             name = u""
@@ -1055,10 +1055,10 @@ class Remain:
         return "~Remain "+self.name+"\n"
     def outputHTML(self, prefixed = None):
         r = u"<div class=\"codechunk\"><div class=\"codehead\">Rappel du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :</div>"
-        line = 1
         for i in CODE[self.name]:
-            r += i.outputHTML(True, line)
-            line += len(i.resolved)
+            r += i.outputHTML(True)
+            if i != CODE[self.name][-1]:
+                r += "<hr>"
         r += "</div>\n"
         return r
 
@@ -1925,6 +1925,10 @@ class Document:
                             border: 1px solid #fda;
                             padding-left: 3px;
                             padding-right: 3px;
+                        }
+                        hr {
+                            color: #ffb;
+                            opacity: 0.3;
                         }
                         li p {
                             margin: 0px;

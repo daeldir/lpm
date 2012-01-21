@@ -43,15 +43,15 @@ théoriquement les seules dépendances du programme.
 
 = Implémentation
 
-~Get architecture.lpm
-~Get unicode.lpm
-~Get actions_principales.lpm
-~Get structure_dun_document.lpm
-~Get gestion_des_documents.lpm
-~Get gestion_du_code.lpm
-~Get gestion_de_la_documentation.lpm
-~Get formater_les_sources.lpm
-~Get sortie_html_du_document.lpm
+~Get implementation/architecture.lpm
+~Get implementation/unicode.lpm
+~Get implementation/actions_principales.lpm
+~Get implementation/structure_dun_document.lpm
+~Get implementation/gestion_des_documents.lpm
+~Get implementation/gestion_du_code.lpm
+~Get implementation/gestion_de_la_documentation.lpm
+~Get implementation/formater_les_sources.lpm
+~Get implementation/sortie_html_du_document.lpm
 
 == Code final
 

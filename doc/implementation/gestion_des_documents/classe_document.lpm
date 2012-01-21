@@ -1,16 +1,3 @@
-== Gestion des documents
-
-Dans cette partie,  nous  traitons  de  la  gestion des documents.  Nous
-expliquerons ici comment  nous  chargeons  un document,  et le découpons
-en sous parties,  en blocs de  code  et en blocs de documentation.  Pour
-cela, nous définirons trois classes : 
-
-<Code: gestion des documents
-<classe Introduction
-<classe Section
-<classe Document
->
-
 === La classe Document
 
 la classe  <Document>  est une  sous-classe  de  <Section>,  un document

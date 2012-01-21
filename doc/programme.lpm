@@ -50,6 +50,7 @@ théoriquement les seules dépendances du programme.
 ~Get implementation/gestion_des_documents.lpm
 ~Get implementation/gestion_du_code.lpm
 ~Get implementation/gestion_de_la_documentation.lpm
+~Get implementation/afficher_la_structure_du_document.lpm
 ~Get implementation/formater_les_sources.lpm
 ~Get implementation/sortie_html_du_document.lpm
 

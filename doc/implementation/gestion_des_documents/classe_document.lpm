@@ -23,6 +23,10 @@ class Document(Section):
 
     def output_html(self):
         <sortir un document en html
+
+    def print_debug(self):
+        <afficher la structure d'un document
+
 >
 
 //La  fonction  d'initialisation  de   la   classe  <Document>  prend un
@@ -416,7 +420,7 @@ fonction originale de <Section>.
 new_lines = []
 mode = "text"
 for line in self.lines:
-    <Document.parse: que faire de cette ligne
+    <Document.parse: que faire de cette ligne ?
 self.lines = new_lines
 Section.parse(self, resolve_references)
 >
@@ -424,7 +428,7 @@ Section.parse(self, resolve_references)
 Nous  parcourons  le  document  ligne  par  ligne.  Nous  commençons par
 ignorer les blocs de code : 
 
-<Code: Document.parse: que faire de cette ligne
+<Code: Document.parse: que faire de cette ligne ?
 <ignorer les blocs de code
 >
 
@@ -442,7 +446,7 @@ solutions : soit nous sommes déjà en  mode titre,  et dans ce cas,  nous
 sortons du mode titre,  soit nous sommes dans un autre mode,  auquel cas
 nous passons en mode titre. 
 
-<Code: Document.parse: que faire de cette ligne
+<Code: Document.parse: que faire de cette ligne ?
 elif star_line(line):
     if mode != "title":
         mode = "title"
@@ -479,7 +483,7 @@ instance  de  la  classe  <Title>.  Cette  classe  contient  une méthode
 nommée  <add_line(line)>,  qui prend en paramètre  la ligne à ajouter et
 l'analyse. Ajouter notre ligne au titre est donc très simple : 
 
-<Code: Document.parse: que faire de cette ligne
+<Code: Document.parse: que faire de cette ligne ?
 elif mode == "title":
     self.title.add_line(line)
 >
@@ -492,16 +496,26 @@ sections correspondantes).
 class Title:
     def __init__(self):
         self.content = []
+
     def important(self):
         <classe Title: est elle importante ?
+
     def add_line(self, line):
         <classe Title: ajouter une ligne
+
     def format_text(self):
         <formater le titre
+
     def output_html(self):
         <sortir le titre en HTML
+
     def output_html_title(self):
         <sortir le titre en HTML (élément <title>)
+
+    def print_debug(self, deep):
+        <afficher la structure du titre
+
+
 >
 
 Cette classe contient uniquement  un tableau,  contenant chaque ligne du
@@ -537,4 +551,102 @@ for line in content:
         return True
 return False
 >
+
+===== Détecter le résumé et la licence
+
+Le résumé comme la licence sont  stockés  dans une instance de la classe
+<Documentation>  (voir   (ici)[classe   documentation]).   Lorsque  nous
+sommes en mode licence ou  en mode résumé,  nous ajoutons chaque ligne à
+la licence/au résumé,  sauf si  la ligne est  <<lpm>\~\~\~>,  auquel cas
+nous repassons en mode normal. 
+
+<Code: Document.parse: que faire de cette ligne ?
+elif mode in ["license", "abstract"]
+    if line.split = "~~~":
+        self.mode = "text"
+    elif mode == "license":
+        self.license.add_line(line)
+    elif mode == "abstract":
+        self.abstract.add_line(line)
+>
+
+On gère maintenant le passage dans ces deux modes : 
+
+<Code: Document.parse: que faire de cette ligne ?
+elif begin(line, "~license~"):
+    mode = "license"
+elif begin(line, "~abstract~"):
+    mode = "abstract"
+>
+
+===== Détecter les auteurs
+
+Comme pour le titre,  une  classe  spéciale  a  été écrite pour contenir
+les auteurs.  Quand une  ligne commence par  <<lpm>\~Authors>,  elle est
+passée à cette classe  qui  retient  cette  ligne après l'avoir nettoyée
+de cet inévitable <<lpm>\~Authors> : 
+
+<Code: Document.parse: que faire de cette ligne ?
+elif begin(line, "~authors"):
+    self.authors.add_line(line)
+>
+
+La classe <Authors> est définie ainsi : 
+
+<Code: classes utiles à la classe Document
+class Authors:
+    def __init__(self):
+        self.content = []
+
+    def add_line(self, line):
+        line = line.strip()[8:].strip()
+        self.content.append(line)
+
+    def format_text(self):
+        <formater les balises des auteurs
+
+    def output_html(self):
+        <sortir les auteurs en HTML
+
+    def output_html_meta(self):
+        <sortir les auteurs en HTML (balise <meta>)
+
+    def print_debug(self, deep):
+        <afficher la structure des auteurs
+
+>
+
+//La  méthode   <add_line>   enlève   les   huit   premiers   caractères
+significatifs de la ligne  (ils contiennent <<lpm>\~Authors>)  et ajoute
+la ligne au contenu de  la  classe,  qui  retient  donc tout les auteurs
+définits.// 
+
+===== Détecter le langage du document
+
+La dernière information  à  extraire  est  le  langage  de programmation
+principal du document.  Ce langage est  stocké  dans la variable globale
+<DOCUMENT_LANGUAGE>. 
+
+<Code: Document.parse: que faire de cette ligne ?
+elif begin(line, "~code"):
+    global DOCUMENT_LANGUAGE
+    DOCUMENT_LANGUAGE = line.strip()[5:].strip()
+>
+
+===== Retenir les autres lignes
+
+Nous terminons cette portion de  code  en  retenant les lignes qui n'ont
+pas été gérées : elles ne  font  pas  partie  des attributs du document,
+mais de la section. 
+
+<Code: Document.parse: que faire de cette ligne ?
+else:
+    new_lines.append(line)
+>
+
+===== Résumé
+
+Voici  au  final  à   quoi   ressemble   la   fonction  qui  extrait les
+informations spécifiques au document : 
+~Display extraire les informations spécifiques au document
 

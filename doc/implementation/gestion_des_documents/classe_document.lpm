@@ -17,7 +17,6 @@ class Document(Section):
 
     def parse(self):
         <extraire les informations spécifiques au document
-        Section.parse(self, resolve_references)
 
     def format_text(self):
         <formater un document
@@ -129,11 +128,13 @@ chemins relativement au fichier  en  cours  de  traitement,  ce qui peut
 poser des problèmes  si  le  fichier  est  dans  un dossier différent du
 répertoire de travail (où la commande a été lancée). 
 
+[=première définition de « ignorer les blocs de code »] 
+
 <Code: analyser les fichiers inclus
 new_lines = []
 mode = "text"
 for line in self.document_lines:
-    <analyse des fichiers inclus : gérer les blocs de code
+    <ignorer les blocs de code
     <gérer les ~Get
     <gérer les ~Include et ~Image
     <gérer les ~Copy
@@ -158,7 +159,7 @@ du parsing,  et comme nous parsons  le  fichier  deux fois,  nous devons
 variable  globale  <RESOLVE_REFERENCES>  permet   d'indiquer  que  cette
 fois, c'est bon, on doit prendre en compte les références.// 
 
-===== Gérer les blocs de code
+===== Ignorer les blocs de code
 
 Vous avez pu  remarquer  que  nous  avons  définit une variable  <mode>.
 Sont  but  est  simple :  nous   permettre  de  ne  pas  interpréter les
@@ -170,7 +171,7 @@ ne faisons qu'une chose : vérifier  si  on  sort de ce mode.  Toutes les
 autres actions seront conditionnées par un <elif>  ou un <else>,  ce qui
 fait qu'elles ne seront jamais exécutées si le mode est <"code">. 
 
-<Code: analyse des fichiers inclus : gérer les blocs de code
+<Code: ignorer les blocs de code
 if mode == "code":
     if i.strip() == ">":
         mode = "text"
@@ -184,7 +185,7 @@ nous en aurons encore l'usage.//
 Si nous ne sommes pas  encore  en  mode  <"code">,  il faut vérifier que
 nous n'y entrons pas : 
 
-<Code: analyse des fichiers inclus : gérer les blocs de code
+<Code: ignorer les blocs de code
 elif begin(line, "<code"):
     mode = "code"
     new_lines.append(line)
@@ -346,6 +347,7 @@ def begin(line, texts):
     for text in texts:
         <begin: vérifier si la ligne commence par ce texte
     return False
+
 >
 
 //Nous  retournerons  <True>  dans   la   boucle   <for>,  si  le  texte
@@ -409,4 +411,116 @@ la retirons des lignes connues du  document.  À la fin de cette lecture,
 le document  sait  qui  il  est,   ce   qu'il   est,  et  les  lignes ne
 contiennent plus que  des  informations  pouvant  être  analysées par la
 fonction originale de <Section>. 
+
+<Code: extraire les informations spécifiques au document
+new_lines = []
+mode = "text"
+for line in self.lines:
+    <Document.parse: que faire de cette ligne
+self.lines = new_lines
+Section.parse(self, resolve_references)
+>
+
+Nous  parcourons  le  document  ligne  par  ligne.  Nous  commençons par
+ignorer les blocs de code : 
+
+<Code: Document.parse: que faire de cette ligne
+<ignorer les blocs de code
+>
+
+Pour rappel, voici comment est définit ce bloc de code : 
+~Remain ignorer les blocs de code
+
+Il fonctionne  car  nous  utilisons  les  mêmes  variables  que  dans la
+méthode[première définition de « ignorer  les  blocs de code »]  où nous
+l'avons définit pour la première fois. 
+
+===== Détecter les titres
+
+Si la  ligne  est  composée  d'une   barre   d'étoiles,   il  y  a  deux
+solutions : soit nous sommes déjà en  mode titre,  et dans ce cas,  nous
+sortons du mode titre,  soit nous sommes dans un autre mode,  auquel cas
+nous passons en mode titre. 
+
+<Code: Document.parse: que faire de cette ligne
+elif star_line(line):
+    if mode != "title":
+        mode = "title"
+    else:
+        mode = "text"
+>
+
+La fonction star_line est une  fonction  utilitaire  qui prend une ligne
+comme  paramètre,  et  retourne  <True>  si  cette  ligne  est  composée
+uniquement d'étoiles, optionellement entourée d'espaces : 
+
+<Code: fonctions utilitaires
+def star_line(line):
+    line = line.strip()
+    if len(line) < 2:
+        return False
+    for c in line:
+        if c != "*":
+            return False
+    return True
+
+>
+
+//Nous commençons par retirer les  espaces  aux  extrémités de la ligne.
+Ensuite,  si la ligne fait  moins  de deux caractères,  elle ne peut pas
+contenir  une  ligne  d'étoiles   (il   faut   au   moins  deux  étoiles
+consécutives).  Pour finir,  nous vérifions  que  tout les caractères de
+la ligne sont des  étoiles.  Si  ce  n'est  pas le cas,  nous retournons
+<False>, sinon, notre ligne est bien une ligne d'étoiles.// 
+
+Si nous sommes en  mode  titre,  nous  ajoutons  la  ligne aux lignes de
+<self.title>.  Pour  rappel,  <self.title>  a  été  initialisé comme une
+instance  de  la  classe  <Title>.  Cette  classe  contient  une méthode
+nommée  <add_line(line)>,  qui prend en paramètre  la ligne à ajouter et
+l'analyse. Ajouter notre ligne au titre est donc très simple : 
+
+<Code: Document.parse: que faire de cette ligne
+elif mode == "title":
+    self.title.add_line(line)
+>
+
+Il est maintenant temps de  vous  décrire la classe  <Title>,  qui n'est
+utilisée qu'ici,  et au  moment  de  générer la documentation  (voir les
+sections correspondantes). 
+
+<Code: classes utiles à la classe Document
+class Title:
+    def __init__(self):
+        self.content = []
+    def important(self):
+        <classe Title: est elle importante ?
+    def add_line(self, line):
+        <classe Title: ajouter une ligne
+    def format_text(self):
+        <formater le titre
+    def output_html(self):
+        <sortir le titre en HTML
+    def output_html_title(self):
+        <sortir le titre en HTML (élément <title>)
+>
+
+Cette classe contient uniquement  un tableau,  contenant chaque ligne du
+titre.  Les fonctions  <important()>,  <format_text()>,  <output_html()>
+et <output_html_title()>  sont utilisées lors  du  formatage du document
+et de la génération de la  documentation  et  seront décrites plus tard.
+La fonction  <add_line>  prend  une  ligne  en paramètre,  l'analyse, et
+stocke la ligne dans la  variable  <self.content>.  La ligne passée peut
+commencer  par  une  étoile,  et/ou   finir  par  une  étoile.  Nous les
+supprimons si c'est le cas.  Nous  supprimons aussi les espaces avant et
+après ces étoiles. Ce qui donne comme fonction : 
+
+<Code: classe Title: ajouter une ligne
+line = line.strip()
+if line[0] == "*":
+    line = line[1:]
+if line[-1] == "*":
+    line = line[:-1]
+line = line.strip()
+self.content.append(line)
+>
 

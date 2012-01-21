@@ -190,7 +190,6 @@ class Code:
         self.referenced = False
         self.references = []
         self.index = 0
-
         split = line.split(":")
         language = split[0]
         if "(" in language:
@@ -255,7 +254,7 @@ class Code:
             before = u""
             after = u""
         else:
-            name = "<span class=\"\codename\"><a id=\""+refEscape(self.name)+str(self.index)+"\">"+self.name+"</a></span>"
+            name = "<span class=\"\codename\"><a id=\""+refEscape(self.name)+str(self.index)+"\">"+self.name.replace("<", "&lt;")+"</a></span>"
             if self.index != 1:
                 before = u"<a href=\"#"+refEscape(self.name)+str(self.index-1)+"\"> &lt;-</a>"
             else:

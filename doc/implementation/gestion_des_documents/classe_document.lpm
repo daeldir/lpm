@@ -505,7 +505,7 @@ class Title:
 >
 
 Cette classe contient uniquement  un tableau,  contenant chaque ligne du
-titre.  Les fonctions  <important()>,  <format_text()>,  <output_html()>
+titre.  Les fonctions  <format_text()>,  <output_html()>
 et <output_html_title()>  sont utilisées lors  du  formatage du document
 et de la génération de la  documentation  et  seront décrites plus tard.
 La fonction  <add_line>  prend  une  ligne  en paramètre,  l'analyse, et
@@ -522,5 +522,18 @@ if line[-1] == "*":
     line = line[:-1]
 line = line.strip()
 self.content.append(line)
+>
+
+La fonction <important()> est utilisée lors de l'affichage, mais nous la
+définissons ici, car elle est assez simple. Elle consiste à vérifier si
+le titre est bien rempli. Si le titre ne contient que des lignes vides,
+il n'est pas important et nous n'aurons jamais à l'afficher. Cette
+fonction renvoie <True> si le titre est « important », <False> sinon.
+
+<Code: classe Title: est elle importante ?
+for line in content:
+    if line != "":
+        return True
+return False
 >
 

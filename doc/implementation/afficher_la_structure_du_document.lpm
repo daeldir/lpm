@@ -31,9 +31,8 @@ ligne  pourrait  être  mieux  décrite,  ou  coupée  pour  une  meilleure
 lisibilité.  Il est aussi possible  de  créer l'indentation en utilisant
 la fonction  <format()>,  mais on peut  déjà  constater à quel point son
 utilisation peut nuire  à  la  lisibilité  (pourquoi pas des expressions
-régulières,  pendant qu'on y est ? Ou  des (incantations)[..].  On se croirait
-en Perl…)// 
-
+régulières,  pendant qu'on  y  est ?  Ou des  (incantations)[..].  On se
+croirait en Perl…)// 
 ..: http://www.perlmonks.org/index.pl/?node_id=306017
 
 <Code: afficher la structure d'un document

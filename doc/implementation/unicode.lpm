@@ -24,8 +24,8 @@ sys.stderr = codecs.getwriter("utf-8")(sys.stderr)
 Ensuite, nous créons une fonction utilitaire pour lire un fichier : 
 
 <Code: fonctions utilitaires
-def read(filename):
-	f = codecs.open(filename, 'r', encoding = "utf-8")
+def read(filename, encoding = "utf-8"):
+	f = codecs.open(filename, 'r', encoding = encoding)
 	return f.read()
 >
 
@@ -37,17 +37,36 @@ De la même  manière,  nous  créons  une  fonctions  renvoyant les lignes
 d'un fichier : 
 
 <Code: fonctions utilitaires
-def readlines(filename):
-	f = codecs.open(filename, 'r', encoding = "utf-8")
+def readlines(filename, encoding = "utf-8"):
+	f = codecs.open(filename, 'r', encoding = encoding)
 	return f.readlines()
 >
 
 Enfin, nous créons une fonction permettant de sauvegarder un fichier : 
 
 <Code: fonctions utilitaires
-def write(filename, text):
-	f = codecs.open(filename, 'w', encoding = "utf-8")
-	f.write(text)
+def write(filename, text, encoding = "utf-8"):
+	#f = codecs.open(filename, 'w', encoding = encoding)
+	#f.write(text)
+    pass
 
 >
+
+//Pour le moment,  nous n'écrivons  pas les fichiers.  Les fonctions qui
+génèrent les chaînes  de  caractères  fournies à  <write>  ne retournent
+pas encore de texte,  et nous avons  de manière d'éviter une erreur lors
+des tests :// 
+ - //commenter chaque appel à la fonction <write>,//
+ - //rendre la fonction <write> inopérante.//
+
+//Cette dernière solution est  bien  plus pratique.  En attendant que le
+code soit plus avancé.// 
+
+Les fonctions  <write>,  <read>  et  <readlines>  prennent  un paramètre
+optionnel  permettant  de   spécifier   l'encodage   du   fichier.  Nous
+travaillons majoritairement sur  des  fichiers  en UTF-8,  c'est donc la
+valeur  par  défaut.  Un   autre   encodage   utilisé  est  <None>  (pas
+d'encodage),  qui permet  de  travailler  sur  les  fichiers  de manière
+binaire (voir l'opposition (fichier binaire vs fichier texte)[..]) 
+..: http://fr.wikipedia.org/wiki/Fichier_binaire
 

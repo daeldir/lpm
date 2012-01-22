@@ -3,6 +3,40 @@
 [=self.line dans les sections] 
 
 <Code: classe Section
+class Section:
+    def __init__(self, parent = None, name = None):
+        <attributs d'une section
+    def parse(self):
+        <décomposer une section
+    def format_text(self):
+        <formater une section
+    def output_html(self):
+        <sortir une section en HTML
+    def print_debug(self, deep):
+        <afficher la structure d'une section
+>
+
+<Code: attributs d'une section
+self.parent = parent
+self.name = name
+self.position = 0
+self.sections = []
+self.introduction = Introduction()
+self.lines = []
+self.original_depth = 0
+>
+
+//<self.original_depth>  nous   permet   de   conserver   la  profondeur
+originale d'un titre,  même s'il est  moins profond dans la structure du
+document.  Ainsi,  un  document  ne   comprenant  comme  seul  titre que
+<<lpm>\=== Titre>  affichera « Titre » au  premier niveau,  mais lors du
+formatage,  restitueras les trois  signes  égal.  Nous  faisons ceci car
+lorsque  nous  incluons  des  fichiers,  au  moment  du formatage,  nous
+parsons leurs titres  comme  étant  de premier niveau,  mais voulons les
+formater à leur profondeur réelle.// 
+
+<Code: décomposer une section
 # TODO
+pass
 >
 

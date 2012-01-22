@@ -21,7 +21,7 @@ class Document(Section):
     def format_text(self):
         <formater un document
 
-    def output_html(self):
+    def output_html(self, ebook = False):
         <sortir un document en html
 
     def print_debug(self):
@@ -137,7 +137,7 @@ répertoire de travail (où la commande a été lancée).
 <Code: analyser les fichiers inclus
 new_lines = []
 mode = "text"
-for line in self.document_lines:
+for line in self.lines:
     <ignorer les blocs de code
     <gérer les ~Get
     <gérer les ~Include et ~Image
@@ -153,7 +153,7 @@ if parse:
     global RESOLVE_REFERENCES
     RESOLVE_REFERENCES = True
     self.parse()
-    self.resolv()
+    #self.resolv()
 >
 
 //Jusqu'à maintenant,  nous  avons  récupéré  des  fichiers  sans jamais
@@ -162,6 +162,9 @@ du parsing,  et comme nous parsons  le  fichier  deux fois,  nous devons
 éviter de commencer à  résoudre  les  références  la première fois).  La
 variable  globale  <RESOLVE_REFERENCES>  permet   d'indiquer  que  cette
 fois, c'est bon, on doit prendre en compte les références.// 
+
+//Nous ne resolvons pas encore  les référence,  car cette fonction n'est
+pas encore implémentée.// 
 
 ===== Ignorer les blocs de code
 
@@ -177,7 +180,7 @@ fait qu'elles ne seront jamais exécutées si le mode est <"code">.
 
 <Code: ignorer les blocs de code
 if mode == "code":
-    if i.strip() == ">":
+    if line.strip() == ">":
         mode = "text"
     new_lines.append(line)
 >
@@ -236,11 +239,11 @@ rien.).
 
 <Code: gérer les ~Include et ~Image
 elif begin(line, "~include"):
-    file_path = path.join(dir_name, i[8:].strip())
-    new_line.append("~include "+file_path)
+    file_path = path.join(dir_name, line[8:].strip())
+    new_lines.append("~include "+file_path)
 elif begin(line, "~image"):
-    file_path = path.join(dir_name, i[6:].strip())
-    new_line.append("~image "+file_path)
+    file_path = path.join(dir_name, line[6:].strip())
+    new_lines.append("~image "+file_path)
 >
 
 ===== Gérer les ~Copy
@@ -264,7 +267,7 @@ fonction <split_path()> (plus loin)[fonction split_path].)//
 
 <Code: ~Copy: déterminer les fichiers
 files = split_path(line[5:].strip())
-from_file = path.join(basedir, files[0])
+from_file = path.join(dir_name, files[0])
 to_file = path.join(os.getcwd(), "src", files[1])
 >
 
@@ -287,8 +290,14 @@ Maintenant,  que nous savons que le fichier source existe,  ainsi que le
 repertoire de destination, nous n'avons plus qu'à copier : 
 
 <Code: ~Copy: si le fichier source existe
-write(to_file, read(from_file))
+write(to_file, read(from_file, None), None)
 >
+
+//Les fonctions  <write>  et  <read>  lisent les  fichiers par défaut en
+UTF-8.  Comme nous copions  juste  un  fichier binaire,  l'encodage peut
+poser problème.  Nous le spécifions donc à  <None>,  ce qui signifie que
+l'on ne  gère  pas  l'encodage,  le  fichier  est  donc  copié octet par
+octet.// 
 
 Cette partie de code ressemble donc à ceci : 
 ~Display gérer les ~Copy
@@ -422,7 +431,7 @@ mode = "text"
 for line in self.lines:
     <Document.parse: que faire de cette ligne ?
 self.lines = new_lines
-Section.parse(self, resolve_references)
+Section.parse(self)
 >
 
 Nous  parcourons  le  document  ligne  par  ligne.  Nous  commençons par
@@ -530,13 +539,17 @@ après ces étoiles. Ce qui donne comme fonction :
 
 <Code: classe Title: ajouter une ligne
 line = line.strip()
-if line[0] == "*":
+if len(line) > 0 and line[0] == "*":
     line = line[1:]
-if line[-1] == "*":
+if len(line) > 0 and line[-1] == "*":
     line = line[:-1]
 line = line.strip()
 self.content.append(line)
 >
+
+//Nous  devons  vérifier  que  la  ligne   n'est  pas  vide  avant  d'en
+supprimer une étoile,  sans quoi  nous risquons d'essayer d'accéder à un
+caractère qui n'est pas dans la chaîne (puisque la ligne est vide).// 
 
 La fonction  <important()>  est utilisée lors de l'affichage,  mais nous
 la définissons  ici,  car  elle   est   assez  simple.  Elle  consiste à
@@ -546,7 +559,7 @@ l'afficher.   Cette   fonction   renvoie    <True>   si   le   titre est
 « important », <False> sinon. 
 
 <Code: classe Title: est elle importante ?
-for line in content:
+for line in self.content:
     if line != "":
         return True
 return False
@@ -575,9 +588,14 @@ On gère maintenant le passage dans ces deux modes :
 <Code: Document.parse: que faire de cette ligne ?
 elif begin(line, "~license~"):
     mode = "license"
+    self.license = Documentation()
 elif begin(line, "~abstract~"):
     mode = "abstract"
+    self.abstract = Documentation()
 >
+
+//Lorsque nous  passons  en  mode  licence  ou  résumé,  nous créons une
+portion de documentation pour en accueillir le contenu.// 
 
 ===== Détecter les auteurs
 

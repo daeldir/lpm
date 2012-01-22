@@ -51,7 +51,7 @@ Maintenant, nous extrayons le code, puis la documentation* :
 <extraction du code source
 write(html_file, document.output_html())
 write(ebook_file, document.output_html(ebook = True))
-
+document.print_debug()
 >
 
 Chaque bloc de  code  nommé  est  retenu dans la variable  <CODE>.  Pour

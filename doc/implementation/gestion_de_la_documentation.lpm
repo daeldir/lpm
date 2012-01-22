@@ -3,6 +3,10 @@
 [=classe documentation] 
 
 <Code: gestion des blocs de documentation
-# TODO
+class Documentation:
+    def __init__(self):
+        self.lines = []
+    def add_line(self, line):
+        self.lines.append(line)
 >
 

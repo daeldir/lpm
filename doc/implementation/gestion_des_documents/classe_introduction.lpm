@@ -1,6 +1,8 @@
 === La classe Introduction
 
 <Code: classe Introduction
-# TODO
+class Introduction:
+    def __init__(self):
+        pass
 >
 

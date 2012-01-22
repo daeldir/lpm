@@ -1,17 +1,62 @@
 == Afficher la structure du document
 
+Pour  afficher  la  structure  du  document,  nous  allons  utiliser une
+fonction d'affichage  spéciale.  Cette  fonction  prend deux paramètres.
+Ces deuxparamètres sont : 
+ - l'objet de la structure que l'on va afficher
+ - la profondeur de cet objet
+
+La fonction va afficher le  nom  de  l'objet,  puis  une série de dièses
+indiquant la profondeur  de  l'objet,  permettant  de mettre en avant la
+hierarchie  du  document.  Enfin,  elle  affiche  le  texte  contenu par
+l'objet si celui-ci  est  une  chaîne  de  caractère,  et coupe celui-ci
+s'il est trop long. 
+
+<Code: fonctions utilitaires
+def print_debug(obj, deep):
+    name = obj.__class__.__name__
+    if name in ["str", "unicode"]:
+        line = unicode(obj)
+    else:
+        line = u""
+    indent = u""
+    for i in range(deep):
+        indent += u"#"
+    print u"[{:^15}]{}{}".format(name, indent, line)[:80]
+>
+
+//Nous récupérons la  classe  de  l'objet avec l'attribut  <\__class__>,
+et le nom de cette  classe  avec son attribut  <\__name__>.  La dernière
+ligne  pourrait  être  mieux  décrite,  ou  coupée  pour  une  meilleure
+lisibilité.  Il est aussi possible  de  créer l'indentation en utilisant
+la fonction  <format()>,  mais on peut  déjà  constater à quel point son
+utilisation peut nuire  à  la  lisibilité  (pourquoi pas des expressions
+régulières,  pendant qu'on y est ? Ou  des incantations.  On se croirait
+en Perl…)// 
+
 <Code: afficher la structure d'un document
-# TODO
-pass
+print_debug(self, 0)
+if self.title.important():
+    self.title.print_debug(1)
+self.authors.print_debug(1)
+print_debug(u"~Code "+DOCUMENT_LANGUAGE, 1)
+for section in self.sections:
+    section.print_debug(1)
 >
 
 <Code: afficher la structure du titre
-# TODO
-pass
+print_debug(self, deep)
+for line in self.content:
+    print_debug(line, deep+1)
 >
 
 <Code: afficher la structure des auteurs
-# TODO
-pass
+print_debug(self, deep)
+for authors in self.content:
+    print_debug(authors, deep+1)
+>
+
+<Code: afficher la structure d'une section
+print debug(self, deep)
 >
 

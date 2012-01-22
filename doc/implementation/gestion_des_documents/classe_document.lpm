@@ -561,8 +561,8 @@ la licence/au résumé,  sauf si  la ligne est  <<lpm>\~\~\~>,  auquel cas
 nous repassons en mode normal. 
 
 <Code: Document.parse: que faire de cette ligne ?
-elif mode in ["license", "abstract"]
-    if line.split = "~~~":
+elif mode in ["license", "abstract"]:
+    if line.split == "~~~":
         self.mode = "text"
     elif mode == "license":
         self.license.add_line(line)

@@ -96,12 +96,25 @@ de vérifier qu'aucune erreur ne  s'est  glissée  dans le fichier formaté
 avant de remplacer le fichier original par celui-ci. 
 
 <Code: formater le fichier source
+lines = self.lines
 self.parse()
+self.lines = lines
 output_text = self.format_text()
 input_text = read(file_name)
 if output_text != input_text:
     write(file_name+".clean", output_text)
 >
+
+//Nous faisons ici face  à  une possible erreur dans l'architecture : la
+classe  <Document>  hérite de  la  classe  <Section>.  Pour  analyser le
+contenu d'un document,  nous  commençons  par  extraire les informations
+spécifiques au document,  puis nous  laissons  les lignes restantes à la
+classe  parente.  Ce  faisant,  nous  avons  supprimé  des  lignes de la
+classe  <Document>.  Mais nous allons encore travailler avec ces lignes.
+Aussi,  nous  les  sauvegardons  (<lines   =  self.lines>)  et  nous les
+restituons  après  avoir  parsé  le  fichier  (<self.lines  =  lines>) –
+n'oubliez pas : ici,  nous parsons le fichier,  plus loin,  nous parsons
+le document entier.// 
 
 ==== Charger le fichier
 
@@ -575,8 +588,8 @@ nous repassons en mode normal.
 
 <Code: Document.parse: que faire de cette ligne ?
 elif mode in ["license", "abstract"]:
-    if line.split == "~~~":
-        self.mode = "text"
+    if line.strip() == "~~~":
+        mode = "text"
     elif mode == "license":
         self.license.add_line(line)
     elif mode == "abstract":

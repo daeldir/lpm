@@ -550,6 +550,8 @@ class Paragraph:
                     mode.append(self.URLRef())
                     mode[-1].content = linktext
                     mode = self.parseChange(mode)
+                    if mode[-1].type != "text":
+                        mode[-1].append(self.Text())
                     i += 3
                 elif self.line[i+1] == "=":
                     mode.append(self.Anchor())

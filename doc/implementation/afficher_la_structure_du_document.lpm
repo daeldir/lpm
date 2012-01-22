@@ -1,21 +1,26 @@
 == Afficher la structure du document
 
 Pour  afficher  la  structure  du  document,  nous  allons  utiliser une
-fonction d'affichage  spéciale.  Cette  fonction  prend deux paramètres.
-Ces deuxparamètres sont : 
- - l'objet de la structure que l'on va afficher
- - la profondeur de cet objet
+fonction d'affichage spéciale.  Cette  fonction  prend trois paramètres.
+Ces trois paramètres sont : 
+ - l'objet de la structure que l'on va afficher,
+ - la profondeur de cet objet,
+ - le nom de l'objet, s'il ne correspond pas à celui de la classe.
+
+Le dernier argument est optionnel. 
 
 La fonction va afficher le  nom  de  l'objet,  puis  une série de dièses
 indiquant la profondeur  de  l'objet,  permettant  de mettre en avant la
-hierarchie  du  document.  Enfin,  elle  affiche  le  texte  contenu par
-l'objet si celui-ci  est  une  chaîne  de  caractère,  et coupe celui-ci
-s'il est trop long. 
+hierarchie  du  document.  Enfin,  elle   affiche  le  texte  contenu de
+l'objet si celui-ci est une  chaîne  de caractère.  La chaine affichée à
+l'écran ne fera pas plus de 80 caractères. 
 
 <Code: fonctions utilitaires
-def print_debug(obj, deep):
-    name = obj.__class__.__name__
-    if name in ["str", "unicode"]:
+def print_debug(obj, deep, name = None):
+    real_name = obj.__class__.__name__
+    if name == None:
+        name = real_name
+    if real_name in ["str", "unicode"]:
         line = unicode(obj)
     else:
         line = u""
@@ -40,9 +45,13 @@ print_debug(self, 0)
 if self.title.important():
     self.title.print_debug(1)
 self.authors.print_debug(1)
-print_debug(u"~Code "+DOCUMENT_LANGUAGE, 1)
+print_debug(DOCUMENT_LANGUAGE, 1, "Code Definition")
+if self.abstract != None:
+    self.abstract.print_debug(1, "Abstract")
 for section in self.sections:
     section.print_debug(1)
+if self.license != None:
+    self.license.print_debug(1, "License")
 >
 
 <Code: afficher la structure du titre
@@ -60,4 +69,15 @@ for authors in self.content:
 <Code: afficher la structure d'une section
 print debug(self, deep)
 >
+
+<Code: afficher la structure d'une portion de documentation
+print_debug(self, deep, name)
+for line in self.lines:
+    print_debug(line, deep+1)
+>
+
+//La fonction  <debug_print()>  de  la classe  <Documentation>  prend en
+paramètre  <name   =   None>.   Ceci   permet   d'afficher   un  bloc de
+documentation en mentant sur le nom,  comme  on a fait avec le résumé et
+la licence.// 
 

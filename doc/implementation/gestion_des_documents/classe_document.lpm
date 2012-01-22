@@ -98,14 +98,14 @@ avant de remplacer le fichier original par celui-ci.
 <Code: formater le fichier source
 lines = self.lines
 self.parse()
-self.lines = lines
+<réinitialiser le document
 output_text = self.format_text()
 input_text = read(file_name)
 if output_text != input_text:
     write(file_name+".clean", output_text)
 >
 
-//Nous faisons ici face  à  une possible erreur dans l'architecture : la
+Nous faisons ici  face  à  une  possible erreur dans l'architecture : la
 classe  <Document>  hérite de  la  classe  <Section>.  Pour  analyser le
 contenu d'un document,  nous  commençons  par  extraire les informations
 spécifiques au document,  puis nous  laissons  les lignes restantes à la
@@ -114,7 +114,15 @@ classe  <Document>.  Mais nous allons encore travailler avec ces lignes.
 Aussi,  nous  les  sauvegardons  (<lines   =  self.lines>)  et  nous les
 restituons  après  avoir  parsé  le  fichier  (<self.lines  =  lines>) –
 n'oubliez pas : ici,  nous parsons le fichier,  plus loin,  nous parsons
-le document entier.// 
+le document   entier.   Nous   devons    aussi   vider   les   lignes de
+<self.authors>  et  <self.title>  qui ont été  modifiées  par ce premier
+parsing. 
+
+<Code: réinitialiser le document
+self.lines = lines
+self.authors = Authors()
+self.title = Title()
+>
 
 ==== Charger le fichier
 

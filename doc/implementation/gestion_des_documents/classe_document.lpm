@@ -44,8 +44,8 @@ sont  initialisées   les   variables   supplémentaires   de   la  classe
 Document : 
 
 <Code: variables spécifiques au document
-self.title = Title()
 self.authors = Authors()
+self.title = None
 self.abstract = None
 self.license = None
 >
@@ -98,7 +98,7 @@ avant de remplacer le fichier original par celui-ci.
 <Code: formater le fichier source
 lines = self.lines
 self.parse()
-<réinitialiser le document
+self.lines = lines
 output_text = self.format_text()
 input_text = read(file_name)
 if output_text != input_text:
@@ -114,15 +114,7 @@ classe  <Document>.  Mais nous allons encore travailler avec ces lignes.
 Aussi,  nous  les  sauvegardons  (<lines   =  self.lines>)  et  nous les
 restituons  après  avoir  parsé  le  fichier  (<self.lines  =  lines>) –
 n'oubliez pas : ici,  nous parsons le fichier,  plus loin,  nous parsons
-le document   entier.   Nous   devons    aussi   vider   les   lignes de
-<self.authors>  et  <self.title>  qui ont été  modifiées  par ce premier
-parsing. 
-
-<Code: réinitialiser le document
-self.lines = lines
-self.authors = Authors()
-self.title = Title()
->
+le document entier. 
 
 ==== Charger le fichier
 
@@ -474,15 +466,22 @@ l'avons définit pour la première fois.
 Si la  ligne  est  composée  d'une   barre   d'étoiles,   il  y  a  deux
 solutions : soit nous sommes déjà en  mode titre,  et dans ce cas,  nous
 sortons du mode titre,  soit nous sommes dans un autre mode,  auquel cas
-nous passons en mode titre. 
+nous passons en mode titre (et créons un titre). 
 
 <Code: Document.parse: que faire de cette ligne ?
 elif star_line(line):
     if mode != "title":
         mode = "title"
+        self.title = Title()
     else:
         mode = "text"
+        if not self.title.important():
+            self.title = None
 >
+
+//Lorsque nous avons finit de  créer  le titre,  nous vérifions s'il est
+important  (s'il  n'est  pas  vide).  S'il  ne  l'est  pas,  nous  ne le
+retenons pas.// 
 
 La fonction star_line est une  fonction  utilitaire  qui prend une ligne
 comme  paramètre,  et  retourne  <True>  si  cette  ligne  est  composée
@@ -637,10 +636,6 @@ class Authors:
     def __init__(self):
         self.content = []
 
-    def add_line(self, line):
-        line = line.strip()[8:].strip()
-        self.content.append(line)
-
     def format_text(self):
         <formater les balises des auteurs
 
@@ -655,10 +650,18 @@ class Authors:
 
 >
 
-//La  méthode   <add_line>   enlève   les   huit   premiers   caractères
-significatifs de la ligne  (ils contiennent <<lpm>\~Authors>)  et ajoute
-la ligne au contenu de  la  classe,  qui  retient  donc tout les auteurs
-définits.// 
+La classe  <Authors>  possède  une  méthode  <add_line>.  Cette  méthode
+prend comme paramètre une  ligne,  en  supprime  le début  (qui contient
+<<lpm>\~Authors>),  et l'ajoute dans  la  liste  des  auteurs – si aucun
+auteur portant ce nom n'a encore été ajouté. 
+
+<Code: classes utiles à la classe Document
+    def add_line(self, line):
+        line = line.strip()[8:].strip()
+        if not line in self.content:
+            self.content.append(line)
+
+>
 
 ===== Détecter le langage du document
 

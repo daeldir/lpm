@@ -42,7 +42,7 @@ croirait en Perl…)//
 
 <Code: afficher la structure d'un document
 print_debug(self, 0)
-if self.title.important():
+if self.title != None:
     self.title.print_debug(1)
 self.authors.print_debug(1)
 print_debug(DOCUMENT_LANGUAGE, 1, "Code Definition")

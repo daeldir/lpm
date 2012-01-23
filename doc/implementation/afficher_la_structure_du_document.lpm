@@ -13,32 +13,43 @@ La fonction va afficher le  nom  de  l'objet,  puis  une série de dièses
 indiquant la profondeur  de  l'objet,  permettant  de mettre en avant la
 hierarchie  du  document.  Enfin,  elle   affiche  le  texte  contenu de
 l'objet si celui-ci est une  chaîne  de caractère.  La chaine affichée à
-l'écran ne fera pas plus de 80 caractères. 
+l'écran ne  fera  pas  plus  de  la  taille  spécifiée  pour un document
+(contenue dans la variable globale <DOCUMENT_WIDTH>). 
 
 <Code: fonctions utilitaires
 def print_debug(obj, deep, name = None):
-    real_name = obj.__class__.__name__
     if name == None:
-        name = real_name
-    if real_name in ["str", "unicode"]:
+        name = meta(obj)
+    name = name.center(15)
+    if meta(obj) in ["str", "unicode"]:
         line = unicode(obj)
     else:
         line = u""
-    indent = u""
-    for i in range(deep):
-        indent += u"#"
-    print u"[{:^15}]{}{}".format(name, indent, line)[:80]
+    indent = u"".rjust(deep, "#")
+    line = u"[%s]%s%s" % (name, indent, line)
+    line = line[:DOCUMENT_WIDTH]
+    print line
 >
 
-//Nous récupérons la  classe  de  l'objet avec l'attribut  <\__class__>,
-et le nom de cette  classe  avec son attribut  <\__name__>.  La dernière
-ligne  pourrait  être  mieux  décrite,  ou  coupée  pour  une  meilleure
-lisibilité.  Il est aussi possible  de  créer l'indentation en utilisant
-la fonction  <format()>,  mais on peut  déjà  constater à quel point son
-utilisation peut nuire  à  la  lisibilité  (pourquoi pas des expressions
-régulières,  pendant qu'on  y  est ?  Ou des  (incantations)[..].  On se
-croirait en Perl…)// 
-..: http://www.perlmonks.org/index.pl/?node_id=306017
+La fonction  <meta()>* permet de  récupérer  le  nom  de  la classe d'un
+objet.  Pour ce  faire,  nous  récupérons  la  classe  de  l'objet  avec
+l'attribut  <\__class__>,  et le nom de  cette  classe avec son attribut
+<\__name__>. 
+ *: Le choix du nom //meta// est dû  au  fait  que parmis les trois noms
+    trouvés pour cette fonction,  aucun ne convenait : <class_name>  est
+    trop long  (nous allons utiliser  cette fonction ailleurs),  <class>
+    est un  mot  reservé,  <name>  est  trop  générique  (utilisé,   par
+    exemple,  comme argument de fonctions…).  <meta> permet de connaître
+    le nom de la classe  d'un  objet  en  l'inspectant.  On utilise donc
+    l'introspection pour connaître  la  nature  de l'objet.  Si //meta//
+    n'est pas  le  mot  le  plus  pertinent,  c'est  néanmoins  le  plus
+    pratique, sans être totalement hors-sujet.
+
+<Code: fonctions utilitaires
+def meta(obj):
+    return obj.__class__.__name__
+
+>
 
 <Code: afficher la structure d'un document
 print_debug(self, 0)

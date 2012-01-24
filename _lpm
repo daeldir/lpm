@@ -9,6 +9,26 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 
+PROGRAM_NAME = path.basename(sys.argv[0])
+FORMAT = True
+WEAVE = True
+TANGLE = True
+EPUB = False
+if PROGRAM_NAME == "tangle":
+    WEAVE = False
+    FORMAT = False
+if PROGRAM_NAME == "weave":
+    TANGLE = False
+    FORMAT = False
+if PROGRAM_NAME == "format":
+    WEAVE = False
+    TANGLE = False
+if PROGRAM_NAME == "epub":
+    FORMAT = False
+    WEAVE = False
+    TANGLE = False
+    EPUB = True
+
 sys.stdout = codecs.getwriter("utf-8")(sys.stdout) 
 sys.stderr = codecs.getwriter("utf-8")(sys.stderr) 
 
@@ -87,39 +107,15 @@ def refEscape(txt):
     txt = txt.replace("'", "_")
     txt = txt.replace(",", "_")
     return txt
-def addSpaceAfter(line, c, direction):
-    l = len(line)
-    if direction == 1:
-        start = 4
-        stop = l-4
-    else:
-        start = l-5
-        stop = 3
-    for i in range(start, stop, direction):
-        if line[i:i+3] != c+"  " and line[i:i+2] == c+" ":
-            return True, line[:i+1]+" "+line[i+1:]
-    return False, line
-def addSpaceBefore(line, c, direction):
-    l = len(line)
-    if direction == 1:
-        start = 4
-        stop = l-4
-    else:
-        start = l-5
-        stop = 3
-    for i in range(start, stop, direction):
-        if line[i-2:i+1] != "  "+c and line[i-1:i+1] == " "+c:
-            return True, line[:i-1]+" "+line[i-1:]
-    return False, line
 
-def addSpaceAnywhere(line, direction):
+def addSpace(line, direction):
     l = len(line)
     if direction == 1:
-        start = 4
-        stop = l-4
+        start = 0
+        stop = l
     else:
-        start = l-5
-        stop = 3
+        start = l-1
+        stop = -1
     spaces = []
     last = ""
     for i in range(start, stop, direction):
@@ -130,7 +126,7 @@ def addSpaceAnywhere(line, direction):
                 spaces.append({"i":i, "c": 1})
         last = line[i]
     if len(spaces) == 0:
-        return False, line
+        return line
     least = spaces[0]
     for i in spaces:
         if i["c"] < least["c"]:
@@ -140,40 +136,16 @@ def addSpaceAnywhere(line, direction):
         if i["c"] == least["c"]:
             most.append(i)
     c = most[int(len(most)/2)]["i"]
-    return True, line[:c]+" "+line[c:]
-
-def addSpace(line, direction):
-    r, line = addSpaceAfter(line, ".", direction)
-    if not r:
-        r, line = addSpaceAfter(line, ",", direction)
-    if not r:
-        r, line = addSpaceAfter(line, ")", direction)
-    if not r:
-        r, line = addSpaceAfter(line, "]", direction)
-    if not r:
-        r, line = addSpaceAfter(line, ">", direction)
-    if not r:
-        r, line = addSpaceBefore(line, "-", direction)
-    if not r:
-        r, line = addSpaceBefore(line, "-", direction)
-    if not r:
-        r, line = addSpaceBefore(line, "(", direction)
-    if not r:
-        r, line = addSpaceBefore(line, "[", direction)
-    if not r:
-        r, line = addSpaceBefore(line, "<", direction)
-    if not r:
-        r, line = addSpaceAnywhere(line, direction)
-    return line
+    return line[:c]+" "+line[c:]
 
 def justify(line, length):
+    line = line.strip()
     l = len(line)
     direction = 1
-    if len(line) < 10:
-        return line # We can't justify that as we use only spaces beetween five
-                    # characters from the start and to the end of the string.
-    while len(line) < length:
-        line = addSpace(line, direction).strip()
+    old_line = None
+    while len(line) < length and old_line != line:
+        old_line = line
+        line = addSpace(line, direction)
         direction *= -1
     return line
 
@@ -1470,20 +1442,21 @@ class Document:
         basedir = path.dirname(filename)
         f = codecs.open(filename, 'r', encoding="utf-8")
         lines = f.readlines()
-        d = Document()
-        d.fromOneFile(filename)
-        d.parse()
-        FOOTNOTE = []
-        NOTEREF = 0 
-        URLREF = 0
-        FOOTURL = []
-        CODE = {}
-        CODEREF_ERRORS = []
-        REFCOUNT = 0
-        infile = codecs.open(filename, encoding="utf-8").read()
-        outfile = d.formatText()
-        if infile != outfile:
-            codecs.open(filename+".clean", "w", encoding="utf-8").write(outfile)
+        if FORMAT:
+            d = Document()
+            d.fromOneFile(filename)
+            d.parse()
+            FOOTNOTE = []
+            NOTEREF = 0 
+            URLREF = 0
+            FOOTURL = []
+            CODE = {}
+            CODEREF_ERRORS = []
+            REFCOUNT = 0
+            infile = codecs.open(filename, encoding="utf-8").read()
+            outfile = d.formatText()
+            if infile != outfile:
+                codecs.open(filename+".clean", "w", encoding="utf-8").write(outfile)
         f.close()
         mode = "normal"
         for i in lines:
@@ -2026,11 +1999,15 @@ d = Document()
 filename = sys.argv[1]
 project = path.basename(filename)
 d.fromFile(filename)
-d.parse()
-d.resolv()
-d.extractCode()
-codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
-codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
+if TANGLE or WEAVE or EPUB:
+    d.parse()
+    d.resolv()
+if TANGLE:
+    d.extractCode()
+if WEAVE:
+    codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
+if EPUB:
+    codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
 for i in COLOR_ERRORS:
     sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
 for i in CODEREF_ERRORS:

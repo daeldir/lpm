@@ -13,9 +13,9 @@
     LPM (Literate  Programming  Markup)  est  un  ensemble  de  deux
     produits.  Tout  d'abord,   c'est   un   (langage   de  balisage
     léger)[..],   adapté   à   l'écriture   d'une   application   en
-    programmation lettrée.  Ensuite,  c'est  un  outil permettant de
+    programmation lettrée. Ensuite,  c'est  un  outil  permettant de
     lire les fichiers écrits avec  ce  langage  de balisage, et d'en
-    extraire le code  et  la  documentation,  tout en reformatant le
+    extraire le code et  la  documentation,  tout  en reformatant le
     fichier source pour le rendre plus lisible. 
     ..: http://fr.wikipedia.org/wiki/Langage_de_balisage_l%C3%A9ger
     
@@ -27,22 +27,22 @@
     dûe au fait  qu'aucun  de  ces  langage  ne  permet d'inclure du
     code  source  dans  le   document   **de  manière  simple**.  La
     programmation lettrée demandant  en  effet  d'écrire beaucoup de
-    code dans la  documentation,  il  n'est  pas agréable de devoir,
+    code dans la documentation,  il  n'est  pas  agréable de devoir,
     dans la plupart des langages  de  balisage légers (dans ceux qui
     supportent cette fonctionnalité),  indenter  notre  bloc de code
     à chaque ligne. 
     
     Ainsi, ce langage permet  d'insérer  du  code  en  ouvrant et en
     fermant  le  bloc  de  code,   plutôt  qu'en  devinant  grâce  à
-    l'indentation. Ce langage  possède  aussi une syntaxe permettant
+    l'indentation. Ce langage possède  aussi  une syntaxe permettant
     l'écriture de gros documents, ce  qui  n'est  pas le cas pour la
     plupart des  langages  de  balisages  légers  (en  général créés
     pour formater des commentaires  sur  le  web,  ou au mieux, pour
-    écrire des articles dans un  wiki)  – Notez que dans ce domaine,
+    écrire des articles dans un wiki)  –  Notez que dans ce domaine,
     ReStructuredText[..]  semble  avoir   une   approche  permettant
     l'écriture  de  gros  documents   (mais   ne   nous  permet  pas
     d'inclure  du  code  facilement).   Le   langage  possède  aussi
-    quelques commandes spécifiques  à  la programmation lettrée, que
+    quelques commandes spécifiques à  la  programmation lettrée, que
     nous n'aurions donc pas  pu  trouver  dans  un  autre langage de
     balisage léger plus « généraliste ». 
     ..: http://fr.wikipedia.org/wiki/ReStructuredText
@@ -52,7 +52,7 @@
     un premier contact,  nous  lisons  la  documentation générée par
     le logiciel, nous  finissons  invariablement  par travailler sur
     la source de ce document  pour  le  modifier. Il peut alors être
-    agréable et bénéfique que  cette  source soit bien présentée, ce
+    agréable et bénéfique que cette  source  soit bien présentée, ce
     que permet notre logiciel. 
     
                                   ~~~                                   

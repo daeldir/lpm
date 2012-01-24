@@ -1,8 +1,8 @@
 == Actions principales du programme
 
-Au lancement,  le  programme  analyse  ses  paramètres  pour savoir quel
-fichier il va analyser. Si  aucun  paramètre n'a été passé, le programme
-quitte en affichant un  message  d'erreur.  De  même si le fichier passé
+Au lancement, le  programme  analyse  ses  paramètres  pour  savoir quel
+fichier il va analyser. Si aucun  paramètre  n'a été passé, le programme
+quitte en affichant un message  d'erreur.  De  même  si le fichier passé
 en paramètre n'existe pas. 
 
 <Code: actions principales
@@ -34,7 +34,7 @@ html dont la css est un  peu  simplifiée, afin d'être utilisable pour le
 convertir en  ebook  (les  propriétés  modifiant  la  largeur  d'un bloc
 passent mal sur les petits écrans).// 
 
-Nous créons un  document  à  partir  du  fichier  passé en paramètre. Ce
+Nous créons un document  à  partir  du  fichier  passé  en paramètre. Ce
 fichier est parsé,  reformaté  (ainsi  que  les  fichiers qu'il inclue),
 les blocs de codes,  les  références  et  la  structure du document sont
 préparés. 
@@ -44,7 +44,7 @@ document = Document(document_file)
 >
 
 Maintenant, nous extrayons le code, puis la documentation* : 
- *: Les fichiers //.clean// sont  générés  dès l'analyse du document, il
+ *: Les fichiers //.clean// sont générés  dès  l'analyse du document, il
     n'y a pas besoin de les créer explicitement ici.
 
 <Code: actions principales
@@ -54,8 +54,8 @@ write(ebook_file, document.output_html(ebook = True))
 document.print_debug()
 >
 
-Chaque bloc de  code  nommé  est  retenu  dans  la variable <CODE>. Pour
-extraire le code source, nous  parcourons  chaque bloc de code nommé, et
+Chaque bloc de code  nommé  est  retenu  dans  la  variable <CODE>. Pour
+extraire le code source, nous parcourons  chaque  bloc de code nommé, et
 s'il n'a jamais été référencé, nous l'extrayons : 
 
 <Code: extraction du code source
@@ -67,7 +67,7 @@ for name in CODE:
 
 //<CODE\[name\]> est séparé en  plusieurs  blocs  (quand  le même nom de
 bloc a été utilisé plusieurs  fois).  Nous  sauvegardons dans le premier
-bloc  le  résultat  obtenu  en  résolvant  les  références.  Ce résultat
+bloc le  résultat  obtenu  en  résolvant  les  références.  Ce  résultat
 (<CODE\[name\]\[0\].resolved>) est retenu  en  tant  que tableau, chaque
 élément correspondant à une ligne  de  code.  Pour écrire le code source
 dans un fichier, nous joignons  tout  ces  éléments  par  un retour à la
@@ -93,7 +93,7 @@ def error(message):
 
 >
 
-Au final,  voici  tout  ce  que  nous  faisons  lorsque  nous lançons le
+Au final, voici  tout  ce  que  nous  faisons  lorsque  nous  lançons le
 programme : 
 ~Display actions principales
 

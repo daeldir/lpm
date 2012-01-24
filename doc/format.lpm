@@ -11,7 +11,7 @@ balises de bloc, qui permettent de définir des blocs de texte.
 
 === Les blocs
 
-La manière la plus basique de  définir  un bloc est de laisser une ligne
+La manière la plus basique de définir  un  bloc est de laisser une ligne
 vide entre deux blocs de texte : 
 
 <Code (lpm): 
@@ -23,13 +23,13 @@ sur deux lignes
 et un troisième bloc de texte
 >
 
-On appelle ces blocs de  texte  des paragraphes. Lorsque le fichier sera
+On appelle ces blocs de texte  des  paragraphes. Lorsque le fichier sera
 reformaté, les lignes de  ces  blocs  seront  fusionnées  si le résultat
 n'est  pas  trop  long.*  Ainsi,  l'exemple  ci-dessus  deviendra  après
 formatage : 
  *: Le fichier source de la  documentation  est  reformaté afin de tenir
     dans 72 colonnes (des  lignes  de  72  caractères maximum). Le texte
-    des paragraphes est justifié.  Les  blocs  de  code ne sont bien sûr
+    des paragraphes est justifié. Les  blocs  de  code  ne sont bien sûr
     pas modifiés, même si leurs lignes dépassent 72 caractères.
 
 <Code (lpm): 
@@ -63,7 +63,7 @@ ceci est un paragraphe
 ~include test.txt
 >
 
-Dans cet exemple, le  paragraphe  ne  fusionne  pas avec la commande qui
+Dans cet exemple, le paragraphe  ne  fusionne  pas  avec la commande qui
 le suit, même  si  la  ligne  n'est  pas  trop  grande.  En effet, **une
 commande reste une commande, seule sur une ligne**. 
  *: Mais  pas  toujours.   Les   commandes   relatives   aux  références
@@ -75,8 +75,8 @@ commande reste une commande, seule sur une ligne**.
 Les balises légères  sont  des  balises  qui  se  trouvent à l'intérieur
 d'une ligne. Il peut  y  en  avoir  plusieurs  sur  une seule ligne. Les
 balises  légères   agissent   à   l'intérieur   d'un   paragraphe.  Elle
-permettent de mettre en gras,  insérer  des liens… Le tout sans dégrader
-le texte par  un  surplus  de  caractères.  Voici  un exemple de balises
+permettent de mettre en gras, insérer  des  liens… Le tout sans dégrader
+le texte par un  surplus  de  caractères.  Voici  un  exemple de balises
 légères : 
 
 <Code (lpm): 
@@ -89,10 +89,10 @@ bas de page.*
 Le langage de balisage  a  pour  objectif  de  rendre le document source
 agréable  à  lire.  Pour  cela,   les   caractères  sont  utilisés  pour
 « dessiner » les  décorations  du  texte.  Cette  manière  de  faire est
-esthétique, mais peu pratique à  écrire  à la main. Aussi, pour certains
+esthétique, mais peu pratique à écrire  à  la main. Aussi, pour certains
 marquages, il  existe  une  forme  abrégée,  dite  « simple »,  qui sera
-transformée par  le  programme  en  forme  complète,  plus « jolie ». Le
-programme accepte en entrée  indépendamment  l'une ou l'autre forme. Par
+transformée par le  programme  en  forme  complète,  plus  « jolie ». Le
+programme accepte en entrée indépendamment  l'une  ou l'autre forme. Par
 exemple, nous marquons le  titre  du  livre  de  cette manière (la forme
 simple) : 
 
@@ -125,14 +125,14 @@ le programme, et n'existent que pour simplifier la vie du programmeur.
 
 Lorsque nous utilisons  des  caractères  qui  devraient être interprétés
 par LPM, mais que nous  les  voulons  tels  quels,  il est nécessaire de
-les échapper. Ceci  se  fait  à  la  mode  Unix : tout caractère précédé
+les échapper. Ceci se  fait  à  la  mode  Unix :  tout caractère précédé
 d'un  \\  sera  rendu   tel   quel,   sans   être  interprété.  Un  mode
 d'échappement spécial existe  pour  les  blocs  de  code,  mais  il sera
 détaillé plus tard, avec les blocs de code. 
 
 == Structure d'un document
 
-Un document possède un titre,  un  ou plusieurs auteurs, une licence, et
+Un document possède un titre, un  ou  plusieurs auteurs, une licence, et
 un résumé. En plus de cela,  il  est  composé de plusieurs sections, qui
 permettent de structurer le document. 
 
@@ -154,10 +154,10 @@ et les autres lignes sont centrées :
 
 Il est possible de simplifier  le  titre,  lors  de  la rédaction, en le
 marquant de la sorte : 
- - Une ligne contenant  aux  moins  deux  étoiles, sans autre caractères
- ' (à part peut-être des  espaces  au  début  et  à  la fin de la ligne)
+ - Une ligne contenant aux  moins  deux  étoiles,  sans autre caractères
+ ' (à part peut-être des espaces  au  début  et  à  la  fin de la ligne)
  ' marque le début du titre.
- - Après cela, les lignes commencent  par  une étoile, puis le texte. La
+ - Après cela, les lignes commencent par  une  étoile, puis le texte. La
  ' dernière étoile de la ligne  est  ignorée  (elle est considérée comme
  ' faisant partie du cadre). Si  vous  voulez  avoir une ligne finissant
  ' par une étoile (en plus de  celle  du cadre), vous devrez écrire deux
@@ -193,7 +193,7 @@ Avec **deux** paragraphes !
 
 Une fois formaté, la  commande  <<lpm>\~Abstract\~> se retrouve centrée,
 la première lettre en  capitale.  Le  <<lpm>\~\~\~>  qui ferme le résumé
-est lui aussi centré. Les lignes  des  blocs de textes du résumé sont un
+est lui aussi centré. Les lignes des  blocs  de textes du résumé sont un
 peu moins longues, et indentée, pour le résultat suivant : 
 
 <Code (lpm): 
@@ -211,7 +211,7 @@ peu moins longues, et indentée, pour le résultat suivant :
 Le format de  la  licence  est  calqué  sur  celui  du  résumé,  mais en
 utilisant  la  commande  <<lpm>\~License\~>   plutôt   que  la  commande
 <<lpm>\~Abstract\~>. Notez que  « License »  est  écrit  en  anglais, et
-que contrairement au français,  le  //\[s\]//  se  note avec un **s** et
+que contrairement au français, le  //\[s\]//  se  note  avec un **s** et
 non un **c**. 
 
 <Code (lpm): 
@@ -232,7 +232,7 @@ non un **c**.
 
 === Le ou les auteurs
 
-Il est possible de préciser  le  ou  les  auteurs du document grâce à la
+Il est possible de préciser le  ou  les  auteurs  du document grâce à la
 commande <<lpm>\~authors>.  Cette  commande  peut  apparaître  plusieurs
 fois, et les auteurs seront regroupés  et  affichés sous le titre. Si la
 commande apparaît plusieurs fois,  après  reformatage  du document, elle
@@ -246,10 +246,10 @@ raison.
 
 === Le langage de programmation du projet
 
-Des blocs de  code  seront  insérés  tout  au  long du document. Ceux-ci
+Des blocs de code  seront  insérés  tout  au  long  du document. Ceux-ci
 peuvent être mis en valeur  par  la  coloration syntaxique, mais pour ce
-faire, nous devons connaître  le  langage de programmation utilisé. Nous
-pouvons définir ce langage au cas  par  cas, et pour nous épargner de le
+faire, nous devons connaître le  langage  de programmation utilisé. Nous
+pouvons définir ce langage au cas par  cas,  et pour nous épargner de le
 faire  à  chaque  fois,  nous  pouvons   aussi  définir  un  langage  de
 programmation par  défaut,  correspondant  au  langage  le  plus utilisé
 dans le document. Pour cela, nous utilisons la commande <<lpm>\~code>. 
@@ -261,7 +261,7 @@ dans le document. Pour cela, nous utilisons la commande <<lpm>\~code>.
 == Formatage des paragraphes
 
 Comme   dit    dans    la    partie    (__Le    format    de    balisage
-LPM__)[description du format  LPM],  un  paragraphe  est définit par une
+LPM__)[description du format LPM],  un  paragraphe  est  définit par une
 suite de lignes non-vides. Un  paragraphe  commence  à la première ligne
 non-vide rencontrée, et s'arrête dès  qu'il  rencontre une ligne vide ou
 une  commande.  Les  lignes   succeptibles   de   marquer  la  fin  d'un
@@ -277,7 +277,7 @@ paragraphe sont :
 
 === Formatage du texte
 
-À l'intérieur du paragraphe,  il  est possible d'utiliser des caractères
+À l'intérieur du paragraphe, il  est  possible d'utiliser des caractères
 qui  vont  mettre  le   texte   **en   gras**,   //en  italique//,  __en
 souligné__, et même --en barré--. 
 
@@ -294,11 +294,11 @@ souligné__, et même --en barré--.
 Il est aussi  possible  d'ajouter  des  liens.  Un  lien  est noté entre
 crochets, et s'applique au mot  qui  précède,  ou bien au groupe contenu
 dans les  parenthèses  qui  précède  (auquel  cas  les  parenthèses sont
-supprimées du texte dans le  document  généré). Un lien contenant un mot
+supprimées du texte dans le document  généré).  Un lien contenant un mot
 est un lien intra-document. Les  liens  vers  l'exterieur sont notés par
-deux points, puis  rappelés  à  la  fin  du  paragraphe avec la commande
+deux points, puis rappelés  à  la  fin  du  paragraphe  avec la commande
 <<lpm>\..:>. Les liens dont le  mot  commence  par <<lpm>\=> ne sont pas
-des liens, mais  des  ancres  vers  lesquelles  on  peut pointer. Ce qui
+des liens, mais des  ancres  vers  lesquelles  on  peut  pointer. Ce qui
 donne : 
 
 <Code (lpm): 
@@ -310,11 +310,11 @@ Du texte.
 L'ancre[=une ancre] en question.
 >
 
-Comme les liens vers  l'exterieur,  il  est  possible de créer des notes
+Comme les liens vers l'exterieur,  il  est  possible  de créer des notes
 de bas de page. Pour  cela,  on  place  une  étoile (seule, deux étoiles
 correspondant  à  la  mise  en  gras)  à  côté  du  mot  que  l'on  veut
 commenter.  La  commande   <<lpm>\*:>   contiendra   le  commentaire  en
-question,  et  sera  suivit  sur  la  même  ligne  et  les  suivantes du
+question, et  sera  suivit  sur  la  même  ligne  et  les  suivantes  du
 paragraphe contenant le commentaire. 
 
 <Code (lpm): 
@@ -332,10 +332,10 @@ mon texte avec* une note de bas de page.
     /!\ bas  de  page,  il   y   aura   un   décalage  dans  les /!\
     /!\ références !                                             /!\
     /!\                                                          /!\
-    /!\ Il est considéré comme  une  bonne pratique de mettre la /!\
+    /!\ Il est considéré comme une  bonne  pratique de mettre la /!\
     /!\ note ou l'URL directement  derrière  le paragraphe qui y /!\
     /!\ fait référence,  mais  ce  n'est  pas  obligé.  Une note /!\
-    /!\ peut même précéder  le  texte  qui  s'y réfère, tant que /!\
+    /!\ peut même précéder le  texte  qui  s'y  réfère, tant que /!\
     /!\ le  compte  (l'ordre  des  notes)  n'est  pas  perturbé. /!\
     /!\ Toutefois, ce n'est pas vraiment conseillé.              /!\
 
@@ -377,7 +377,7 @@ Deviendra :
 == Formatage des listes
 
 LPM  permet   de   créer   des   listes   numérotées   et   des   listes
-non-numérotées. Les listes  numérotées  sont  marquées  par une suite de
+non-numérotées. Les listes numérotées  sont  marquées  par  une suite de
 lignes commençant par  <<lpm>\#>,  chaque  <<lpm>\#>  marquant  le début
 d'un élément de la liste.  Les  listes  non-numérotées sont marquées par
 une ligne  commençant  par  <<lpm>\->,  chaque  <<lpm>\->  marquant,  de
@@ -409,8 +409,8 @@ contenir d'autres listes, des paragraphes…
 == Commandes d'inclusion de fichiers
 
 Plusieurs commandes  permettent  d'insérer  un  autre  fichier  dans  le
-document. Ces commandes prennent  en  paramètre  le  chemin et le nom du
-fichier à insérer,  relatif  à  la  position  du  fichier dans lequel la
+document. Ces commandes prennent en  paramètre  le  chemin  et le nom du
+fichier à insérer, relatif  à  la  position  du  fichier  dans lequel la
 commande apparaît. 
 
 Prenons  comme  exemple,  pour  illustrer  ce  principe,  l'arborescence
@@ -428,14 +428,14 @@ Ce qui compte ici est la  position  du  fichier sur lequel on travaille,
 et  non  celle  du  fichier  sur  lequel  aura  été  lancé  la  commande
 <<sh>lpm>. 
 
-Il est possible d'insérer  une  image  dans  la documentation grâce à la
+Il est possible d'insérer une  image  dans  la  documentation grâce à la
 commande <<lpm>\~image> : 
 
 <Code (lpm): 
 ~image img/lolcat.jpg
 >
 
-On peut aussi insérer un  fichier  texte brut dans la documentation avec
+On peut aussi insérer un fichier  texte  brut dans la documentation avec
 la commande <<lpm>\~include> : 
 
 <Code (lpm): 
@@ -450,10 +450,10 @@ d'être ajouté dans la documentation :
 >
 
 Cette  dernière  commande  est  très  importante,  car  elle  permet  de
-fractionner la source de  la  documentation en plusieurs petit fichiers,
+fractionner la source de la  documentation  en plusieurs petit fichiers,
 facilement éditables dans un  éditeur  de  texte.  Elle permet aussi, en
 supposant que l'on a un fichier  par  section,  de créer une « table des
-matières » dans le  fichier  principal,  et  de régorganiser le document
+matières » dans le fichier  principal,  et  de  régorganiser le document
 juste en modifiant l'ordre de ces inclusions. 
 
 Pour finir, nous désirons  parler  d'une  commande  qui  n'inclue pas, à
@@ -468,7 +468,7 @@ Cette commande  prend  deux  fichiers  en  paramètres.  Elle  copiera le
 fichier passé en  premier,  et  dont  le  positionnement  est  relatif à
 celui du fichier en cours  d'édition,  dans  le fichier passé en second,
 dont la position sera  relative  au  dossier  dans  lequel sera placé le
-code source. Les  espaces  et  autres  caractères pouvant poser problème
+code source. Les espaces  et  autres  caractères  pouvant poser problème
 doivent être échappés avec <<lpm>\\>. 
 
 == Gestion du code
@@ -539,11 +539,11 @@ void main(){
 === Programmation lettrée, la toile de code
 
 Cette dernière fonctionnalité nous ammène  à  aborder  le principe de la
-programmation lettrée : nous écrivons  de  petits morceaux de code, dans
+programmation lettrée : nous écrivons de  petits  morceaux de code, dans
 lesquels nous incluons des  références  vers  d'autres morceaux de code.
 Il est aussi possible de  commencer  un  bloc  de code, puis de rajouter
 plus tard du code  dans  celui-ci  en  créant  un  nouveau  bloc de code
-portant le même  nom.  Cette  manière  de  présenter  le code, emmêlé et
+portant le même nom.  Cette  manière  de  présenter  le  code, emmêlé et
 avec des références, fait  penser  au  Web  et  ses liens hypertexte, et
 bien que la programmation lettrée  aie  été  inventée bien avant le Web,
 sont auteur avait déjà saisi le  concept  de toile d'idées créée par les
@@ -573,7 +573,7 @@ printf("Hello, world!");
 
 Le morceau de code  //test.c//  sera  réunifié,  puis  la référence vers
 //implémentation de main// sera résolue  et  remplacée par le morceau de
-code portant ce  nom.  Toutes  les  lignes  du  code ainsi inséré seront
+code portant ce nom.  Toutes  les  lignes  du  code  ainsi inséré seront
 indentées  d'autant  de  caractères  que  ce  qui  précède  la  commande
 référençant  le  bloc.   Cette   fonctionnalité   est   nécessaire  pour
 permettre d'obtenir  un  code  source  lisible  d'une  part,  et d'autre
@@ -591,7 +591,7 @@ bloc  de  code,  et  un   fichier   sera   donc  créé  portant  ce  nom.
 //implémentation de main//, par contre,  est  inséré  dans un autre bloc
 de code, et il ne sera donc pas extrait dans un fichier.* 
  *: En l'occurence, il le  sera,  mais  seulement  parce  que le morceau
-    dans lequel il est inclu,  //test.c//,  est lui même extrait dans un
+    dans lequel il est inclu, //test.c//,  est  lui même extrait dans un
     fichier.
 
 === Échappement de caractères dans les blocs de code
@@ -601,7 +601,7 @@ comme une référence vers un  autre  bloc  de  code. Si elle commence par
 <<lpm>\>>, elle sera  interprétée  comme  une  sortie  du  bloc de code.
 Pour empêcher cela, on peut  échapper  la  ligne,  en la débutant par le
 caractère <<lpm>\\>.  Contrairement  à  l'échappement  traditionnel,  ce
-caractère, dans les blocs  de  code,  va  échapper la ligne entière, qui
+caractère, dans les blocs de  code,  va  échapper  la ligne entière, qui
 peut ensuite contenir n'importe quoi, et non pas juste un caractère. 
 
 Ainsi : 
@@ -636,7 +636,7 @@ import os
 
 //On voit bien ici que  l'on  n'a  échappé  que  le <<lpm>\\>, et pas le
 <<lpm>\\\<>, qui aurait  dû  être  échappé  <<lpm>\\\\\\\<>  (au lieu de
-<<lpm>\\\\\<>) si nous échappions  caractère  par caractère et non ligne
+<<lpm>\\\\\<>) si nous échappions caractère  par  caractère et non ligne
 par ligne.// 
 
 === Morceaux de code dans les paragraphes
@@ -646,13 +646,13 @@ paragraphe  est  du  code.   Ceci   permet   d'appliquer  la  coloration
 syntaxique à ces morceaux  de  code.  Nous  ne  somme  alors pas dans un
 bloc de code, et  l'échappement  se  fait  cette  fois  à  la mode Unix,
 caractère par caractère.  Nous  marquons  un  passage  de  code  dans un
-texte   en   l'entourant    des    signes   inférieur   et   supérieur :
+texte   en   l'entourant   des    signes    inférieur   et   supérieur :
 <<lpm>\<import os\>>. Il est  possible  de  spécifier  le  langage de ce
 morceau de code en ajoutant,  directement  après  le signe inférieur, le
 langage     entouré      lui      aussi      des      même      signes :
 <<lpm>\<\<C\>printf("Wouhou!")\>>. 
 
-Enfin,  pour  illustrer  l'échappement  caractère  par  caractère, voici
+Enfin, pour  illustrer  l'échappement  caractère  par  caractère,  voici
 comment    a    été    noté    le     dernier    morceau    de    code :
 <<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
 
@@ -674,7 +674,7 @@ La seconde  commande  permet  non  seulement  d'afficher  un  morceau de
 code, mais  surtout  d'afficher  celui-ci  sans  aucune  référence  vers
 d'autres morceaux de code,  c'est  à  dire  qu'il  les remplace par leur
 contenu. Ainsi, utiliser  cette  commande  sur  un  bloc  destiné à être
-sortit dans un fichier  revient  à  insérer  dans le document le contenu
+sortit dans un fichier revient  à  insérer  dans  le document le contenu
 de ce fichier.  Mais  il  est  possible,  bien  sûr,  d'insérer juste un
 morceau de code,  la  commande  fonctionnant  sur  ceux-ci,  et  non pas
 exclusivement sur les blocs destinés à être sortis dans un fichier. 

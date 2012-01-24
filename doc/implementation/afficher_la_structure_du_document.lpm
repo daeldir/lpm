@@ -1,6 +1,6 @@
 == Afficher la structure du document
 
-Pour  afficher  la  structure  du  document,  nous  allons  utiliser une
+Pour afficher  la  structure  du  document,  nous  allons  utiliser  une
 fonction d'affichage spéciale.  Cette  fonction  prend trois paramètres.
 Ces trois paramètres sont : 
  - l'objet de la structure que l'on va afficher,
@@ -13,7 +13,7 @@ La fonction va afficher le  nom  de  l'objet,  puis  une série de dièses
 indiquant la profondeur de  l'objet,  permettant  de  mettre en avant la
 hierarchie  du  document.  Enfin,  elle  affiche  le  texte  contenu  de
 l'objet si celui-ci est une  chaîne  de  caractère. La chaine affichée à
-l'écran ne  fera  pas  plus  de  la  taille  spécifiée  pour un document
+l'écran ne fera  pas  plus  de  la  taille  spécifiée  pour  un document
 (contenue dans la variable globale <DOCUMENT_WIDTH>). 
 
 <Code: fonctions utilitaires
@@ -31,7 +31,7 @@ def print_debug(obj, deep, name = None):
     print line
 >
 
-La fonction <meta()>*  permet  de  récupérer  le  nom  de la classe d'un
+La fonction <meta()>* permet  de  récupérer  le  nom  de  la classe d'un
 objet. Pour  ce  faire,  nous  récupérons  la  classe  de  l'objet  avec
 l'attribut <\__class__>, et le  nom  de  cette  classe avec son attribut
 <\__name__>. 
@@ -89,6 +89,6 @@ for line in self.lines:
 
 //La fonction <debug_print()>  de  la  classe  <Documentation>  prend en
 paramètre  <name  =   None>.   Ceci   permet   d'afficher   un  bloc  de
-documentation en mentant sur le nom,  comme  on a fait avec le résumé et
+documentation en mentant sur le nom, comme  on  a fait avec le résumé et
 la licence.// 
 

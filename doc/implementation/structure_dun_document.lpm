@@ -1,7 +1,7 @@
 == Structure d'un document
 
-Afin de  comprendre  le  découpage  en  classes  qui  va  suivre, il est
-nécessaire de parler  un  peu  de  la  composition  d'un document, et du
+Afin de comprendre  le  découpage  en  classes  qui  va  suivre,  il est
+nécessaire de parler un  peu  de  la  composition  d'un  document, et du
 processus de  découpage  de  celui-ci  nécessaire  pour  en  extraire la
 structure. 
 
@@ -31,12 +31,12 @@ ainsi de suite.
 On distingue trois types de sections : 
  - Tout d'abord, le document  lui  même  est  composé comme une section,
  ' c'est à dire  qu'il  contient  une  introduction,  puis  une liste de
- ' sections. La différence  est  qu'en  tant  que **section mère**, elle
+ ' sections. La différence est  qu'en  tant  que  **section mère**, elle
  ' contient des  informations  supplémentaires,  telles  que  le  ou les
- ' auteurs  du  document,  le  titre,  le  langage  de  programmation du
+ ' auteurs du  document,  le  titre,  le  langage  de  programmation  du
  ' projet… Cette section  aura  aussi  un  rendu  différent lorsque nous
  ' générerons la documentation.
- - Ensuite, viennent  les  **sections**  à  proprement parler. Celles-ci
+ - Ensuite, viennent les  **sections**  à  proprement  parler. Celles-ci
  ' sont telles que décrites  plus  tôt,  composées d'une introduction et
  ' d'une suite de sous-sections.
  - Enfin, il y a  les  **sections  terminales**.  Ces sections n'ont pas
@@ -53,9 +53,9 @@ sections elles-mêmes, soit déjà analysées.
 Une introduction va contenir  des  paragraphes  de documentation, et des
 morceaux de code. Le  traitement  de  ces  deux parties sera extrêmement
 différent.  Lors  de  l'analyse,  nous  séparons  donc  ces  parties.  À
-l'issue de  l'analyse,  une  introduction  est  composée  d'une suite de
+l'issue de l'analyse,  une  introduction  est  composée  d'une  suite de
 paragraphes  et  de  morceaux  de  code.  Toutefois,  deviner  quand  se
-termine et quand commence un  paragraphe  est, au contraire des blocs de
+termine et quand commence un paragraphe  est,  au contraire des blocs de
 code,  assez   difficile.   Nous   passons   donc   par   une  structure
 intermédiaire,  la   **documentation**,   qui   va   contenir  plusieurs
 paragraphes, plutôt que  de  découper  les  paragraphes directement dans
@@ -65,7 +65,7 @@ l'introduction.
 
 Les blocs de codes sont composés  d'une  suite  de lignes de codes et de
 références vers d'autres blocs de code.  Un  bloc  de code peut avoir un
-nom (pour des références futures)  et  nous pouvons spécifier au cas par
+nom (pour des références futures) et  nous  pouvons spécifier au cas par
 cas le langage de programmation d'un  bloc  de  code (qui par défaut est
 celui du projet). 
 
@@ -80,7 +80,7 @@ paragraphes peuvent être de plusieurs sorte :
  - des commandes.
 
 Une partie de ces types  de  paragraphes  peuvent eux même être composés
-de documentation. Par exemple,  un  paragraphe important va contenir une
+de documentation. Par exemple, un  paragraphe  important va contenir une
 documentation, ce  qui  lui  permettra  de  contenir  à  sont  tour  des
 listes.  Les  listes  elles-même  contiennent  une  documentation,  leur
 permettant ainsi  de  contenir  des  sous-listes,  ou  des…  paragraphes
@@ -93,19 +93,19 @@ paragraphe.
     /!\ les   listes   et   les   paragraphes   importants,   le /!\
     /!\ comportement  pourrait  être  imprévisible.  C'est  donc /!\
     /!\ fortement déconseillé. Et  de  toute  façon peu intuitif /!\
-    /!\ pour les  futures  lectures,  une  commande étant censée /!\
+    /!\ pour les futures  lectures,  une  commande  étant censée /!\
     /!\ se trouver seule sur une ligne.                          /!\
 
 === Les paragraphes
 
-Les  paragraphes  sont  des  suites  de  lignes  consécutives.  Ils sont
+Les paragraphes  sont  des  suites  de  lignes  consécutives.  Ils  sont
 séparés les uns des autres  par  une  ligne  vide. Ce qui nous intéresse
 ici est qu'ils contiennent eux-même  des  éléments de formatage. On peut
 considérer qu'un paragraphe contient deux type de donnée : 
  - des morceaux de texte brut,
  - des passages formatés.
 
-Les passages  formatés  peuvent  contenir,  eux  aussi,  des morceaux de
+Les passages formatés  peuvent  contenir,  eux  aussi,  des  morceaux de
 texte brut et des  passages  formatés.  Au  final, cette arborescence de
 donnée sera toujours terminée,  à  chaque  //feuille//,  par  un bloc de
 texte brut. 
@@ -117,7 +117,7 @@ une **introduction** et  des  sous-sections.  L'introduction contient du
 **code** (contenant des  **lignes  de  code**  et  des **références vers
 des blocs de code**) et  de  la  **documentation**, et celle-ci contient
 des **paragraphes**,  des  **listes**,  des  **paragraphes importants**,
-des **notes de bas  de  page**,  des  **URLs** et des **commandes**. Les
+des **notes de bas de  page**,  des  **URLs**  et des **commandes**. Les
 paragraphes contiennent des  **blocs  de  texte  brut**,  et des **blocs
 formatés**. Les autres  éléments  de  la  documentation  contiennent des
 paragraphes ou de la documentation. 
@@ -167,8 +167,8 @@ Présenté avec plus de formes, voici la structure d'un document :
     /!\ Ceci ne représente  pas  l'arborescence  des classes. La /!\
     /!\ plupart des éléments présentés  ici  n'ont pas de classe /!\
     /!\ parente commune (à  part  peut-être  <object>), et même, /!\
-    /!\ la  classe  <Document>  hérite  de  la  classe <Section> /!\
+    /!\ la classe  <Document>  hérite  de  la  classe  <Section> /!\
     /!\ alors  que  notre   arborescence  //montre  l'inverse//. /!\
-    /!\ Bref, ne  confondez  pas  l'arborescence  du document et /!\
+    /!\ Bref, ne confondez  pas  l'arborescence  du  document et /!\
     /!\ celle des classes.                                       /!\
 

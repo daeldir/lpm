@@ -2,7 +2,7 @@
 
 Le support de l'unicode  en  python  2  est  une  horreur. Il faut faire
 attention à bien utiliser  des  chaînes  de  type  <unicode> au lieu des
-chaînes de type <str>, et  spécifier  le type des fichiers ouverts, dont
+chaînes de type <str>, et spécifier  le  type des fichiers ouverts, dont
 la sortie standard et  la  sortie  d'erreur  (et l'entrée standard, mais
 nous ne sommes pas concernés ici, puisque nous ne la lisons pas). 
 
@@ -29,7 +29,7 @@ def read(filename, encoding = "utf-8"):
 	return f.read()
 >
 
-//Pour  rappel,  il  n'est  pas  nécessaire  de  fermer  manuellement le
+//Pour rappel,  il  n'est  pas  nécessaire  de  fermer  manuellement  le
 fichier, celui-ci sera fermé à  la  destruction  de l'objet <f>, c'est à
 dire à la sortie de la fonction, <f> n'étant plus utilisé.// 
 
@@ -64,7 +64,7 @@ code soit plus avancé.//
 
 Les fonctions  <write>,  <read>  et  <readlines>  prennent  un paramètre
 optionnel  permettant  de   spécifier   l'encodage   du   fichier.  Nous
-travaillons majoritairement sur  des  fichiers  en  UTF-8, c'est donc la
+travaillons majoritairement sur des  fichiers  en  UTF-8,  c'est donc la
 valeur  par  défaut.  Un   autre   encodage   utilisé  est  <None>  (pas
 d'encodage), qui  permet  de  travailler  sur  les  fichiers  de manière
 binaire (voir l'opposition (fichier binaire vs fichier texte)[..]) 

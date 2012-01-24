@@ -252,7 +252,7 @@ On peut mettre des blocs de --code **dans un** paragraphe--
 l'échappant : <test \\>.
 >
 
-Enfin,  notre  dernier  travail  consiste  à  tester  les  inclusions de
+Enfin, notre  dernier  travail  consiste  à  tester  les  inclusions  de
 fichier : 
 
 <Code (lpm): tests/test

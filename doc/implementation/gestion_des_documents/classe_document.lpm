@@ -121,7 +121,7 @@ le document entier.
 Nous chargeons le fichier.  Cette  partie  est  assez simple : nous nous
 contentons  d'extraire  les  lignes   du   fichier  dans  une  variable,
 <self.lines>  (qui est  héritée  de  la classe  <Section>,  voir  (cette
-partie)[self.line dans les sections] pour comprendre son usage :) 
+partie)[self.lines dans les sections] pour comprendre son usage :) 
 
 <Code: charger le fichier
 file_name = path.abspath(file_name)

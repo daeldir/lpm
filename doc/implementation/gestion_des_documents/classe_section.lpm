@@ -1,6 +1,6 @@
 === La classe Section
 
-[=self.line dans les sections] 
+[=self.lines dans les sections] 
 
 <Code: classe Section
 class Section:
@@ -15,6 +15,18 @@ class Section:
     def print_debug(self, deep):
         <afficher la structure d'une section
 >
+
+//Lors de l'initialisation d'une section, on peut lui donner deux
+paramètres. <parent> permet de savoir de quelle section la section
+courante est une sous-section, et <name> permet de connaître le nom de
+la section.//
+
+Une section est décomposée en deux parties : son introduction, et ses
+sous-sections. Une section possède aussi un titre, et une position,
+indiquant le numéro de la section dans sa section parente. Nous retenons
+le contenu de la section non-parsée dans la variable <self.lines>. Nous
+retenons aussi la section parente de notre section, afin de pouvoir
+trouver, pour une section, quelle est sa place dans le document entier.
 
 <Code: attributs d'une section
 self.parent = parent
@@ -34,6 +46,13 @@ formatage,  restitueras les trois  signes  égal.  Nous  faisons ceci car
 lorsque  nous  incluons  des  fichiers,  au  moment  du formatage,  nous
 parsons leurs titres  comme  étant  de premier niveau,  mais voulons les
 formater à leur profondeur réelle.// 
+
+L'analyse d'une section consiste en une action très simple : séparer
+l'introduction des sous-sections, et créer les sous-sections. Pour cela,
+nous lisons chaque ligne, et l'ajoutons à l'introduction. Si une ligne
+débute par le signe <=>, nous considérons que nous débutons une
+sous-section. Comme dans la classe <Document>, nous ignorons le contenu
+des blocs de code.
 
 <Code: décomposer une section
 # TODO

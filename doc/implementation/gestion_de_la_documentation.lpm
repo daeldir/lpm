@@ -13,7 +13,7 @@ class Documentation:
 >
 
 //La  fonction  <print_debug>  de  la   portion  de  documentation  peut
-prendre en paramètre un  faux  nom  qu'elle  affichera au lieu du nom de
-la classe  (<Documentation>).  Ce paramètre est utilisé pour afficher la
+prendre en paramètre un faux  nom  qu'elle  affichera  au lieu du nom de
+la classe (<Documentation>). Ce  paramètre  est utilisé pour afficher la
 licence et le résumé du document avec un nom correct.// 
 

@@ -2,42 +2,42 @@
 
 == Utilisation du programme
 
-Le programme  s'utilise  de  manière   très   simple :  nous  lançons la
+Le  programme  s'utilise  de  manière  très  simple :  nous  lançons  la
 commande  <<bash>lpm>  suivie  du   nom   du   fichier  contenant  notre
-document.  Nous  ne  passons  qu'un  seul  fichier.  Si  le document est
+document. Nous  ne  passons  qu'un  seul  fichier.  Si  le  document est
 séparé  en  plusieurs  sous-fichiers,  le  programme  ira  les  chercher
 automatiquement. 
 
 Le programme fait trois choses : 
- - Il crée  un  fichier   HTML   contenant   la  documentation  affichée
- ' correctement,  portant le nom du  fichier passé en paramètre auquel a
+ - Il  crée  un  fichier   HTML   contenant  la  documentation  affichée
+ ' correctement, portant le nom du  fichier  passé en paramètre auquel a
  ' été ajoutée  l'extension  //.html//.  Le  fichier  se  trouve dans le
  ' répertoire courant (d'où a été lancé lpm).
- - Il crée un  dossier  //src//  contenant  tout  les  fichiers  sources
- ' extraits  de  la  documentation.   Il   crée   des  sous  dossiers si
+ - Il crée  un  dossier  //src//  contenant  tout  les  fichiers sources
+ ' extraits  de  la  documentation.  Il   crée   des  sous  dossiers  si
  ' nécessaire. Ce dossier se trouve aussi dans le répertoire courant.
- - Enfin,  il crée,  pour chaque fichier  composant la documentation, un
+ - Enfin, il crée, pour  chaque  fichier  composant la documentation, un
  ' fichier  //.clean//,  contenant  un   code   source  équivalent  mais
  ' formaté correctement  (texte  justifié,  blocs  importants  indentés,
- ' titre centré,  lignes de  72 caractères…).  Dans l'idéal,  il devrait
- ' remplacer le fichier  original.  Nous  vous conseillons,  pour chaque
- ' fichier,  de vérifier que  ce  //.clean//  correspond à votre fichier
- ' original  (l'inverse signifiant  que  votre  fichier original est mal
- ' formaté  (balise non-fermée ?)  ou que lpm est sujet à un bug)  et de
- ' remplacer votre fichier par  le  //.clean//  si tout va bien.  Ainsi,
- ' vous améliorez  la  présentation  de  votre  document source.  Aussi,
+ ' titre centré, lignes  de  72  caractères…).  Dans l'idéal, il devrait
+ ' remplacer le fichier  original.  Nous  vous  conseillons, pour chaque
+ ' fichier, de vérifier  que  ce  //.clean//  correspond à votre fichier
+ ' original (l'inverse signifiant  que  votre  fichier  original est mal
+ ' formaté (balise non-fermée ?) ou que lpm  est  sujet  à un bug) et de
+ ' remplacer votre fichier par  le  //.clean//  si  tout va bien. Ainsi,
+ ' vous améliorez  la  présentation  de  votre  document  source. Aussi,
  ' s'il n'y a  pas  de  différence  entre  votre  code et le //.clean//,
- ' c'est à dire si votre  fichier  est déjà formaté correctement,  aucun
+ ' c'est à dire si votre  fichier  est  déjà formaté correctement, aucun
  ' //.clean// n'est généré.
 
 == Dépendances du programme
 
 Le programme est écrit  en  python,  et  nécessite  donc un interpréteur
-python.  Il n'est pas écrit en python3,  et  nous ne savons pas s'il est
+python. Il n'est pas écrit en  python3,  et  nous ne savons pas s'il est
 compatible avec celui-ci. (À vrai dire, il y a peu de chances…) 
 
-Le programme utilise  aussi  pour  la  coloration  syntaxique  le module
-pygments[..],  qui est donc  nécessaire  pour  la  sortie HTML.  Ce sont
+Le programme  utilise  aussi  pour  la  coloration  syntaxique le module
+pygments[..], qui est  donc  nécessaire  pour  la  sortie  HTML. Ce sont
 théoriquement les seules dépendances du programme. 
 ..: http://pygments.org/
 

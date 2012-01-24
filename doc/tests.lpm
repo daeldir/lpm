@@ -1,13 +1,13 @@
 = Un fichier pour tester le programme
 
-Nous  allons   ici   créer   un   document   permettant   de  tester les
+Nous  allons  ici   créer   un   document   permettant   de  tester  les
 fonctionnalités du programme. 
 
-Ce document sera composé de  trois fichiers,  permettant ainsi de tester
+Ce document sera composé de  trois  fichiers, permettant ainsi de tester
 les commandes d'inclusion de fichier. 
 
 Le premier  fichier  sera  nommé  //test//  et  placé  dans  un  dossier
-//tests//.  Son titre tiendra sur  plusieurs  lignes afin de vérifier la
+//tests//. Son titre tiendra sur  plusieurs  lignes  afin de vérifier la
 génération de cadre autour de celui-ci. 
 
 <Code (lpm): tests/test
@@ -21,8 +21,8 @@ génération de cadre autour de celui-ci.
 
 >
 
-Ce fichier contiendra,  pour la  forme,  majoritairement  du python.  Il
-sera  écrit  par  deux   individus   nommés  Tartempion  et  Mélanine de
+Ce fichier contiendra,  pour  la  forme,  majoritairement  du python. Il
+sera  écrit  par  deux  individus   nommés  Tartempion  et  Mélanine  de
 Balzac : 
 
 <Code (lpm): tests/test
@@ -76,7 +76,7 @@ Introduction de la section
 == Sous-section
 >
 
-Cette  sous-section  contiendra  encore   des  sous-sections  testant le
+Cette  sous-section  contiendra  encore  des  sous-sections  testant  le
 fonctionnement des listes : 
 
 <Code (lpm): tests/test
@@ -136,7 +136,7 @@ L'ancre renvoie ici[=une ancre].
 
 >
 
-Nous   présentons   ensuite   différentes    manière   de   formater les
+Nous  présentons   ensuite   différentes   manière   de   formater   les
 paragraphes et le texte qu'ils contiennent : 
 
 <Code (lpm): tests/test
@@ -270,7 +270,7 @@ Et on peut insérer un fichier das le code source généré.
 
 >
 
-Nous créons ici nos deux  autres fichier,  dont le premier va inclure le
+Nous créons ici nos deux autres  fichier,  dont le premier va inclure le
 second afin de tester les inclusions de fichier récursives : 
 
 <Code (lpm): tests/test2.txt

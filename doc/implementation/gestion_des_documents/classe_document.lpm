@@ -1,9 +1,9 @@
 === La classe Document
 
-la classe  <Document>  est une  sous-classe  de  <Section>,  un document
+la classe  <Document>  est  une  sous-classe  de  <Section>, un document
 étant une section qui  a  réussit.  Nous  parlons  d'elle en premier car
-c'est la première classe que  nous  utilisons dans le programme.  Ce qui
-nous  intéresse  ici  n'est  d'ailleurs  pas  son  travail  en  tant que
+c'est la première classe que  nous  utilisons  dans le programme. Ce qui
+nous intéresse  ici  n'est  d'ailleurs  pas  son  travail  en  tant  que
 section, mais bien son travail en tant que document. 
 
 <Code: classe Document
@@ -29,17 +29,17 @@ class Document(Section):
 
 >
 
-//La  fonction  d'initialisation  de   la   classe  <Document>  prend un
-argument optionnel,  <parse>.  Cet argument est  utilisé par la fonction
-elle  même :   au   moment   de   charger   les   fichiers   incluts par
-<<lpm>\~Get>,  <\__init\__()> crée un <Document>  et récupère les lignes
-qu'il a chargé.  Cette fonction  permet  d'éviter  de parser le document
+//La  fonction  d'initialisation  de  la   classe  <Document>  prend  un
+argument optionnel, <parse>. Cet  argument  est  utilisé par la fonction
+elle  même :  au   moment   de   charger   les   fichiers   incluts  par
+<<lpm>\~Get>, <\__init\__()> crée un  <Document>  et récupère les lignes
+qu'il a chargé. Cette  fonction  permet  d'éviter  de parser le document
 pour rien (seules les lignes incluses nous intéressent).// 
 
-Notre document  possède  quelques  atout  en  plus  que  la section : un
-titre,  des auteurs,  un résumé,  une licence.  Le  titre et les auteurs
+Notre document possède  quelques  atout  en  plus  que  la  section : un
+titre, des auteurs, un  résumé,  une  licence.  Le  titre et les auteurs
 sont conservés dans une  classe  sur  mesure,  d'où la référence vers un
-bloc de code //classes  utiles  à  la  classe Document//.  Voici comment
+bloc de code //classes  utiles  à  la  classe  Document//. Voici comment
 sont  initialisées   les   variables   supplémentaires   de   la  classe
 Document : 
 
@@ -53,15 +53,15 @@ self.license = None
 À la création d'un document, nous faisons plusieurs actions : 
  - tout  d'abord,  nous  cherchons   les   commandes  <<lpm>\~Get>  pour
  ' insérer leur contenu dans le document,*
- - ceci  fait,  nous   analysons   le   document   pour  en  extraire la
+ - ceci  fait,  nous  analysons   le   document   pour  en  extraire  la
  ' structure,
  - enfin,  nous  résolvons  les  références,   c'est  à  dire  que  nous
  ' déterminons  le  nom  des  références  et,   dans  le  cas  du  code,
  ' remplaçons les références par leur contenu.
 
  *: Nous  désirons,  pour  le  formatage  du  fichier  source  lui même,
-    ignorer les  <<lpm>\~Get>.  Pour cette  raison,  nous analysons deux
-    fois le fichier.  Une fois sans avoir remplacé les  <<lpm>\~Get>, et
+    ignorer les <<lpm>\~Get>.  Pour  cette  raison,  nous analysons deux
+    fois le fichier. Une fois  sans  avoir remplacé les <<lpm>\~Get>, et
     une fois en l'ayant fait.  Nous  ne résolvons les références qu'à la
     deuxième analyse.
 
@@ -76,7 +76,7 @@ self.license = None
 >
 
 Nous  attaquons  ici  véritablement   les   spécificités  de  la  classe
-<Document>.  Si vous n'avez pas encore deviné,  voici ce qu'elle fait en
+<Document>. Si vous n'avez pas  encore  deviné, voici ce qu'elle fait en
 plus que la classe <Section> : 
  - elle charge le fichier  passé  en  paramètre  (et  les fichiers qu'il
  ' inclue),
@@ -91,7 +91,7 @@ Après ça, notre classe va se comporter comme une section normale.
 
 Lorsque nous chargeons  un  document,  nous  formatons le fichier source
 de ce document et sauvegardons  à  côté  de  celui-ci  le résultat de ce
-formatage  (s'il est différent  du  fichier original),  ce qui permettra
+formatage (s'il est  différent  du  fichier  original), ce qui permettra
 de vérifier qu'aucune erreur ne  s'est  glissée  dans le fichier formaté
 avant de remplacer le fichier original par celui-ci. 
 
@@ -105,22 +105,22 @@ if output_text != input_text:
     write(file_name+".clean", output_text)
 >
 
-Nous faisons ici  face  à  une  possible erreur dans l'architecture : la
-classe  <Document>  hérite de  la  classe  <Section>.  Pour  analyser le
+Nous faisons ici face  à  une  possible  erreur dans l'architecture : la
+classe <Document>  hérite  de  la  classe  <Section>.  Pour  analyser le
 contenu d'un document,  nous  commençons  par  extraire les informations
-spécifiques au document,  puis nous  laissons  les lignes restantes à la
-classe  parente.  Ce  faisant,  nous  avons  supprimé  des  lignes de la
-classe  <Document>.  Mais nous allons encore travailler avec ces lignes.
-Aussi,  nous  les  sauvegardons  (<lines   =  self.lines>)  et  nous les
+spécifiques au document, puis nous  laissons  les  lignes restantes à la
+classe parente.  Ce  faisant,  nous  avons  supprimé  des  lignes  de la
+classe <Document>. Mais nous  allons  encore travailler avec ces lignes.
+Aussi,  nous  les  sauvegardons  (<lines  =  self.lines>)  et  nous  les
 restituons  après  avoir  parsé  le  fichier  (<self.lines  =  lines>) –
-n'oubliez pas : ici,  nous parsons le fichier,  plus loin,  nous parsons
+n'oubliez pas : ici, nous parsons  le  fichier,  plus loin, nous parsons
 le document entier. 
 
 ==== Charger le fichier
 
 Nous chargeons le fichier.  Cette  partie  est  assez simple : nous nous
 contentons  d'extraire  les  lignes   du   fichier  dans  une  variable,
-<self.lines>  (qui est  héritée  de  la classe  <Section>,  voir  (cette
+<self.lines> (qui  est  héritée  de  la  classe  <Section>,  voir (cette
 partie)[self.lines dans les sections] pour comprendre son usage :) 
 
 <Code: charger le fichier
@@ -129,17 +129,17 @@ dir_name = path.dirname(file_name)
 self.lines = readlines(file_name)
 >
 
-//Nous utilisons le chemin  absolu  vers  le fichier.  Nous en profitons
+//Nous utilisons le chemin  absolu  vers  le  fichier. Nous en profitons
 d'ailleurs pour récupérer le nom  du  dossier dans lequel se situe notre
 fichier.// 
 
-Une fois  ces  lignes  chargées,  nous   devons  nous  débrouiller  pour
-charger les  fichiers  référencés  dans  ce  fichier,  et en insérer les
-lignes dans le document  en  cours.  Pour  compliquer la chose,  si nous
-incluons un fichier,  nous voulons que  les  commandes de celui-ci ayant
-pour  paramètre  des   noms   de   fichier   soient  modifiées,  afin de
+Une  fois  ces  lignes  chargées,  nous  devons  nous  débrouiller  pour
+charger les fichiers  référencés  dans  ce  fichier,  et  en insérer les
+lignes dans le document  en  cours.  Pour  compliquer  la chose, si nous
+incluons un fichier, nous voulons  que  les  commandes de celui-ci ayant
+pour  paramètre  des  noms   de   fichier   soient  modifiées,  afin  de
 transformer le nom de fichier  relatif  en  nom de fichier absolu : nous
-ne connaissons en effet la position  du  fichier  en cours de chargement
+ne connaissons en effet la  position  du  fichier en cours de chargement
 que dans cette  partie  du  programme,  mais  nous  devrons  traiter ces
 chemins relativement au fichier  en  cours  de  traitement,  ce qui peut
 poser des problèmes  si  le  fichier  est  dans  un dossier différent du
@@ -170,25 +170,25 @@ if parse:
 >
 
 //Jusqu'à maintenant,  nous  avons  récupéré  des  fichiers  sans jamais
-résoudre les références  (certaines références  sont  résolues au moment
-du parsing,  et comme nous parsons  le  fichier  deux fois,  nous devons
-éviter de commencer à  résoudre  les  références  la première fois).  La
+résoudre les références (certaines  références  sont  résolues au moment
+du parsing, et comme  nous  parsons  le  fichier  deux fois, nous devons
+éviter de commencer à  résoudre  les  références  la  première fois). La
 variable  globale  <RESOLVE_REFERENCES>  permet   d'indiquer  que  cette
 fois, c'est bon, on doit prendre en compte les références.// 
 
-//Nous ne resolvons pas encore  les référence,  car cette fonction n'est
+//Nous ne resolvons pas encore  les  référence, car cette fonction n'est
 pas encore implémentée.// 
 
 ===== Ignorer les blocs de code
 
-Vous avez pu  remarquer  que  nous  avons  définit une variable  <mode>.
-Sont  but  est  simple :  nous   permettre  de  ne  pas  interpréter les
-<<lpm>\~Get>  et autres joyeusetés lorsqu'ils  font  partie d'un bloc de
+Vous avez pu  remarquer  que  nous  avons  définit  une variable <mode>.
+Sont  but  est  simple :  nous  permettre  de  ne  pas  interpréter  les
+<<lpm>\~Get> et autres joyeusetés  lorsqu'ils  font  partie d'un bloc de
 code (les blocs de code ne sont **jamais interprétés**). 
 
-Avant toute chose,  si cette variable contient la chaîne <"code">,  nous
-ne faisons qu'une chose : vérifier  si  on  sort de ce mode.  Toutes les
-autres actions seront conditionnées par un <elif>  ou un <else>,  ce qui
+Avant toute chose, si cette  variable  contient la chaîne <"code">, nous
+ne faisons qu'une chose : vérifier  si  on  sort  de ce mode. Toutes les
+autres actions seront conditionnées par  un  <elif> ou un <else>, ce qui
 fait qu'elles ne seront jamais exécutées si le mode est <"code">. 
 
 <Code: ignorer les blocs de code
@@ -198,8 +198,8 @@ if mode == "code":
     new_lines.append(line)
 >
 
-//On sort du mode  <"code">  si la ligne contient juste un <"\>">.  Quoi
-qu'il arrive,  nous ajoutons la ligne aux lignes du document final,  car
+//On sort du mode <"code"> si  la  ligne  contient juste un <"\>">. Quoi
+qu'il arrive, nous ajoutons la  ligne  aux lignes du document final, car
 nous en aurons encore l'usage.// 
 
 Si nous ne sommes pas  encore  en  mode  <"code">,  il faut vérifier que
@@ -213,9 +213,9 @@ elif begin(line, "<code"):
 
 ===== Gérer les ~Get
 
-Si la ligne commence par  <<lpm>\~Get>,  nous créons un  <Document>  qui
+Si la ligne commence  par  <<lpm>\~Get>,  nous  créons un <Document> qui
 contient le contenu pointé  par  <<lpm>\~Get>,  puis nous lui « volons »
-ses lignes en les insérant  dans  le  document en cours.  Dans le cas où
+ses lignes en les insérant  dans  le  document  en cours. Dans le cas où
 le fichier n'existe pas, nous affichons une erreur. 
 
 <Code: gérer les ~Get
@@ -236,18 +236,18 @@ elif begin(line, "~get"):
 celles des fichiers qu'il  inclue),  nous pouvons nous passer d'analyser
 la structure du  document  que  contient  ce  fichier,  car  nous allons
 l'analyser dans le document en  cours.  C'est pour cette raison que nous
-passons l'argument  <parse  =  False> :  l'analyse  étant inutile,  nous
+passons l'argument  <parse  =  False> :  l'analyse  étant  inutile, nous
 gagnons du temps en ne la faisant pas.// 
 
 ===== Gérer les ~Include et ~Image
 
-Si la ligne commence par <<lpm>\~Include>  ou <<lpm>\~Image>,  nous nous
-contentons de  modifier  le  chemin  d'accès  au  fichier pointé pour le
-rendre absolu.  Nous utilisons deux blocs  <elif>,  car vous remarquerez
-que les deux commandes ne font  pas  la  même taille,  ce qui est gênant
-pour récupérer le chemin de  fichier  (Une solution à base de  <split()>
-existe,  mais ne serait intéressante  que  si  nous avions plus de cas à
-gérer.  Ici,  l'utiliser reviendrais  à  complexifier  le  système  pour
+Si la ligne commence  par  <<lpm>\~Include> ou <<lpm>\~Image>, nous nous
+contentons de modifier  le  chemin  d'accès  au  fichier  pointé pour le
+rendre absolu. Nous utilisons  deux  blocs  <elif>, car vous remarquerez
+que les deux commandes ne  font  pas  la  même taille, ce qui est gênant
+pour récupérer le chemin de  fichier  (Une  solution à base de <split()>
+existe, mais ne serait intéressante  que  si  nous  avions plus de cas à
+gérer. Ici,  l'utiliser  reviendrais  à  complexifier  le  système  pour
 rien.). 
 
 <Code: gérer les ~Include et ~Image
@@ -262,9 +262,9 @@ elif begin(line, "~image"):
 ===== Gérer les ~Copy
 
 Dans  le  cas   de   la   commande   <<lpm>\~Copy>,   elle   est,  comme
-<<lpm>\~Get>,  traitée tout  de  suite.  Son  fonctionnement  est un peu
+<<lpm>\~Get>, traitée  tout  de  suite.  Son  fonctionnement  est un peu
 spécial par rapport aux autres  commandes,  car  elle prend en paramètre
-deux noms de fichier.  De plus,  la ligne contenant cette commande n'est
+deux noms de fichier. De  plus,  la ligne contenant cette commande n'est
 pas retenue. 
 
 <Code: gérer les ~Copy
@@ -274,8 +274,8 @@ elif begin(line, "~copy"):
 >
 
 Nous commençons par extraire  les  chemins  de  fichier  de la commande.
-Ces chemins peuvent  contenir  des  espaces  à  condition  qu'ils soient
-échappées  (chaque espace doit être précédé d'un <<lpm>\\>).  //(voir la
+Ces chemins  peuvent  contenir  des  espaces  à  condition qu'ils soient
+échappées (chaque espace doit  être  précédé d'un <<lpm>\\>). //(voir la
 fonction <split_path()> (plus loin)[fonction split_path].)// 
 
 <Code: ~Copy: déterminer les fichiers
@@ -284,7 +284,7 @@ from_file = path.join(dir_name, files[0])
 to_file = path.join(os.getcwd(), "src", files[1])
 >
 
-Nous vérifions ensuite que le  fichier à copier existe.  De même pour le
+Nous vérifions ensuite que le fichier  à  copier existe. De même pour le
 dossier de destination, que nous créons si ce n'est pas le cas. 
 
 <Code: ~Copy: le fichier source existe ?
@@ -299,16 +299,16 @@ if not path.exists(path.dirname(to_file)):
     os.makedirs(path.dirname(to_file))
 >
 
-Maintenant,  que nous savons que le fichier source existe,  ainsi que le
+Maintenant, que nous savons que  le  fichier source existe, ainsi que le
 repertoire de destination, nous n'avons plus qu'à copier : 
 
 <Code: ~Copy: si le fichier source existe
 write(to_file, read(from_file, None), None)
 >
 
-//Les fonctions  <write>  et  <read>  lisent les  fichiers par défaut en
-UTF-8.  Comme nous copions  juste  un  fichier binaire,  l'encodage peut
-poser problème.  Nous le spécifions donc à  <None>,  ce qui signifie que
+//Les fonctions <write> et  <read>  lisent  les  fichiers  par défaut en
+UTF-8. Comme nous  copions  juste  un  fichier  binaire, l'encodage peut
+poser problème. Nous le spécifions  donc  à  <None>, ce qui signifie que
 l'on ne  gère  pas  l'encodage,  le  fichier  est  donc  copié octet par
 octet.// 
 
@@ -344,7 +344,7 @@ caractères précédés d'un <<lpm>\\> sont ignorés.//
 
 ===== Gérer les autres cas
 
-Si nous n'avons pas croisé de <<lpm>\~Get>,  <<lpm>\~include>  ou autre,
+Si nous n'avons pas  croisé  de <<lpm>\~Get>, <<lpm>\~include> ou autre,
 nous nous contentons d'ajouter la ligne dans les lignes finales : 
 
 <Code: gérer les autres cas
@@ -361,10 +361,10 @@ Voici au final comment nous analysons les fichiers inclus :
 
 ===== La fonction begin()
 
-La fonction  <begin()>,  utilisée dans les  morceaux  de code précédents
+La fonction <begin()>,  utilisée  dans  les  morceaux de code précédents
 et tout au long  du  programme,  vérifie  si  une  ligne commence par un
-texte,  ou par l'un  des  textes  fournits  en  paramètre.  Elle accepte
-comme  paramètre  une  chaîne  de  caractères  ou  un tableau.  Voici sa
+texte, ou par  l'un  des  textes  fournits  en  paramètre.  Elle accepte
+comme paramètre  une  chaîne  de  caractères  ou  un  tableau.  Voici sa
 définition : 
 
 <Code: fonctions utilitaires
@@ -377,11 +377,11 @@ def begin(line, texts):
 >
 
 //Nous  retournerons  <True>  dans   la   boucle   <for>,  si  le  texte
-correspond.  Si nous atteignons la fin  de la boucle,  c'est que rien ne
+correspond. Si nous atteignons la fin  de  la  boucle, c'est que rien ne
 correspond, nous retournons donc <False>.// 
 
-Pour  gérer  les  deux  types  de  paramètre,  nous  nous  contentons de
-vérifier si le paramètre  est  une  chaine de caractère,  et si c'est le
+Pour gérer  les  deux  types  de  paramètre,  nous  nous  contentons  de
+vérifier si le paramètre est  une  chaine  de  caractère, et si c'est le
 cas, de le remplacer par un tableau contenant seulement cette chaîne. 
 
 <Code: begin: gérer deux types de paramètre
@@ -389,9 +389,9 @@ if type(texts) == str:
     texts = [texts]
 >
 
-Pour vérifier que  la  ligne  débute  par  le texte,  nous vérifons tout
-d'abord qu'elle est plus grande que  ce texte  (elle ne peux pas débuter
-par ce texte si elle est plus courte que lui).  Ensuite,  nous comparons
+Pour vérifier que  la  ligne  débute  par  le  texte, nous vérifons tout
+d'abord qu'elle est plus grande que  ce  texte (elle ne peux pas débuter
+par ce texte si elle est  plus  courte que lui). Ensuite, nous comparons
 les premiers caractères de la ligne avec le texte : 
 
 <Code: begin: vérifier si la ligne commence par ce texte
@@ -403,9 +403,9 @@ if len(line) >= len(text):
 >
 
 //Nous utilisons cette  fonctions  pour  vérifier  qu'une ligne commence
-par une commande.  Les  commandes  sont  insensibles  à la casse.  Comme
+par une commande.  Les  commandes  sont  insensibles  à  la casse. Comme
 aucun  autre  cas  demandant  d'être  sensible   à  la  casse  ne  s'est
-présenté,  nous nous  épargnons  de  futures  mises  en minuscule en les
+présenté, nous nous  épargnons  de  futures  mises  en  minuscule en les
 pratiquant ici. La même remarque s'applique à propos du <strip()>.// 
 
 Voici la fonction entière : 
@@ -430,11 +430,11 @@ Pour récapituler, voici ce qui se passe quand on crée un document :
 
 ==== Extraire les informations spécifiques au document
 
-Pour  extraire  les  informations   spécifiques   au  document,  nous le
+Pour  extraire  les  informations  spécifiques   au  document,  nous  le
 parcourons une fois  en  entier,  lui  tirant  sa substantifique moëlle.
-Quand une ligne est spécifique  au document,  nous l'analysons,  et nous
+Quand une ligne est spécifique  au  document,  nous l'analysons, et nous
 la retirons des lignes connues du  document.  À la fin de cette lecture,
-le document  sait  qui  il  est,   ce   qu'il   est,  et  les  lignes ne
+le  document  sait  qui  il  est,  ce   qu'il  est,  et  les  lignes  ne
 contiennent plus que  des  informations  pouvant  être  analysées par la
 fonction originale de <Section>. 
 
@@ -458,14 +458,14 @@ Pour rappel, voici comment est définit ce bloc de code :
 ~Remain ignorer les blocs de code
 
 Il fonctionne  car  nous  utilisons  les  mêmes  variables  que  dans la
-méthode[première définition de « ignorer  les  blocs de code »]  où nous
+méthode[première définition de « ignorer  les  blocs  de code »] où nous
 l'avons définit pour la première fois. 
 
 ===== Détecter les titres
 
-Si la  ligne  est  composée  d'une   barre   d'étoiles,   il  y  a  deux
-solutions : soit nous sommes déjà en  mode titre,  et dans ce cas,  nous
-sortons du mode titre,  soit nous sommes dans un autre mode,  auquel cas
+Si  la  ligne  est  composée  d'une   barre   d'étoiles,  il  y  a  deux
+solutions : soit nous sommes déjà en  mode  titre,  et dans ce cas, nous
+sortons du mode titre, soit nous  sommes  dans un autre mode, auquel cas
 nous passons en mode titre (et créons un titre). 
 
 <Code: Document.parse: que faire de cette ligne ?
@@ -479,7 +479,7 @@ elif star_line(line):
             self.title = None
 >
 
-//Lorsque nous avons finit de  créer  le titre,  nous vérifions s'il est
+//Lorsque nous avons finit de  créer  le  titre, nous vérifions s'il est
 important  (s'il  n'est  pas  vide).  S'il  ne  l'est  pas,  nous  ne le
 retenons pas.// 
 
@@ -500,16 +500,16 @@ def star_line(line):
 >
 
 //Nous commençons par retirer les  espaces  aux  extrémités de la ligne.
-Ensuite,  si la ligne fait  moins  de deux caractères,  elle ne peut pas
+Ensuite, si la ligne fait  moins  de  deux  caractères, elle ne peut pas
 contenir  une  ligne  d'étoiles   (il   faut   au   moins  deux  étoiles
-consécutives).  Pour finir,  nous vérifions  que  tout les caractères de
-la ligne sont des  étoiles.  Si  ce  n'est  pas le cas,  nous retournons
+consécutives). Pour finir,  nous  vérifions  que  tout les caractères de
+la ligne sont des  étoiles.  Si  ce  n'est  pas  le cas, nous retournons
 <False>, sinon, notre ligne est bien une ligne d'étoiles.// 
 
 Si nous sommes en  mode  titre,  nous  ajoutons  la  ligne aux lignes de
-<self.title>.  Pour  rappel,  <self.title>  a  été  initialisé comme une
+<self.title>. Pour  rappel,  <self.title>  a  été  initialisé  comme une
 instance  de  la  classe  <Title>.  Cette  classe  contient  une méthode
-nommée  <add_line(line)>,  qui prend en paramètre  la ligne à ajouter et
+nommée <add_line(line)>, qui prend en  paramètre  la  ligne à ajouter et
 l'analyse. Ajouter notre ligne au titre est donc très simple : 
 
 <Code: Document.parse: que faire de cette ligne ?
@@ -517,8 +517,8 @@ elif mode == "title":
     self.title.add_line(line)
 >
 
-Il est maintenant temps de  vous  décrire la classe  <Title>,  qui n'est
-utilisée qu'ici,  et au  moment  de  générer la documentation  (voir les
+Il est maintenant temps  de  vous  décrire  la classe <Title>, qui n'est
+utilisée qu'ici, et au  moment  de  générer  la  documentation (voir les
 sections correspondantes). 
 
 <Code: classes utiles à la classe Document
@@ -547,13 +547,13 @@ class Title:
 
 >
 
-Cette classe contient uniquement  un tableau,  contenant chaque ligne du
-titre.     Les     fonctions     <format_text()>,     <output_html()> et
-<output_html_title()>  sont utilisées lors  du  formatage du document et
-de la génération de la documentation  et  seront décrites plus tard.  La
-fonction <add_line> prend une ligne en paramètre,  l'analyse,  et stocke
-la ligne  dans  la  variable   <self.content>.   La  ligne  passée  peut
-commencer  par  une  étoile,  et/ou   finir  par  une  étoile.  Nous les
+Cette classe contient uniquement  un  tableau, contenant chaque ligne du
+titre.    Les    fonctions     <format_text()>,    <output_html()>    et
+<output_html_title()> sont utilisées lors  du  formatage  du document et
+de la génération de la  documentation  et  seront décrites plus tard. La
+fonction <add_line> prend une  ligne  en paramètre, l'analyse, et stocke
+la  ligne  dans  la  variable   <self.content>.  La  ligne  passée  peut
+commencer  par  une  étoile,  et/ou  finir  par  une  étoile.  Nous  les
 supprimons si c'est le cas.  Nous  supprimons aussi les espaces avant et
 après ces étoiles. Ce qui donne comme fonction : 
 
@@ -568,14 +568,14 @@ self.content.append(line)
 >
 
 //Nous  devons  vérifier  que  la  ligne   n'est  pas  vide  avant  d'en
-supprimer une étoile,  sans quoi  nous risquons d'essayer d'accéder à un
+supprimer une étoile, sans quoi  nous  risquons d'essayer d'accéder à un
 caractère qui n'est pas dans la chaîne (puisque la ligne est vide).// 
 
-La fonction  <important()>  est utilisée lors de l'affichage,  mais nous
-la définissons  ici,  car  elle   est   assez  simple.  Elle  consiste à
+La fonction <important()> est  utilisée  lors  de l'affichage, mais nous
+la  définissons  ici,  car  elle  est  assez  simple.  Elle  consiste  à
 vérifier si le titre est bien  rempli.  Si  le titre ne contient que des
-lignes  vides,  il  n'est  pas   important  et  nous  n'aurons  jamais à
-l'afficher.   Cette   fonction   renvoie    <True>   si   le   titre est
+lignes  vides,  il  n'est  pas  important  et  nous  n'aurons  jamais  à
+l'afficher.  Cette   fonction   renvoie   <True>   si   le   titre   est
 « important », <False> sinon. 
 
 <Code: classe Title: est elle importante ?
@@ -589,8 +589,8 @@ return False
 
 Le résumé comme la licence sont  stockés  dans une instance de la classe
 <Documentation>  (voir   (ici)[classe   documentation]).   Lorsque  nous
-sommes en mode licence ou  en mode résumé,  nous ajoutons chaque ligne à
-la licence/au résumé,  sauf si  la ligne est  <<lpm>\~\~\~>,  auquel cas
+sommes en mode licence ou en  mode  résumé, nous ajoutons chaque ligne à
+la licence/au résumé, sauf  si  la  ligne  est <<lpm>\~\~\~>, auquel cas
 nous repassons en mode normal. 
 
 <Code: Document.parse: que faire de cette ligne ?
@@ -614,13 +614,13 @@ elif begin(line, "~abstract~"):
     self.abstract = Documentation()
 >
 
-//Lorsque nous  passons  en  mode  licence  ou  résumé,  nous créons une
+//Lorsque nous passons  en  mode  licence  ou  résumé,  nous  créons une
 portion de documentation pour en accueillir le contenu.// 
 
 ===== Détecter les auteurs
 
 Comme pour le titre,  une  classe  spéciale  a  été écrite pour contenir
-les auteurs.  Quand une  ligne commence par  <<lpm>\~Authors>,  elle est
+les auteurs. Quand  une  ligne  commence  par <<lpm>\~Authors>, elle est
 passée à cette classe  qui  retient  cette  ligne après l'avoir nettoyée
 de cet inévitable <<lpm>\~Authors> : 
 
@@ -651,8 +651,8 @@ class Authors:
 >
 
 La classe  <Authors>  possède  une  méthode  <add_line>.  Cette  méthode
-prend comme paramètre une  ligne,  en  supprime  le début  (qui contient
-<<lpm>\~Authors>),  et l'ajoute dans  la  liste  des  auteurs – si aucun
+prend comme paramètre une  ligne,  en  supprime  le  début (qui contient
+<<lpm>\~Authors>), et l'ajoute  dans  la  liste  des  auteurs – si aucun
 auteur portant ce nom n'a encore été ajouté. 
 
 <Code: classes utiles à la classe Document
@@ -665,8 +665,8 @@ auteur portant ce nom n'a encore été ajouté.
 
 ===== Détecter le langage du document
 
-La dernière information  à  extraire  est  le  langage  de programmation
-principal du document.  Ce langage est  stocké  dans la variable globale
+La dernière  information  à  extraire  est  le  langage de programmation
+principal du document. Ce langage  est  stocké  dans la variable globale
 <DOCUMENT_LANGUAGE>. 
 
 <Code: Document.parse: que faire de cette ligne ?
@@ -678,7 +678,7 @@ elif begin(line, "~code"):
 ===== Retenir les autres lignes
 
 Nous terminons cette portion de  code  en  retenant les lignes qui n'ont
-pas été gérées : elles ne  font  pas  partie  des attributs du document,
+pas été gérées : elles  ne  font  pas  partie des attributs du document,
 mais de la section. 
 
 <Code: Document.parse: que faire de cette ligne ?
@@ -688,7 +688,7 @@ else:
 
 ===== Résumé
 
-Voici  au  final  à   quoi   ressemble   la   fonction  qui  extrait les
+Voici  au  final  à  quoi   ressemble   la   fonction  qui  extrait  les
 informations spécifiques au document : 
 ~Display extraire les informations spécifiques au document
 

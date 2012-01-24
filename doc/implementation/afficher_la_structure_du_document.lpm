@@ -10,9 +10,9 @@ Ces trois paramètres sont :
 Le dernier argument est optionnel. 
 
 La fonction va afficher le  nom  de  l'objet,  puis  une série de dièses
-indiquant la profondeur  de  l'objet,  permettant  de mettre en avant la
-hierarchie  du  document.  Enfin,  elle   affiche  le  texte  contenu de
-l'objet si celui-ci est une  chaîne  de caractère.  La chaine affichée à
+indiquant la profondeur de  l'objet,  permettant  de  mettre en avant la
+hierarchie  du  document.  Enfin,  elle  affiche  le  texte  contenu  de
+l'objet si celui-ci est une  chaîne  de  caractère. La chaine affichée à
 l'écran ne  fera  pas  plus  de  la  taille  spécifiée  pour un document
 (contenue dans la variable globale <DOCUMENT_WIDTH>). 
 
@@ -31,17 +31,17 @@ def print_debug(obj, deep, name = None):
     print line
 >
 
-La fonction  <meta()>* permet de  récupérer  le  nom  de  la classe d'un
-objet.  Pour ce  faire,  nous  récupérons  la  classe  de  l'objet  avec
-l'attribut  <\__class__>,  et le nom de  cette  classe avec son attribut
+La fonction <meta()>*  permet  de  récupérer  le  nom  de la classe d'un
+objet. Pour  ce  faire,  nous  récupérons  la  classe  de  l'objet  avec
+l'attribut <\__class__>, et le  nom  de  cette  classe avec son attribut
 <\__name__>. 
- *: Le choix du nom //meta// est dû  au  fait  que parmis les trois noms
-    trouvés pour cette fonction,  aucun ne convenait : <class_name>  est
-    trop long  (nous allons utiliser  cette fonction ailleurs),  <class>
-    est un  mot  reservé,  <name>  est  trop  générique  (utilisé,   par
-    exemple,  comme argument de fonctions…).  <meta> permet de connaître
-    le nom de la classe  d'un  objet  en  l'inspectant.  On utilise donc
-    l'introspection pour connaître  la  nature  de l'objet.  Si //meta//
+ *: Le choix du nom //meta// est  dû  au  fait que parmis les trois noms
+    trouvés pour cette fonction,  aucun  ne convenait : <class_name> est
+    trop long (nous allons  utiliser  cette  fonction ailleurs), <class>
+    est  un  mot  reservé,  <name>  est  trop  générique  (utilisé,  par
+    exemple, comme argument de  fonctions…).  <meta> permet de connaître
+    le nom de la  classe  d'un  objet  en  l'inspectant. On utilise donc
+    l'introspection pour connaître  la  nature  de  l'objet. Si //meta//
     n'est pas  le  mot  le  plus  pertinent,  c'est  néanmoins  le  plus
     pratique, sans être totalement hors-sujet.
 
@@ -87,8 +87,8 @@ for line in self.lines:
     print_debug(line, deep+1)
 >
 
-//La fonction  <debug_print()>  de  la classe  <Documentation>  prend en
-paramètre  <name   =   None>.   Ceci   permet   d'afficher   un  bloc de
+//La fonction <debug_print()>  de  la  classe  <Documentation>  prend en
+paramètre  <name  =   None>.   Ceci   permet   d'afficher   un  bloc  de
 documentation en mentant sur le nom,  comme  on a fait avec le résumé et
 la licence.// 
 

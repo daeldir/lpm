@@ -108,17 +108,10 @@ def refEscape(txt):
     txt = txt.replace(",", "_")
     return txt
 
-def addSpace(line, direction):
-    l = len(line)
-    if direction == 1:
-        start = 0
-        stop = l
-    else:
-        start = l-1
-        stop = -1
+def addSpace(line):
     spaces = []
     last = ""
-    for i in range(start, stop, direction):
+    for i in xrange(0, len(line)):
         if line[i] == " ":
             if last == " ":
                 spaces[-1]["c"] += 1
@@ -140,13 +133,10 @@ def addSpace(line, direction):
 
 def justify(line, length):
     line = line.strip()
-    l = len(line)
-    direction = 1
     old_line = None
     while len(line) < length and old_line != line:
         old_line = line
-        line = addSpace(line, direction)
-        direction *= -1
+        line = addSpace(line)
     return line
 
 # Importation

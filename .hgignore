@@ -1,0 +1,16 @@
+# Ignorer les fichiers générés par lpm
+src/
+lpm\.html
+.*\.clean
+
+# Ignorer les fichier qui correspondent à une copie de ou un lien vers lpm
+# (faites un lien vers _lpm portant ce nom, et il ne fera que l'action
+# correspondant au nom).
+format
+epub
+tangle
+weave
+
+# Ignorer les fichiers temporaires des éditeurs de texte 
+.*\.swp # vim
+

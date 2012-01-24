@@ -10,6 +10,8 @@ format
 epub
 tangle
 weave
+#clean # On ajoutera cette commande plus tard, pour le moment, le script
+#      # suffit.
 
 # Ignorer les fichiers temporaires des éditeurs de texte 
 .*\.swp # vim

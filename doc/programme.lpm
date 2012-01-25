@@ -30,6 +30,90 @@ Le programme fait trois choses :
  ' c'est à dire si votre  fichier  est  déjà formaté correctement, aucun
  ' //.clean// n'est généré.
 
+Avec un  environnement  graphique  gérant  le  glisser-déposer  sur  les
+programmes*, il est possible de  ne  pas  utiliser la ligne de commande,
+en glissant le fichier  à  extraire  sur  l'icone du programme. Celui-ci
+n'ayant besoin que d'un argument,  le  nom  du  fichier à extraire, tout
+se déroulera correctement. 
+ *: Cette  fonctionnalité  est  très  pratique  sur  des  environnements
+    comme Windows, sur lequel la ligne de commande est une horreur.
+
+Il  est  aussi  possible  de  dire   au  programme  ne  n'effectuer  que
+certaines  actions.  Les   actions   de   bases  sont  « surprenante » :
+//WTF//*.  « **W** »  pour   « **Weave** »,   tisser.   Le  tissage  est
+l'action de générer la documentation  HTML  à  partir du fichier source.
+« **T** » pour  « **Tangle** »,  emmêler.  Cette  action  prend  le code
+source, qui  est  à  la  base  déroulé  pour  suivre  notre  pensée,  et
+l'emmêle  pour  le  rendre  moins   compréhensible  par  nous,  et  plus
+compréhensible par l'ordinateur.  Enfin,  « **F** » pour « **Format** ».
+Cette action n'est  pas  spécifique  à  la  programmation lettrée, c'est
+l'action de rendre  le  fichier  source  plus  lisible  en le formatant.
+Deux  actions  supplémentaires  sont   disponibles :  « **Apply** »  est
+disponible après l'action  « //Format// » :  pour  chaque fichier source
+auquel correspond  un  fichier  //.clean//,  le  programme  remplace  le
+premier par le second.  N'effectuez  cette  opération  que  si vous êtes
+certains que tout  vos  fichiers  //.clean//  sont  bien formés*. Enfin,
+l'action  « **Clean** »  supprime  tout  les  fichiers  générés  par  le
+programme. Le programme sait quels  fichier  ont  été générés car ils se
+trouvent toujours  au  même  endroit,  avec  les  mêmes  conventions  de
+nommage. Il  supprime  de  manière  aveugle.  Si  vous  avez  modifié un
+dossier généré par le programme, les modifications seront perdues ! 
+ *: « What  the  fuck? »  est  une   interjection  en  anglais,  souvent
+    abrégée « WTF », indiquant  la  surprise,  l'incrédulité.  C'est une
+    expression familière (à ne pas mettre dans toutes les bouches).
+ *: Un fichier //.clean// est bien  formé  s'il  correspond mot pour mot
+    au fichier source, ce qui ne  sera  pas  le cas si le fichier source
+    contient des  erreurs  de  syntaxe :  le  fichier  //.clean//  étant
+    généré à  partir  de  la  forme  analysée  du  document,  une erreur
+    d'analyse se retrouve  dans  celui-ci.  Dans  le  pire  des  cas, un
+    paragraphe entier peu disparaître.  Le  programme  ne peut pas gérer
+    cela,  c'est  bien  à  vous  de   vérifier  que  votre  syntaxe  est
+    correcte.
+
+Il existe deux  manière  de  dire  au  programme  de  limiter son champs
+d'action : la méthode Unix  et  la  méthode  Windows  (ces deux méthodes
+fonctionnent aussi  bien  sur  l'une  et  l'autre  plateforme,  mais  la
+première est bien  moins  pratique  que  la  seconde  quand  la ligne de
+commande est  très  pauvre).  La  méthode  unix  consiste  à  passer  un
+paramètre sur la ligne de commande.  La  méthode  Windows se base sur le
+nom de fichier pour  déterminer  les  actions  à effectuer. Ainsi, créer
+un  lien  vers  l'exécutable  portant  un   autre  nom  va  modifier  le
+comportement du programme. À chaque  option  est  associé  un mot. Si ce
+mot fait partie  du  nom  du  programme,  le  programme  considérera que
+l'option lui a été passée.  Le  comportement  par  défaut est, comme dit
+plus haut, « surprenant » :  <<bash>\-wtf>.  Les  options <<bash>\-a> et
+<<bash>\-c>  ne  sont  pas  passées  par  défaut.  Voici  la  liste  des
+options : 
+ - <<bash>\-w>, //weave// :  génère  la  documentation  du  programme en
+ ' HTML.
+ - <<bash>\-t>, //tangle// : extrait le code source du programme.
+ - <<bash>\-f>, //format// : formate  les  fichiers  source  et crée des
+ ' fichiers //.clean// contenant le résultat de ce formatage.
+ - <<bash>\-a>,  //apply// :  remplace  les   fichiers   source  par  le
+ ' //.clean// qui leur est associé (//applique// le formatage).
+ - <<bash>\-c>, //clean// : supprime les fichiers générés par LPM.
+
+//Si l'on crée un  lien  vers  LPM  nommé  //tangle//, seule l'opération
+//tangle// sera appelée  lors  de  l'utilisation  de  ce  lien.  On peut
+obtenir le même effet en  créant  le  lien //lpm_tangle// (utile pour ne
+pas  entrer  en  collisions   avec   d'autres  outils  de  programmation
+lettrée, comme //WEB// de Donald Knuth).  Ce  qui  compte est que le nom
+de fichier **contienne** le  mot  de  l'action.  On  peut aussi créer un
+lien   effectuant   deux    actions,    par   exemple   //format-apply//
+(déconseillé) ou //weave-tangle//.// 
+
+    /!\ L'ordre d'apparition des  options  est  prit en compte ! /!\
+    /!\ Ainsi, appeler  LPM  avec  les  options  <<bash>\-ct> va /!\
+    /!\ supprimer les  sources  puis  les  extraires  à nouveau, /!\
+    /!\ tandis que l'appeler  avec  les  options <<bash>\-tc> va /!\
+    /!\ extraire les sources  puis  les  supprimer  (ce que vous /!\
+    /!\ ne désirez sûrement pas).  Ce  principe s'applique aussi /!\
+    /!\ lorsque  l'on  utilise   les   noms   de   fichier  pour /!\
+    /!\ spécifier    les    options :    nommer    le    fichier /!\
+    /!\ //clean-tangle// équivaudra  à  notre  premier  exemple, /!\
+    /!\ et  //tangle-clean//  sera  une  action  inutile  (juste /!\
+    /!\ bonne à vous faire perdre votre temps).                  /!\
+
 == Dépendances du programme
 
 Le programme est écrit  en  python,  et  nécessite  donc un interpréteur

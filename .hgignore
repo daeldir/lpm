@@ -12,7 +12,11 @@ tangle
 weave
 #clean # On ajoutera cette commande plus tard, pour le moment, le script
 #      # suffit.
+.*\.desktop # Fichiers lanceurs de Linux (on en fera peut-être des officiels, 
+            # mais pas pour le moment, alors on bidouille chacun dans son coin)
+.*\.lnk # L'extensions des liens sur Windows, si je me souviens bien
 
 # Ignorer les fichiers temporaires des éditeurs de texte 
 .*\.swp # vim
+.*\~ # Fichier gedit
 

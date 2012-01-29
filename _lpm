@@ -1475,7 +1475,7 @@ class Document:
                 if begin(i, "~copy"):
                     files = splitPath(i[5:].strip())
                     fromFile = path.join(basedir, files[0])
-                    toFile = path.join(os.getcwd(), "src", files[1])
+                    toFile = path.join(base_dir, "src", files[1])
                     if not path.exists(path.dirname(toFile)):
                         os.makedirs(path.dirname(toFile))
                     try:
@@ -1977,7 +1977,7 @@ class Document:
             section.resolv()
     def extractCode(self):
         global CODE
-        srcdir = path.join(os.getcwd(), "src")
+        srcdir = path.join(base_dir, "src")
         for i in CODE:
             if not CODE[i][0].referenced:
                 filename = path.join(srcdir, i)
@@ -1986,7 +1986,8 @@ class Document:
                 codecs.open(filename, "w", encoding="utf-8").write(CODE[i][0].outputCode())
 
 d = Document()
-filename = sys.argv[1]
+filename = path.abspath(sys.argv[1])
+base_dir = path.dirname(filename)
 project = path.basename(filename)
 d.fromFile(filename)
 if TANGLE or WEAVE or EPUB:
@@ -1995,9 +1996,9 @@ if TANGLE or WEAVE or EPUB:
 if TANGLE:
     d.extractCode()
 if WEAVE:
-    codecs.open(path.join(os.getcwd(), project+".html"), "w", encoding="utf-8").write(d.outputHTML())
+    codecs.open(path.join(base_dir, project+".html"), "w", encoding="utf-8").write(d.outputHTML())
 if EPUB:
-    codecs.open(path.join(os.getcwd(), project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
+    codecs.open(path.join(base_dir, project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
 for i in COLOR_ERRORS:
     sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
 for i in CODEREF_ERRORS:

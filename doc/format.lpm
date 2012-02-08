@@ -121,15 +121,6 @@ Sachant que le programme finit par centrer les titres, ce qui donne :
 Ces trois manières de noter  un  titre sont absolument équivalentes pour
 le programme, et n'existent que pour simplifier la vie du programmeur. 
 
-=== Échappement de caractères
-
-Lorsque nous utilisons  des  caractères  qui  devraient être interprétés
-par LPM, mais que nous  les  voulons  tels  quels,  il est nécessaire de
-les échapper. Ceci se  fait  à  la  mode  Unix :  tout caractère précédé
-d'un  \\  sera  rendu   tel   quel,   sans   être  interprété.  Un  mode
-d'échappement spécial existe  pour  les  blocs  de  code,  mais  il sera
-détaillé plus tard, avec les blocs de code. 
-
 == Structure d'un document
 
 Un document possède un titre, un  ou  plusieurs auteurs, une licence, et
@@ -594,6 +585,63 @@ de code, et il ne sera donc pas extrait dans un fichier.*
     dans lequel il est inclu, //test.c//,  est  lui même extrait dans un
     fichier.
 
+=== Morceaux de code dans les paragraphes
+
+Il est possible d'indiquer qu'une  portion  de  texte à l'interieur d'un
+paragraphe  est  du  code.   Ceci   permet   d'appliquer  la  coloration
+syntaxique à ces morceaux  de  code.  Nous  marquons  un passage de code
+dans un  texte  en  l'entourant  des  signes  inférieur  et  supérieur :
+<<lpm>\<import os\>>. Il est  possible  de  spécifier  le  langage de ce
+morceau de code en ajoutant,  directement  après  le signe inférieur, le
+langage     entouré      lui      aussi      des      même      signes :
+<<lpm>\<\<C\>printf("Wouhou!")\>>. 
+
+=== Récapitulatif de code
+
+Il peut être utile, après avoir  décrit  un  bloc de code petit à petit,
+de présenter un  récapitulatif  de  ce  code.  Deux commandes permettent
+d'afficher le code qui a été généré : 
+
+La première commande permet de  rappeler  le  contenu d'un bloc de code,
+et affiche tout le code de  ce  bloc,  même si celui-ci était morcelé en
+plusieurs blocs portant le même nom : 
+
+<Code (lpm): 
+~remain morceau de code
+>
+
+La seconde  commande  permet  non  seulement  d'afficher  un  morceau de
+code, mais  surtout  d'afficher  celui-ci  sans  aucune  référence  vers
+d'autres morceaux de code,  c'est  à  dire  qu'il  les remplace par leur
+contenu. Ainsi, utiliser  cette  commande  sur  un  bloc  destiné à être
+sortit dans un fichier revient  à  insérer  dans  le document le contenu
+de ce fichier.  Mais  il  est  possible,  bien  sûr,  d'insérer juste un
+morceau de code,  la  commande  fonctionnant  sur  ceux-ci,  et  non pas
+exclusivement sur les blocs destinés à être sortis dans un fichier. 
+
+Cette commande est celle-ci : 
+
+<Code (lpm): 
+~display morceau de code
+>
+
+== Échappement de caractères
+
+=== Échappement de caractères dans les paragraphes
+
+Lorsque nous utilisons  des  caractères  qui  devraient être interprétés
+par LPM, mais que nous  les  voulons  tels  quels,  il est nécessaire de
+les échapper. Ceci se  fait  à  la  mode  Unix :  tout caractère précédé
+d'un <<lpm>\\> sera rendu tel  quel,  sans être interprété. Par exemple,
+<<lpm>\\\*\*> affichera <<lpm>\*\*>.  Pour  un  exemple  plus compliqué,
+considéront    l'affichage    du    morceau     de    code    suivant* :
+<<lpm>\<\<C\>printf("Wouhou!")\>>. Pour arriver à  ce  résultat, il aura
+fallut échapper  les  caractères  spéciaux  dans  le  morceau  de  code,
+notamment le <<lpm>\>> qui aurait  fermé  le  bloc sinon. Le code source
+de       ce       morceau       de       code       est       celui-ci :
+<<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
+ *: Ceci est un morceau de code LPM, pas un morceau de code C.
+
 === Échappement de caractères dans les blocs de code
 
 Si une ligne  de  code  commence  par  <<lpm>\<>,  elle sera interprétée
@@ -638,50 +686,4 @@ import os
 <<lpm>\\\<>, qui aurait  dû  être  échappé  <<lpm>\\\\\\\<>  (au lieu de
 <<lpm>\\\\\<>) si nous échappions caractère  par  caractère et non ligne
 par ligne.// 
-
-=== Morceaux de code dans les paragraphes
-
-Il est possible d'indiquer qu'une  portion  de  texte à l'interieur d'un
-paragraphe  est  du  code.   Ceci   permet   d'appliquer  la  coloration
-syntaxique à ces morceaux  de  code.  Nous  ne  somme  alors pas dans un
-bloc de code, et  l'échappement  se  fait  cette  fois  à  la mode Unix,
-caractère par caractère.  Nous  marquons  un  passage  de  code  dans un
-texte   en   l'entourant   des    signes    inférieur   et   supérieur :
-<<lpm>\<import os\>>. Il est  possible  de  spécifier  le  langage de ce
-morceau de code en ajoutant,  directement  après  le signe inférieur, le
-langage     entouré      lui      aussi      des      même      signes :
-<<lpm>\<\<C\>printf("Wouhou!")\>>. 
-
-Enfin, pour  illustrer  l'échappement  caractère  par  caractère,  voici
-comment    a    été    noté    le     dernier    morceau    de    code :
-<<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
-
-=== Récapitulatif de code
-
-Il peut être utile, après avoir  décrit  un  bloc de code petit à petit,
-de présenter un  récapitulatif  de  ce  code.  Deux commandes permettent
-d'afficher le code qui a été généré : 
-
-La première commande permet de  rappeler  le  contenu d'un bloc de code,
-et affiche tout le code de  ce  bloc,  même si celui-ci était morcelé en
-plusieurs blocs portant le même nom : 
-
-<Code (lpm): 
-~remain morceau de code
->
-
-La seconde  commande  permet  non  seulement  d'afficher  un  morceau de
-code, mais  surtout  d'afficher  celui-ci  sans  aucune  référence  vers
-d'autres morceaux de code,  c'est  à  dire  qu'il  les remplace par leur
-contenu. Ainsi, utiliser  cette  commande  sur  un  bloc  destiné à être
-sortit dans un fichier revient  à  insérer  dans  le document le contenu
-de ce fichier.  Mais  il  est  possible,  bien  sûr,  d'insérer juste un
-morceau de code,  la  commande  fonctionnant  sur  ceux-ci,  et  non pas
-exclusivement sur les blocs destinés à être sortis dans un fichier. 
-
-Cette commande est celle-ci : 
-
-<Code (lpm): 
-~display morceau de code
->
 

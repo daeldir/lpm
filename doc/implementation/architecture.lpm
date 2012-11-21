@@ -149,7 +149,7 @@ positionnée à  <False>  au  départ,  et  que  nous  passerons  à  <True>
 lorsque nous serons prêts à compter les références pour de bon. 
 
 <Code: variables de référence
-RESOlVE_REFERENCES = False
+RESOLVE_REFERENCES = False
 >
 
 ==== Variables d'erreur
@@ -166,7 +166,7 @@ CODEREF_ERRORS = []
 
 À ce point,  voici  un  récapitulatif  des  variables globales utilisées
 par le programme : 
-~Display variables globales
+~Display variables système
 
     /!\ Ces   variables   globales   ont   été   réfléchies   et /!\
     /!\ semblaient  la  meilleure   solution   pour   éviter  de /!\

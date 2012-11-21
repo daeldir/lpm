@@ -1866,6 +1866,7 @@ class Document:
                         }
                         pre {
                             margin: 0px;
+                            white-space: pre-warp;
                         }
                         .codechunk {
                             border: 1px solid #fda;

@@ -60,4 +60,6 @@ Yep. That was a prototype, quickly hacked. And it's buggy, too. But it
 works well enough to begin with, and write a better version of it, using
 it. I needed to bootstrap my literate programming language.
 
-
+TODO: translate at least the language documentation part in english. The
+implementation may not be the one I will go for, but the language does
+not risk to change a lot, and is the important part to use `_lpm`.

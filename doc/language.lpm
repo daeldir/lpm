@@ -1,125 +1,116 @@
-[=description du format LPM] 
+[=LPM format description] 
 
-= Le format de balisage LPM
+= The LPM markup language
 
-== Les bases de la syntaxe
+== Syntax basics
 
-Il existe plusieur type  de  balises  dans  le  langage LPM. Les balises
-légères, destinées à formater  le  texte,  les commandes, qui permettent
-d'effectuer une  action  lors  de  la  génération  du  document,  et les
-balises de bloc, qui permettent de définir des blocs de texte. 
+There are many types  of  tags  in  the  LPM language. Lightweight tags,
+meant to  format  the  text,  commands,  that  will  execute  actions at
+document  generation,  and  block  tags,  enabling  us  to  define  text
+blocks. 
 
-=== Les blocs
+=== Blocks
 
-La manière la plus basique de définir  un  bloc est de laisser une ligne
-vide entre deux blocs de texte : 
-
-<Code (lpm): 
-voici un bloc de texte
-
-et un second bloc de texte
-sur deux lignes
-
-et un troisième bloc de texte
->
-
-On appelle ces blocs de texte  des  paragraphes. Lorsque le fichier sera
-reformaté, les lignes de  ces  blocs  seront  fusionnées  si le résultat
-n'est  pas  trop  long.*  Ainsi,  l'exemple  ci-dessus  deviendra  après
-formatage : 
- *: Le fichier source de la  documentation  est  reformaté afin de tenir
-    dans 72 colonnes (des  lignes  de  72  caractères maximum). Le texte
-    des paragraphes est justifié. Les  blocs  de  code  ne sont bien sûr
-    pas modifiés, même si leurs lignes dépassent 72 caractères.
+The most basic mean to define a  block  is to left a blank line beetween
+to text blocks: 
 
 <Code (lpm): 
-voici un bloc de texte
+Here is a text block.
 
-et un second bloc de texte sur deux lignes
+And a second text block,
+spanning two lines.
 
-et un troisième bloc de texte
+And a third text block.
 >
 
-Le second bloc ne fait  plus  qu'une  ligne.  Au contraire, si une ligne
-est trop longue, un retour à la ligne sera inséré. 
+We  call  those  text  blocks  “paragraphs”.   When  the  file  will  be
+formatted, the blocks lines will  be  merged  if  the  result is not too
+long.* Thus, the example above will become, after formatting: 
 
-Il existe d'autres manières  de  définir  des  blocs.  Lorsque l'on crée
-une liste, ou que l'on insère un  bloc  de code, on crée des blocs, dont
-le comportement est bien entendu différent de celui des paragraphes. 
+<Code (lpm): 
+Here is a text block.
 
-=== Les commandes
+And a second text block, spanning two lines.
 
-Les commandes  tiennent  sur  une  ligne.  Elles  marquent  la  fin d'un
-paragraphe, même s'il n'y a  pas  de  ligne  vide  entre elles et le-dit
-paragraphe. Elles commencent souvent  par  le  caractère <<lpm>\~>*. Une
-commande peut permettre de définir  une  donnée  du document (langage du
-code source, auteurs…), ou  d'inclure  un  autre  fichier  à ce point du
-texte. Voici un exemple de commande : 
+And a third text block.
+>
+
+The second block is now one single  line.  In contrast, if a line is too
+long, a line feed will be added. 
+
+There are other means to define  blocs.  When  we create a list, or when
+we insert  a  code  block,  we  create  blocks,  and  their  behavior is
+different from the paragraphs one. 
+ *: The source file of  the  documentation  is  formatted  to  fit in 72
+    columns (72  characters  max  in  a  line).  The  paragraph  text is
+    justified. Code blocks are not changed,  even  if they do not fit in
+    72 characters.
+
+=== Commands
+
+Commands fit on one line. They  force  the  end  of a paragraph, even if
+there is no blank line  beetween  them  and said paragraph. They usually
+begin with the character <<lpm>\~>*. A  command  can enable us to define
+a document  data  (source  code  language,  authors...),  or  to include
+other files at this point of the text. Here is an example of commands: 
 
 <Code (lpm): 
 ~code python
 
-ceci est un paragraphe
+This is a pararaph
 ~include test.txt
 >
 
-Dans cet exemple, le paragraphe  ne  fusionne  pas  avec la commande qui
-le suit, même  si  la  ligne  n'est  pas  trop  grande.  En effet, **une
-commande reste une commande, seule sur une ligne**. 
- *: Mais  pas  toujours.   Les   commandes   relatives   aux  références
-    commencent en général par le  symbole  lié  à l'élément auquel elles
-    se réfèrent.
+In  that  example,  the  paragraph  doesn't  merge  with  the  following
+command, even if the line is not  too  long. That is: **a command stay a
+command, alone on a line**. 
+ *: But not always. Commands  about  references  usually  begin with the
+    same symbole as the one used to refer to them.
 
-=== Les balises légères
+=== Lightweight tags
 
-Les balises légères  sont  des  balises  qui  se  trouvent à l'intérieur
-d'une ligne. Il peut  y  en  avoir  plusieurs  sur  une seule ligne. Les
-balises  légères   agissent   à   l'intérieur   d'un   paragraphe.  Elle
-permettent de mettre en gras, insérer  des  liens… Le tout sans dégrader
-le texte par un  surplus  de  caractères.  Voici  un  exemple de balises
-légères : 
+Lightweight tags are tags found inside  lines.  There can be many on one
+line. Lightweight tags act  inside  a  paragraph.  The  can  put text in
+bold, italic, define  links...  And  all  of  that without deteriorating
+the text with a characters overflow. Here is an example: 
 
 <Code (lpm): 
-Ceci est un **texte en gras** suivit d'une référence vers une note de 
-bas de page.*
+This is a **bold text** followed by a reference to a footnote.*
 >
 
-=== La forme simple et la forme complète du langage
+=== The simple form, and the complete form of the language
 
-Le langage de balisage  a  pour  objectif  de  rendre le document source
-agréable  à  lire.  Pour  cela,   les   caractères  sont  utilisés  pour
-« dessiner » les  décorations  du  texte.  Cette  manière  de  faire est
-esthétique, mais peu pratique à écrire  à  la main. Aussi, pour certains
-marquages, il  existe  une  forme  abrégée,  dite  « simple »,  qui sera
-transformée par le  programme  en  forme  complète,  plus  « jolie ». Le
-programme accepte en entrée indépendamment  l'une  ou l'autre forme. Par
-exemple, nous marquons le  titre  du  livre  de  cette manière (la forme
-simple) : 
+The markup language's goal  is  to  make  the  source  documents easy to
+read. To this  end,  characters  are  used  to  “draw” text decorations.
+That way is aesthetic, but not nice  to  write  on our own. So, for some
+markup, there is  an  abbreviated  form,  said  “simple”,  that  will be
+transformed into the “complete”  form  by  our  program, more pretty. As
+an example, we write the book title like that (simple form): 
 
 <Code (lpm): 
 **
-* Un titre
+* A title
 **
 >
 
-Ou, de manière plus lourde : 
+Or, on a more heavy fashion: 
 
 <Code (lpm): 
-************
-* Un titre *
-************
+***********
+* A title *
+***********
 >
 
-Sachant que le programme finit par centrer les titres, ce qui donne : 
+And the software will center the title, thus giving us: 
 
 <Code (lpm): 
-                            ************
-                            * Un titre *
-                            ************
+                             ***********
+                             * A title *
+                             ***********
 >
 
-Ces trois manières de noter  un  titre sont absolument équivalentes pour
-le programme, et n'existent que pour simplifier la vie du programmeur. 
+Those three means of writing a  title  are absolutely equivalent for our
+tool, and are only there to make our life easier. 
 
 == Structure d'un document
 

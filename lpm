@@ -18,18 +18,16 @@
     make it more readable. 
     ..: https://en.wikipedia.org/wiki/Lightweight_markup_language
     
-    L'écriture de ce logiciel est  motivée  par  le désir de pouvoir
-    écrire ses  programmes  de  manière  simple  et  légère,  ce qui
-    n'est pas le cas avec  des  langages de balisage « lourds » tels
-    que  LaTeX  ou  HTML.  La   création  d'un  nouveau  langage  de
-    balisage léger, parmis  la  myriade  de  langages existants, est
-    dûe au fait  qu'aucun  de  ces  langage  ne  permet d'inclure du
-    code  source  dans  le   document   **de  manière  simple**.  La
-    programmation lettrée demandant  en  effet  d'écrire beaucoup de
-    code dans la documentation,  il  n'est  pas  agréable de devoir,
-    dans la plupart des langages  de  balisage légers (dans ceux qui
-    supportent cette fonctionnalité),  indenter  notre  bloc de code
-    à chaque ligne. 
+    The creation of this program  as  been  motivated by the wish to
+    write literate  softwares  in  a  simple  and  lightweight  way,
+    which is not the case  with  « heavy »  markup languages such as
+    LaTeX  and  HTML.  The  choice   of  a  new  lightweight  markup
+    language, instead of using  one  of  the  many already existing,
+    is due to the fact that  none  of  these languages enabled us to
+    include source code in  the  document  **in  a simple fashion**.
+    Literate programming requiring the  inclusion  of  a lot of code
+    in the documentation, it is  not  pleasant  to  have, in most of
+    the languages, to indent the code block at each line. 
     
     Ainsi, ce langage permet  d'insérer  du  code  en  ouvrant et en
     fermant  le  bloc  de  code,   plutôt  qu'en  devinant  grâce  à

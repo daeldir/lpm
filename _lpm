@@ -47,7 +47,7 @@ DOCUMENT_LANGUAGE = "text"
 COLOR_ERRORS = []
 CODEREF_ERRORS = []
 
-# Fonctions utiles
+# Utility functions
 def splitPath(line):
     r = []
     esc = False
@@ -142,7 +142,7 @@ def justify(line, length):
 # Importation
 class Code:
     def __init__(self, line):
-        """ Contient un morceau de code """
+        """ A code chunk """
         global CODE
         self.type = "code"
         self.language = None
@@ -173,12 +173,13 @@ class Code:
         self.raw_code.append(line)
 
     def important(self):
-        """ Renvoie False si le morceau de code est vide et n'a pas de nom. """
+        """ Return False if the chunk is empty and does not have a name.
+        """
         if self.name != None:
             return True
         for i in self.raw_code:
-            # Le strip nous empêche d'écrire des codes anonymes en whitespace.
-            # Tant pis.
+            # The strip prevent us to write anonymous code blocks in the
+            # whitespace programming language. Oh, well...
             if i.strip() != "":
                 return True
         return False
@@ -294,7 +295,7 @@ class Code:
 
     class Line:
         def __init__(self, line):
-            """ Crée une ligne sans le retour à la ligne final. """
+            """ Make a line without the final carriage return. """
             if line != "" and line[-1] == "\n":
                 line = line[:-1]
             if len(line) > 0 and line[0] == "\\":
@@ -995,7 +996,7 @@ class Image:
             name = path.basename(self.name)
             return "<div class=\"img\"><img src=\"data:image/*;base64,"+img+"\" alt=\""+name+"\"></div>"
         except IOError:
-            sys.stderr.write(u"Fichier non trouvé :"+self.name+"\n")
+            sys.stderr.write(u"File not found:"+self.name+"\n")
             return "<div>Image not found</div>"
 
 class Remain:
@@ -1017,7 +1018,7 @@ class Remain:
     def formatText(self, length, prefixed = None):
         return "~Remain "+self.name+"\n"
     def outputHTML(self, prefixed = None):
-        r = u"<div class=\"codechunk\"><div class=\"codehead\">Rappel du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :</div>"
+        r = u"<div class=\"codechunk\"><div class=\"codehead\">Reminder for code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a>:</div>"
         for i in CODE[self.name]:
             r += i.outputHTML(True)
             if i != CODE[self.name][-1]:
@@ -1064,7 +1065,7 @@ class Display:
         return "~Display "+self.name+"\n"
     def outputHTML(self, prefixed = None):
         global COLOR_ERRORS
-        r = u"<div class=\"codechunk\"><div class=\"codehead\">Sortie du code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a> :</div>"
+        r = u"<div class=\"codechunk\"><div class=\"codehead\">Output of code <a href=\"#"+refEscape(self.name)+"1\" id=\"coderef"+str(self.count)+"\">"+self.name+"</a>:</div>"
         if CODE[self.name][0].language == None:
             format_language = DOCUMENT_LANGUAGE
         else:
@@ -1117,7 +1118,7 @@ class Include:
         try:
             return "<pre>"+codecs.open(self.name, 'r', encoding = "utf-8").read()+"</pre>"
         except IOError:
-            sys.stderr.write(u"Fichier non trouvé : "+self.name+"\n")
+            sys.stderr.write(u"File not found : "+self.name+"\n")
             return "<pre>File not found</pre>"
 
 class TextBlock:
@@ -1133,7 +1134,7 @@ class TextBlock:
     def important(self):
         return len(self.raw_content) > 0
     def parse(self):
-        """ Renvoie une liste de paragraphes et d'autres éléments (liste…) """
+        """ Return a list of paragraphs and other elements (lists...) """
         mode = "par"
         element = Paragraph()
         block = []
@@ -1235,7 +1236,7 @@ class Documentation:
         self.lines.append(line.strip())
 
     def important(self):
-        """ Renvoie False si la documentation ne contient que des lignes vides """
+        """ Return False if the documentation is made of empty lines. """
         for i in self.lines:
             if i != "":
                 return True
@@ -1282,7 +1283,7 @@ class Title:
     def __init__(self):
         self.name = []
     def important(self):
-        """ Renvoie True si le titre n'est pas vide. """
+        """ Return True if there is a title. """
         for i in self.name:
             if i != "":
                 return True
@@ -1395,7 +1396,7 @@ class Authors:
             r += u"~Authors "+i+u"\n"
         return r
     def outputHTML(self):
-        r = "<div class=\"authors\">Par "
+        r = "<div class=\"authors\">Authors: "
         for i in self.names:
             r += "<span>"+i+"</span>"
         return r+"</div>"
@@ -1408,7 +1409,7 @@ class Authors:
 
 class Document:
     def __init__(self, name = None):
-        """ Crée un document et charge le fichier si passé en paramètre. """
+        """ Create a document and load the file given in parameter. """
         self.type = "section"
         self.parent = None
         self.name = name
@@ -1424,8 +1425,9 @@ class Document:
         self.original_depth = 0
 
     def fromFile(self, file_name):
-        """ Récupère le code source d'un fichier (interprète ~Get) et remplace
-        les chemins de fichiers par leur chemin absolu. """
+        """ Retrieve the source code of a file (interpret ~Get) and
+            replace filenames by their absolute path.
+        """
         global CODE, FOOTNOTE, URLREF, NOTEREF, FOOTURL, REFCOUNT, CODEREF_ERRORS
         self.type = "document"
         filename = path.abspath(file_name)
@@ -1465,7 +1467,7 @@ class Document:
                         document.fromFile(path.join(basedir, filename))
                         self.lines += document.lines
                     except IOError:
-                        sys.stderr.write(u"Fichier non trouvé : "+filename+"\n")
+                        sys.stderr.write(u"File not found: "+filename+"\n")
                         self.lines.append(i)
             else:
                 if begin(i, "~include"):
@@ -1481,11 +1483,13 @@ class Document:
                     try:
                         open(toFile, "w").write(open(fromFile, "r").read())
                     except IOError:
-                        sys.stderr.write(u"Problème en copiant :\n\t de "+fromFile+u"\n\t à  "+toFile+"\n")
+                        sys.stderr.write(u"Copy problem:\n\t from "+fromFile+u"\n\t to  "+toFile+"\n")
                 self.lines.append(i)
 
     def fromOneFile(self, filename):
-        """ Récupère le code source d'un fichier (sans interpreter ~Get) """
+        """ Retrieve the source code of a file, without interpreting 
+            ~Get.
+        """
         filename = path.abspath(filename)
         basedir = path.dirname(filename)
         try:
@@ -1493,13 +1497,13 @@ class Document:
             lines = f.readlines()
             f.close()
         except IOError:
-            sys.stderr.write(u"Fichier non trouvé : "+filename+"\n")
+            sys.stderr.write(u"File not found: "+filename+"\n")
             lines = []
         for i in lines:
             self.lines.append(i)
 
     def parseStructure(self, level = 0):
-        """ Place les lignes dans la structure du document. """
+        """ Place lines in the document's structure"""
         global DOCUMENT_LANGUAGE
         mode = "intro"
         introduction = True
@@ -1599,8 +1603,8 @@ class Document:
             self.sections.append(document)
 
     def getPosition(self):
-        """ Renvoie un tableau contenant le chemin d'accès à cette partie du
-        document, en terme de sections. """
+        """ Return an array of access path to that document part, in 
+            term of sections. """
         position = [self.position]
         parent = self.parent
         while parent != None:
@@ -1609,7 +1613,7 @@ class Document:
         return position
 
     def debugDisplay(self, deep = 0):
-        """ Affiche la structure du document """
+        """ Display the document's structure. """
         debugDisplay("document", deep)
         if self.title.important():
             self.title.debugDisplay(deep)
@@ -1631,9 +1635,9 @@ class Document:
             section.debugDisplay(deep+1)
 
     def splitDocCode(self):
-        """ Place le code et la documentation de l'introduction dans une suite
-        de morceaux séparés (un morceau de code, un morceau de doc, et ainsi de
-        suite), et effectue la même séparation sur les sections qui la suivent.
+        """ Put the code and the documentation in a list of splitted
+            chunks (a code chunk, a documentation chunk, and so on), and
+            proceed to the same splitting for subsequent sections.
         """
         self.introduction.split()
         if self.abstract != None:
@@ -1643,7 +1647,7 @@ class Document:
         for section in self.sections:
             section.splitDocCode()
     def parseChunks(self):
-        """ Découpe les paragraphes et prépare leur mise en forme. """
+        """ Cut paragraphs and prepare their formatting."""
         self.introduction.parse()
         if self.abstract != None:
             self.abstract.parseChunks()
@@ -1671,7 +1675,7 @@ class Document:
             return True
         return False
     def parse(self):
-        """ Analyse le document. """
+        """ Analyse the document. """
         self.parseStructure()
         self.splitDocCode()
         self.parseChunks()
@@ -1715,7 +1719,7 @@ class Document:
             for i in self.license.formatText(line_length-MARGINS*2).split("\n"):
                 r += INDENT + i + "\n"
             r += "\n"+u"~~~".center(line_length)+"\n\n"
-        # On remplace les doubles lignes vides par des lignes vides uniques
+        # Replacing double empty lines by unique empty lines.
         mode = "doc"
         text = u""
         old = ""
@@ -1924,15 +1928,15 @@ class Document:
         if self.authors.important():
             r += self.authors.outputHTML()
         if self.code_type != None:
-            r += u"<div class=\"codetype\">Projet codé majoritairement en "+self.code_type+"</div>\n"
+            r += u"<div class=\"codetype\">Project mainly coded in "+self.code_type+"</div>\n"
         r += "\n"
         if self.abstract != None:
             r += "\n<div class=\"abstract\">"
-            r += "\n"+u"<h1>Résumé</h1>"+"\n\n"
+            r += "\n"+u"<h1>Abstract</h1>"+"\n\n"
             r += self.abstract.outputHTML(False)
             r += "</div>"
         if top:
-            r += u"<div class=\"toc\"><h1>Table des matières</h1>\n"
+            r += u"<div class=\"toc\"><h1>Table of Content</h1>\n"
             r += self.outputHTMLToc()
             r += "</div>"
         if self.introduction.important():
@@ -1944,7 +1948,7 @@ class Document:
             r += section.outputHTML(False)+"\n\n"
         if self.license != None:
             r += "\n<div class=\"license\">"
-            r += "\n"+u"<h1>Licence</h1>"+"\n\n"
+            r += "\n"+u"<h1>License</h1>"+"\n\n"
             r += self.license.outputHTML(False)
             r += "</div>"
         if top:
@@ -2001,8 +2005,8 @@ if WEAVE:
 if EPUB:
     codecs.open(path.join(base_dir, project+"_epub_ready.html"), "w", encoding="utf-8").write(d.outputHTML(ebook = True))
 for i in COLOR_ERRORS:
-    sys.stderr.write("Pas de coloration syntaxique pour le langage "+i+"\n")
+    sys.stderr.write("No syntax highlighting for that language: "+i+"\n")
 for i in CODEREF_ERRORS:
-    sys.stderr.write("<Code: "+i+" n'existe pas.\n")
+    sys.stderr.write("<Code: "+i+" does not exist.\n")
 #d.debugDisplay()
 

@@ -2,7 +2,7 @@
 
 = The LPM markup language
 
-== Syntax basics
+== Syntax Basics
 
 There are many types  of  tags  in  the  LPM language. Lightweight tags,
 meant to  format  the  text,  commands,  that  will  execute  actions at
@@ -67,7 +67,7 @@ command, alone on a line**.
  *: But not always. Commands  about  references  usually  begin with the
     same symbole as the one used to refer to them.
 
-=== Lightweight tags
+=== Lightweight Tags
 
 Lightweight tags are tags found inside  lines.  There can be many on one
 line. Lightweight tags act  inside  a  paragraph.  The  can  put text in
@@ -78,7 +78,7 @@ the text with a characters overflow. Here is an example:
 This is a **bold text** followed by a reference to a footnote.*
 >
 
-=== The simple form, and the complete form of the language
+=== The Simple Form, and the Complete Form of the language
 
 The markup language's goal  is  to  make  the  source  documents easy to
 read. To this  end,  characters  are  used  to  “draw” text decorations.

@@ -1,6 +1,6 @@
-[=LPM format description] 
-
 = The LPM markup language
+
+[Syntax Basics] 
 
 == Syntax Basics
 
@@ -234,120 +234,111 @@ that effect.
 ~code haskell
 >
 
-== Formatage des paragraphes
+== Paragraphs Format
 
-Comme   dit    dans    la    partie    (__Le    format    de    balisage
-LPM__)[description du format LPM],  un  paragraphe  est  définit par une
-suite de lignes non-vides. Un  paragraphe  commence  à la première ligne
-non-vide rencontrée, et s'arrête dès  qu'il  rencontre une ligne vide ou
-une  commande.  Les  lignes   succeptibles   de   marquer  la  fin  d'un
-paragraphe sont : 
- - les lignes formatées comme une liste,
- - les  lignes  contenant   une   commande   du   type  <<lpm>\~include>
- ' (commençant par un <<lpm>\~>),
- - les lignes marquant le début d'un bloc de code,
- - les lignes marquant une url ou une note de bas de page,
- - les lignes marquant un début de paragraphe important,
- - les lignes marquant un début de section (débutant par <<lpm>\=>),
- - les lignes vides.
+As said in the part  (__Syntax  Basics__)[Syntax Basics], a paragraph is
+defined by a sequence of  non  blank  lines.  A  paragraph begins at the
+first non blank line encountered, and stop as soon as it encounters: 
+ - lines formatted as lists,
+ - lines  containing  commands  like  <<lpm>\~include>  (beginning  with
+ ' <<lpm>\~>),
+ - lines that mark the beginning of a code block,
+ - lines that mark a URL or a footnote,
+ - lines that mark the beginning of an important paragraph,
+ - lines  that  mark  the   beginning   of   a  section  (starting  with
+ ' <<lpm>\=>),
+ - blank lines.
 
-=== Formatage du texte
+=== Text formatting
 
-À l'intérieur du paragraphe, il  est  possible d'utiliser des caractères
-qui  vont  mettre  le   texte   **en   gras**,   //en  italique//,  __en
-souligné__, et même --en barré--. 
+Inside a paragraph, it is possible  to  use characters that will put our
+text in **bold**, //italic//, __underlined__, and --striked--. 
 
-Le paragraphe précédent ressemble donc à ceci : 
+Consequently, the paragraph above looks like that: 
 
 <Code (lpm): 
-À l'intérieur du paragraphe,  il est  possible d'utiliser des caractères
-qui vont  mettre  le   texte   **en   gras**,   //en   italique//,  __en
-souligné__, et même --en barré--.
+Inside a paragraph, it is possible  to  use characters that will put our
+text in **bold**, //italic//, __underlined__, and --striked--. 
 >
 
-=== Liens et références
+=== Links and references
 
-Il est aussi  possible  d'ajouter  des  liens.  Un  lien  est noté entre
-crochets, et s'applique au mot  qui  précède,  ou bien au groupe contenu
-dans les  parenthèses  qui  précède  (auquel  cas  les  parenthèses sont
-supprimées du texte dans le document  généré).  Un lien contenant un mot
-est un lien intra-document. Les  liens  vers  l'exterieur sont notés par
-deux points, puis rappelés  à  la  fin  du  paragraphe  avec la commande
-<<lpm>\..:>. Les liens dont le  mot  commence  par <<lpm>\=> ne sont pas
-des liens, mais des  ancres  vers  lesquelles  on  peut  pointer. Ce qui
-donne : 
+You can also add links to  your  document.  A  link is denoted by square
+parentheses, and apply to it's  preceding  word,  or  a group of word if
+it is in parentheses (in that  case,  parentheses will not appear in the
+generated document). A  link  containing  a  word  is  an intra-document
+link. Link to the  outside  world  (internet)  are  denoted by two dots,
+and defined at the end  of  the  paragraph with the command <<lpm>\..:>.
+Links beginning with <<lpm>\=> are  not  links,  but anchors to which we
+can point. Thus, we have: 
 
 <Code (lpm): 
-Un (lien vers l'exterieur)[..], un lien vers une ancre[une ancre].
+An (outside link)[..], a link to an anchor[an anchor].
 ..:http://example.org/
 
-Du texte.
+Some text.
 
-L'ancre[=une ancre] en question.
+The anchor[=an anchor] in question.
 >
 
-Comme les liens vers l'exterieur,  il  est  possible  de créer des notes
-de bas de page. Pour  cela,  on  place  une  étoile (seule, deux étoiles
-correspondant  à  la  mise  en  gras)  à  côté  du  mot  que  l'on  veut
-commenter.  La  commande   <<lpm>\*:>   contiendra   le  commentaire  en
-question, et  sera  suivit  sur  la  même  ligne  et  les  suivantes  du
-paragraphe contenant le commentaire. 
+Like the outside links, we can  create  footnotes. To this end, we place
+a star (and only one, two  stars  are  to  put text in bold) right after
+the word that we want to  comment  on.  The <<lpm>\*:> command will mark
+said comment, and be followed on the  same  line  and the next ones by a
+paragraph which will be the footnote. 
 
 <Code (lpm): 
-mon texte avec* une note de bas de page.
-*: //avec// est un anagramme de //cave//.
+My text with* a footnote.
+*: //with// is not //whit//.
 >
 
-    /!\ Pour savoir quelle note  de  bas  de  page ou quelle URL /!\
-    /!\ correspond à  une  référence,  le  programme  assigne un /!\
-    /!\ nombre à chaque note de  bas  de  page ou chaque URL (il /!\
-    /!\ les compte),  ainsi  qu'un  nombre  à  chaque référence. /!\
-    /!\ Les références vers  une  URL  vont  pointer  vers l'URL /!\
-    /!\ auquel le même nombre  a  été  assigné,  et de même pour /!\
-    /!\ les notes de bas de  page.  Si  vous oubliez une note de /!\
-    /!\ bas  de  page,  il   y   aura   un   décalage  dans  les /!\
-    /!\ références !                                             /!\
+    /!\ To know what footnote or  URL  a reference point to, the /!\
+    /!\ software  assign  to  each  footnote  or  URL  a  number /!\
+    /!\ (counting  them),  and  a   number  to  each  reference. /!\
+    /!\ References to an URL  will  point  to  the  URL with the /!\
+    /!\ same number, and it  works  the  same  for footnotes. If /!\
+    /!\ you forget a footnote,  there  will  be  a  shift in the /!\
+    /!\ references!                                              /!\
     /!\                                                          /!\
-    /!\ Il est considéré comme une  bonne  pratique de mettre la /!\
-    /!\ note ou l'URL directement  derrière  le paragraphe qui y /!\
-    /!\ fait référence,  mais  ce  n'est  pas  obligé.  Une note /!\
-    /!\ peut même précéder le  texte  qui  s'y  réfère, tant que /!\
-    /!\ le  compte  (l'ordre  des  notes)  n'est  pas  perturbé. /!\
-    /!\ Toutefois, ce n'est pas vraiment conseillé.              /!\
+    /!\ It is a good idea to  keep  your footnotes and URLs just /!\
+    /!\ after the paragraph that  references  them,  but you are /!\
+    /!\ not forced to  do  so.  A  note  can  even  precede it's /!\
+    /!\ reference, as long  as  the  count  (the  order in which /!\
+    /!\ the footnotes  appear)  is  not  changed.  It  would  be /!\
+    /!\ unadvised to do so, however...                           /!\
 
-=== Les paragraphes importants
+=== Important paragrphs
 
-Il peut être utile de mettre  en  avant  un paragraphe, comme le dernier
-paragraphe de la section précédente.  Pour  celà, on utilise la commande
-<<lpm>/!\\>. Cette commande  va  considérer  tout  le  paragraphe qui la
-suit comme un  paragraphe  important.  Il  est  possible  de mettre deux
-paragraphes dans  un  même  bloc  important  en  plaçant  cette commande
-devant les  deux  paragraphes  ainsi  que  sur  la  ligne  vide  qui les
-sépare. Enfin, dans la forme complète  de  ces  blocs (car oui, c'est un
-bloc de texte qui  est  marqué  comme  important),  chaque ligne du bloc
-commence par cette commande, et  termine  aussi  par celle-ci. Comme les
-résumés et licences, le bloc sera  un  peu plus court et indenté. Ainsi,
-ce code : 
+It can be useful to  emphasize  an  entire  paragraph, like the last one
+in  the  previous  section.  To   that   effect,   we  use  the  command
+<<lpm>/!\\>. That command will  take  the  following  paragraph and mark
+it as  important.  It  is  possible  to  put  two  paragraph  in  a same
+important block, by placing that  command  on  the blank line that split
+our two paragraphs. Finally, that  block  (yes,  we are marking a **text
+block** as important)  has  a  complete  form:  each  line  of the block
+begins and ends with that  command.  Like  for the abstracts and license
+blocks, the important  block  will  be  shorter  and  indented. So, that
+code: 
 
 <Code (lpm): 
-/!\Un paragraphe
-important
+/!\An important
+paragraph
 /!\
-/!\Et un autre paragraphe important
+/!\And another important paragraph
 
-/!\Les deux paragraphes précédents sont dans le même bloc, et celui-ci 
-dans un nouveau bloc important.
+/!\The two paragraphs above are in 
+one block, and this one in another.
 >
 
-Deviendra : 
+Will become: 
 
 <Code (lpm): 
-    /!\ Un paragraphe important                                  /!\
+    /!\ An important paragraph                                   /!\
     /!\                                                          /!\
-    /!\ Et un autre paragraphe important                         /!\
+    /!\ And another important paragraph                          /!\
 
-    /!\ Les deux  paragraphes  précédents  sont   dans  le  même /!\
-    /!\ bloc, et celui-ci dans un nouveau bloc important.        /!\
+    /!\ The two paragraphs  above  are  in  one  block, and this /!\
+    /!\ one in another.                                          /!\
 >
 
 == Formatage des listes

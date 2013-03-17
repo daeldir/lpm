@@ -1396,7 +1396,7 @@ class Authors:
             r += u"~Authors "+i+u"\n"
         return r
     def outputHTML(self):
-        r = "<div class=\"authors\">Authors: "
+        r = "<div class=\"authors\">By "
         for i in self.names:
             r += "<span>"+i+"</span>"
         return r+"</div>"

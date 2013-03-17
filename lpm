@@ -42,13 +42,11 @@
     “general” lightweight markup language. 
     ..: https://en.wikipedia.org/wiki/ReStructuredText
     
-    La dernière fonctionnalité  de  notre  logiciel  est de proposer
-    un reformatage du code source  du  document.  En effet, si, pour
-    un premier contact,  nous  lisons  la  documentation générée par
-    le logiciel, nous  finissons  invariablement  par travailler sur
-    la source de ce document  pour  le  modifier. Il peut alors être
-    agréable et bénéfique que cette  source  soit bien présentée, ce
-    que permet notre logiciel. 
+    The last  feature  of  our  software  is  to  offer  source code
+    formatting. Indeed, for  a  first  look,  we  read the generated
+    documentation, but  we  always  work  with  the  original source
+    code. It is pleasant  and  beneficial  to  have a well presented
+    source, and that is the goal of our software. 
     
                                   ~~~                                   
 

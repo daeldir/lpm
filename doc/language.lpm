@@ -112,129 +112,123 @@ And the software will center the title, thus giving us:
 Those three means of writing a  title  are absolutely equivalent for our
 tool, and are only there to make our life easier. 
 
-== Structure d'un document
+== Document Structure
 
-Un document possède un titre, un  ou  plusieurs auteurs, une licence, et
-un résumé. En plus de cela,  il  est  composé de plusieurs sections, qui
-permettent de structurer le document. 
+A document  as  a  title,  one  or  many  authors,  a  license,  and  an
+abstract. In addition to that,  it  is  composed  of many sections, that
+structure the document. 
 
-=== Le titre
+=== The Title
 
-Le titre correspond au titre  du  document.  Il  doit se trouver au tout
-début de celui-ci. Le  titre  est  écrit  dans  un cadre d'étoiles. S'il
-fait plusieurs lignes, le cadre a  la  largeur  de la plus grande ligne,
-et les autres lignes sont centrées : 
+The title is the title of  the  document  (tautology?).  It has to be at
+the beginning of the said document.  It  is  written in a star frame. If
+it is several lines long, the frame  is  as wide as the widest line, and
+other lines are centered. 
 
 <Code (lpm): 
-                ***************************************
-                *        Le titre du document :       *
-                *                                     *
-                * Ce document est un document de test *
-                *                                     *
-                ***************************************
+               *****************************************
+               *            Document Title             *
+               *                                       *
+               * This is a test document, with a title *
+               *                                       *
+               *****************************************
 >
 
-Il est possible de simplifier  le  titre,  lors  de  la rédaction, en le
-marquant de la sorte : 
- - Une ligne contenant aux  moins  deux  étoiles,  sans autre caractères
- ' (à part peut-être des espaces  au  début  et  à  la  fin de la ligne)
- ' marque le début du titre.
- - Après cela, les lignes commencent par  une  étoile, puis le texte. La
- ' dernière étoile de la ligne  est  ignorée  (elle est considérée comme
- ' faisant partie du cadre). Si  vous  voulez  avoir une ligne finissant
- ' par une étoile (en plus de  celle  du cadre), vous devrez écrire deux
- ' étoiles.
- - Après toutes ces lignes,  une  nouvelle  ligne contenant deux étoiles
- ' consécutives ou plus,  et  sans  autre  caractères  marque  la fin du
- ' titre.
+It is possible to simplify the  title,  at redaction time, by marking it
+as follow: 
+ - A line containing  at  least  two  stars,  and  nothing  else (except
+ ' maybe  some  spaces  before  and  after  the  line),  will  mark  the
+ ' beginning of the title.
+ - After that, all lines begin  with  a  star,  then  the text. The last
+ ' star of the line is ignored (as  it  is  considered to be part of the
+ ' frame). If you want a line  ending  with  a  star (in addition to the
+ ' one of the frame), you will have to put two stars.
+ - After all these lines, a new  line  containing two stars or more, and
+ ' nothing else, mark the end of the title.
 
-Ce qui donne le code suivant : 
+So, a simplified title looks like that: 
 
 <Code (lpm): 
 **
-* Le titre du document :
+* Document Title
 *
-* Ce document est un document de test
+* This is a test document, with a title
 *
 **
 >
 
-=== Le résumé
+=== The Abstract
 
-On  débute  le  résumé   avec   la  commande  <<lpm>\~abstract\~>.  Nous
-écrivons ensuite une suite de  paragraphes,  puis fermons le résumé avec
-la commande <<lpm>\~\~\~>. 
+We begin the  abstract  with  the  command  <<lpm>\~abstract\~>. We then
+write a bunch of paragraphs,  then  close  the abstract with the command
+<<lpm>\~\~\~>. 
 
 <Code (lpm): 
 ~abstract~
-Ceci est un résumé.
+This is an abstract of our document.
 
-Avec **deux** paragraphes !
+With **two** paragraphs!
 ~~~
 >
 
-Une fois formaté, la  commande  <<lpm>\~Abstract\~> se retrouve centrée,
-la première lettre en  capitale.  Le  <<lpm>\~\~\~>  qui ferme le résumé
-est lui aussi centré. Les lignes des  blocs  de textes du résumé sont un
-peu moins longues, et indentée, pour le résultat suivant : 
+Once  formatted,  the  command  <<lpm>\~Abstract\~>  is  centered,  it's
+first letter capitalized. The <<lpm>\~\~\~>  that  close the abstract is
+centered  too.  The  paragraphs  of   the   abstract  are  shorter,  and
+indented, like here: 
 
 <Code (lpm): 
                                ~Abstract~
 
-    Ceci est un résumé.
+    This is an abstract of our document.
 
-    Avec **deux** paragraphes !
+    With **two** paragraphs!
 
                                   ~~~
 >
 
-=== La licence
+=== The License
 
-Le format de  la  licence  est  calqué  sur  celui  du  résumé,  mais en
-utilisant  la  commande  <<lpm>\~License\~>   plutôt   que  la  commande
-<<lpm>\~Abstract\~>. Notez que  « License »  est  écrit  en  anglais, et
-que contrairement au français, le  //\[s\]//  se  note  avec un **s** et
-non un **c**. 
+The license format is  modeled  after  the  abstract  one, but using the
+<<lpm>\~License\~> instead of the <<lpm>\~Abstract\~> one. 
 
 <Code (lpm): 
                                ~License~
 
-    __**Licence Récursive LRL**__
+    __**LRL Recursive License**__
 
     //Copyright Tartempion © 1842//
 
-    Vous  avez  la  permission  d'utiliser,  copier,  modifier et/ou
-    distribuer ce travail aussi longtemps que :
-     # Vous respectez la licence
+    Permission is granted  to  use,  copy, modify and/or distribute
+    this work as long as:
 
-    Cette licence est soumise à la licence LRL
+     # You follow the license
+
+    This license is under LRL Recursive license.
 
                                   ~~~
 >
 
-=== Le ou les auteurs
+=== The Author(s)
 
-Il est possible de préciser le  ou  les  auteurs  du document grâce à la
-commande <<lpm>\~authors>.  Cette  commande  peut  apparaître  plusieurs
-fois, et les auteurs seront regroupés  et  affichés sous le titre. Si la
-commande apparaît plusieurs fois,  après  reformatage  du document, elle
-apparaîtra toujours plusieurs  fois.  Nous  partons  du  principe que si
-vous avez préféré  utiliser  plusieurs  fois  la  commande,  il  y a une
-raison. 
+We  can  specify   the   authors   of   the   document   thank   to  the
+<<lpm>\~authors> command.  That  command  can  appear  many  times,  and
+authors will be grouped and  displayed  under  the title. If the command
+appear many times, after formatting,  it  will  again appear many times.
+We think that if it as  been  typed  more  than  once, there is a reason
+and we should not merge the commands. 
 
 <Code (lpm): 
-~authors Ludovic Broutille et Mélanine de Balzac.
+~authors Ludovic Broutille and Mélanine de Balzac.
 >
 
-=== Le langage de programmation du projet
+=== The Project Programming Language
 
-Des blocs de code  seront  insérés  tout  au  long  du document. Ceux-ci
-peuvent être mis en valeur  par  la  coloration syntaxique, mais pour ce
-faire, nous devons connaître le  langage  de programmation utilisé. Nous
-pouvons définir ce langage au cas par  cas,  et pour nous épargner de le
-faire  à  chaque  fois,  nous  pouvons   aussi  définir  un  langage  de
-programmation par  défaut,  correspondant  au  langage  le  plus utilisé
-dans le document. Pour cela, nous utilisons la commande <<lpm>\~code>. 
+Code blocks will  be  inserted  throughout  the  document.  Those can be
+prettified  with  syntax  highlighting,   but   only   if  we  know  the
+programming language. We can define  that  language  at each code block,
+but to save us from typing it  each  time,  we can also specify the more
+used language in  the  document.  We  use  the  command <<lpm>\~code> to
+that effect. 
 
 <Code (lpm): 
 ~code haskell

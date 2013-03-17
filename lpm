@@ -1,23 +1,22 @@
-               ******************************************               
-               *      Literate Programming Markup       *               
-               *                                        *               
-               * Un outil pour la programmation lettrée *               
-               *                                        *               
-               ******************************************               
+                  ***********************************                   
+                  *   Literate Programming Markup   *                   
+                  *                                 *                   
+                  * A tool for literate programming *                   
+                  *                                 *                   
+                  ***********************************                   
 
 ~Authors Dorian Trupin
 ~Code python
 
                                ~Abstract~                               
 
-    LPM (Literate  Programming  Markup)  est  un  ensemble  de  deux
-    produits.  Tout  d'abord,   c'est   un   (langage   de  balisage
-    léger)[..],   adapté   à   l'écriture   d'une   application   en
-    programmation lettrée. Ensuite,  c'est  un  outil  permettant de
-    lire les fichiers écrits avec  ce  langage  de balisage, et d'en
-    extraire le code et  la  documentation,  tout  en reformatant le
-    fichier source pour le rendre plus lisible. 
-    ..: http://fr.wikipedia.org/wiki/Langage_de_balisage_l%C3%A9ger
+    LPM (Literate Programming  Markup)  is  a  set  of two products.
+    First, it is a  (lightweight  markup language)[..], suitable for
+    literate programming redaction. It  is  also  a software able to
+    read files written in  this  language,  and  to extract code and
+    documentation from it,  while  reformatting  the  source file to
+    make it more readable. 
+    ..: https://en.wikipedia.org/wiki/Lightweight_markup_language
     
     L'écriture de ce logiciel est  motivée  par  le désir de pouvoir
     écrire ses  programmes  de  manière  simple  et  légère,  ce qui

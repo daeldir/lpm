@@ -63,3 +63,20 @@ it. I needed to bootstrap my literate programming language.
 TODO: translate at least the language documentation part in english. The
 implementation may not be the one I will go for, but the language does
 not risk to change a lot, and is the important part to use `_lpm`.
+
+How to use that prototype?
+--------------------------
+
+The prototype understand three commands: Weave, Tangle, Format. If you
+run `_lpm literate_rogram`, it will extract the source and documentation
+of `literate_program`, and generate a file called
+`literate_program.clean`, which should contain the same text as
+`literate_program`, but well formatted (be careful, there can be data
+loss, that's why we don't overwrite the original file by default).
+
+If you only want to weave, tangle or format your program, for efficiency
+reasons, you can create a link to `_lpm`, with it's filename set to the
+action you want. So, `format literate_program` will only generate the
+“.clean” file, without extracting the source and the documentation.
+
+

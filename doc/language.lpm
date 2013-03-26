@@ -372,70 +372,66 @@ paragraphs…
  ' This is the second paragraph of the third element.
 >
 
-== Commandes d'inclusion de fichiers
+== File include command
 
-Plusieurs commandes  permettent  d'insérer  un  autre  fichier  dans  le
-document. Ces commandes prennent en  paramètre  le  chemin  et le nom du
-fichier à insérer, relatif  à  la  position  du  fichier  dans lequel la
-commande apparaît. 
+Some commands can insert other files  in  the  document. Those take as a
+parameter the path and name  of  the  file  to  include, relative to the
+position of the file in which the command appears. 
 
-Prenons  comme  exemple,  pour  illustrer  ce  principe,  l'arborescence
-suivante : 
+Let's take for example,  to  illustrate  that  idea,  the following file
+tree: 
  - document.txt
  - includes 
- ' - canard.txt
+ ' - duck.txt
  ' - coco.txt
 
-Si le fichier //document.txt//  veut  inclure  //canard.txt//, il faudra
-utiliser la commande  <<lpm>\~get  includes/canard.txt>.  Maintenant, si
-le fichier //canard.txt//  veut  inclure  //coco.txt//,  il utilisera la
-commande <<lpm>\~get coco.txt>,  et  non <<lpm>\~get includes/coco.txt>.
-Ce qui compte ici est la  position  du  fichier sur lequel on travaille,
-et  non  celle  du  fichier  sur  lequel  aura  été  lancé  la  commande
-<<sh>lpm>. 
+If the file  //document.txt//  wants  to  include  //duck.txt//, it will
+use the command  <<lpm>\~get  includes/duck.txt>.  Now,  if //duck.txt//
+wants to include  //coco.txt//,  it  will  use  the  command <<lpm>\~get
+coco.txt>,  and  not   <<lpm>\~get   includes/coco.txt>.   What  we  are
+interested in is the  position  of  the  current  file, not the position
+from where the command <<sh>lpm> has been issued. 
 
-Il est possible d'insérer une  image  dans  la  documentation grâce à la
-commande <<lpm>\~image> : 
+We can insert an  image  in  the  documentation  with the <<lpm>\~image>
+command: 
 
 <Code (lpm): 
 ~image img/lolcat.jpg
 >
 
-On peut aussi insérer un fichier  texte  brut dans la documentation avec
-la commande <<lpm>\~include> : 
+We can also  insert  a  raw  text  file  in  the  documentation with the
+<<lpm>\~include> command: 
 
 <Code (lpm): 
 ~include rfc/rfc1149.txt
 >
 
-Enfin, on peut inclure un  fichier  LPM,  qui  sera  lu et formaté avant
-d'être ajouté dans la documentation : 
+Finally, we can include a  LPM  file,  which  will be read and formatted
+before being added to the documentation: 
 
 <Code (lpm): 
-~get partie-2.lpm
+~get part-2.lpm
 >
 
-Cette  dernière  commande  est  très  importante,  car  elle  permet  de
-fractionner la source de la  documentation  en plusieurs petit fichiers,
-facilement éditables dans un  éditeur  de  texte.  Elle permet aussi, en
-supposant que l'on a un fichier  par  section,  de créer une « table des
-matières » dans le fichier  principal,  et  de  régorganiser le document
-juste en modifiant l'ordre de ces inclusions. 
+That last command is very important,  because  it enable us to split our
+documentation in many smaller files,  easier  to  edit in a text editor.
+It also enable us, if we  have  a  file  per section, to create a “table
+of content” in the main file,  and  to reorganize the documentation just
+by changing the order of the inclusions. 
 
-Pour finir, nous désirons  parler  d'une  commande  qui  n'inclue pas, à
-proprement parler, de fichier  dans  la  documentation, mais plutôt dans
-le code source généré. C'est la commande <<lpm>\~copy>. 
+At last, we'd like to  talk  about  a  command that doesn't, in reality,
+include a file in the documentation,  but  in the generated source code.
+The command <<lpm>\~copy>. 
 
 <Code (lpm): 
 ~copy image.jpg data/image.jpg
 >
 
-Cette commande  prend  deux  fichiers  en  paramètres.  Elle  copiera le
-fichier passé en  premier,  et  dont  le  positionnement  est  relatif à
-celui du fichier en cours  d'édition,  dans  le fichier passé en second,
-dont la position sera  relative  au  dossier  dans  lequel sera placé le
-code source. Les espaces  et  autres  caractères  pouvant poser problème
-doivent être échappés avec <<lpm>\\>. 
+That command takes two files  as  parameters.  It  will copy the file in
+the first parameter  (and  whose  position  is  relative  to the current
+file), into the file in  the  second  parameter,  whose position will be
+relative to the folder in which  will  be placed the source code. Spaces
+and other problematic characters should be escaped with <<lpm>\\>. 
 
 == Gestion du code
 

@@ -341,36 +341,35 @@ Will become:
     /!\ one in another.                                          /!\
 >
 
-== Formatage des listes
+== List formatting
 
-LPM  permet   de   créer   des   listes   numérotées   et   des   listes
-non-numérotées. Les listes numérotées  sont  marquées  par  une suite de
-lignes commençant par  <<lpm>\#>,  chaque  <<lpm>\#>  marquant  le début
-d'un élément de la liste.  Les  listes  non-numérotées sont marquées par
-une ligne  commençant  par  <<lpm>\->,  chaque  <<lpm>\->  marquant,  de
-même, le début d'un élément de la liste. 
+It is possible  to  create  both  numbered  and  non-numbered lists with
+LPM. Numbered lists are entered  as  a  sequence on lines beginning with
+<<lpm>\#>, each <<lpm>\#>  being  the  beginning  of  an  element of the
+list. Non-numbered lists  are  denoted  by  a  <<lpm>\->, each <<lpm>\->
+being the beginning of an element of the list. 
 
-Si un élément de la liste  tient  sur  plus d'une ligne, il est possible
-de continuer sur la ligne  suivante,  sans  débuter de nouvel élément de
-liste, en commençant la ligne  par  <<lpm>\'>  plutôt que par <<lpm>\->.
-En réalité, une ligne commençant  par  <<lpm>\->  ou <<lpm>\#> et suivie
-de lignes commençant par  <<lpm>\'>  devient,  si  on  enlève le premier
-caractère  de  ces  lignes,  une  suite  de  blocs  de  textes,  pouvant
-contenir d'autres listes, des paragraphes… 
+If an element of the list  take  more  than  one line, it is possible to
+continue on the next  line,  without  beginning  a  new list element, by
+starting the line with <<lpm>\'>  rather  than  with <<lpm>\->. In fact,
+a line  beginning  by  <<lpm>\#>  or  <<lpm>\->  and  followed  by lines
+beginning with <<lpm>\'> becomes, when  that  first column is removed, a
+sequence of text blocks,  that  can  be  lists  (and  so, nested lists),
+paragraphs... 
 
 <Code (lpm): 
- - une liste non numérotée
- - un deuxième élément
+ - A non numbered list
+ - A second element
 
- # une liste numérotée
- ' le premier élément tenant sur plusieurs lignes
- # Le deuxième élément contient une liste non-numérotée
- ' - Premier élément d'une sous-liste
- ' - Deuxième élément de la sous-liste
- ' ' sur plusieurs lignes
- # Le troisième élément contient deux paragraphes
+ # A numbered list
+ ' whose first element is on many lines
+ # The second element embed a non-numbered list
+ ' - First element of a nested list
+ ' - Second element of a nested list
+ ' ' on many lines
+ # Third element has many paragraphs
  '
- ' C'est le deuxième paragraphe du troisième élément.
+ ' This is the second paragraph of the third element.
 >
 
 == Commandes d'inclusion de fichiers

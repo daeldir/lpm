@@ -249,7 +249,7 @@ first non blank line encountered, and stop as soon as it encounters:
  ' <<lpm>\=>),
  - blank lines.
 
-=== Text formatting
+=== Text Formatting
 
 Inside a paragraph, it is possible  to  use characters that will put our
 text in **bold**, //italic//, __underlined__, and --striked--. 
@@ -261,7 +261,7 @@ Inside a paragraph, it is possible  to  use characters that will put our
 text in **bold**, //italic//, __underlined__, and --striked--. 
 >
 
-=== Links and references
+=== Links and References
 
 You can also add links to  your  document.  A  link is denoted by square
 parentheses, and apply to it's  preceding  word,  or  a group of word if
@@ -307,7 +307,7 @@ My text with* a footnote.
     /!\ the footnotes  appear)  is  not  changed.  It  would  be /!\
     /!\ unadvised to do so, however…                             /!\
 
-=== Important paragraphs
+=== Important Paragraphs
 
 It can be useful to  emphasize  an  entire  paragraph, like the last one
 in  the  previous  section.  To   that   effect,   we  use  the  command
@@ -341,7 +341,7 @@ Will become:
     /!\ one in another.                                          /!\
 >
 
-== List formatting
+== List Formatting
 
 It is possible  to  create  both  numbered  and  non-numbered lists with
 LPM. Numbered lists are entered  as  a  sequence on lines beginning with
@@ -372,7 +372,7 @@ paragraphs…
  ' This is the second paragraph of the third element.
 >
 
-== File include command
+== File Include Command
 
 Some commands can insert other files  in  the  document. Those take as a
 parameter the path and name  of  the  file  to  include, relative to the

@@ -51,8 +51,8 @@ different from the paragraphs one.
 Commands fit on one line. They  force  the  end  of a paragraph, even if
 there is no blank line  beetween  them  and said paragraph. They usually
 begin with the character <<lpm>\~>*. A  command  can enable us to define
-a document  data  (source  code  language,  authors...),  or  to include
-other files at this point of the text. Here is an example of commands: 
+a document data (source code  language,  authors…),  or to include other
+files at this point of the text. Here is an example of commands: 
 
 <Code (lpm): 
 ~code python
@@ -71,8 +71,8 @@ command, alone on a line**.
 
 Lightweight tags are tags found inside  lines.  There can be many on one
 line. Lightweight tags act  inside  a  paragraph.  The  can  put text in
-bold, italic, define  links...  And  all  of  that without deteriorating
-the text with a characters overflow. Here is an example: 
+bold, italic, define links… And  all  of  that without deteriorating the
+text with a characters overflow. Here is an example: 
 
 <Code (lpm): 
 This is a **bold text** followed by a reference to a footnote.*
@@ -305,9 +305,9 @@ My text with* a footnote.
     /!\ not forced to  do  so.  A  note  can  even  precede it's /!\
     /!\ reference, as long  as  the  count  (the  order in which /!\
     /!\ the footnotes  appear)  is  not  changed.  It  would  be /!\
-    /!\ unadvised to do so, however...                           /!\
+    /!\ unadvised to do so, however…                             /!\
 
-=== Important paragrphs
+=== Important paragraphs
 
 It can be useful to  emphasize  an  entire  paragraph, like the last one
 in  the  previous  section.  To   that   effect,   we  use  the  command
@@ -355,7 +355,7 @@ starting the line with <<lpm>\'>  rather  than  with <<lpm>\->. In fact,
 a line  beginning  by  <<lpm>\#>  or  <<lpm>\->  and  followed  by lines
 beginning with <<lpm>\'> becomes, when  that  first column is removed, a
 sequence of text blocks,  that  can  be  lists  (and  so, nested lists),
-paragraphs... 
+paragraphs… 
 
 <Code (lpm): 
  - A non numbered list

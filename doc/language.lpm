@@ -433,13 +433,13 @@ file), into the file in  the  second  parameter,  whose position will be
 relative to the folder in which  will  be placed the source code. Spaces
 and other problematic characters should be escaped with <<lpm>\\>. 
 
-== Gestion du code
+== Code Management
 
-=== Définition des blocs de code
+=== Defining Code Block
 
-Une fonctionnalité importante du  langage  LPM  est  la  gestion du code
-source. Il est ainsi possible  d'inclure  facilement du code source dans
-le document : 
+An important functionnality of  the  LPM  language  is the management of
+the source code. It is  possible  to  easily  include source code in the
+document: 
 
 <Code (lpm): 
 \<code:
@@ -448,18 +448,17 @@ print os.getcwd()
 \>
 >
 
-Qui va donner : 
+Which will output: 
 
 <Code: 
 import os
 print os.getcwd()
 >
 
-En  plus  de  cela,  il   est   possible   de  préciser  le  langage  de
-programmation utilisé dans le bloc de code, ce qui permet : 
- # de préciser, pour le lecteur,  le  langage  de  ce qu'il est en train
- ' de lire,
- # d'appliquer une coloration syntaxique adaptée au langage.
+Additionally, it is possible  to  specify  the programming language used
+in the code block, which enable us to: 
+ # specify, for the reader, the language that he is currently reading,
+ # apply syntax highlighting to code blocks.
 
 <Code (lpm): 
 \<code (haskell):
@@ -468,14 +467,14 @@ fib n = fibs !! n
 \>
 >
 
-Deviendra : 
+Will become : 
 
 <Code (haskell): 
 fibs = 0 : 1 : (zipWith (+) fibs (tail fibs))
 fib n = fibs !! n
 >
 
-Il est possible de nommer un bloc de code : 
+It is also possible to name a code block: 
 
 <Code (lpm): 
 \<code (c): test.c

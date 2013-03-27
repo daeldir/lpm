@@ -550,15 +550,14 @@ output into it's own file.*
  *: It will be  output,  but  only  because  the  code  that include it,
     //test.c//, is itself output into a file.
 
-=== Morceaux de code dans les paragraphes
+=== Piece of Code into the Paragraphs
 
-Il est possible d'indiquer qu'une  portion  de  texte à l'interieur d'un
-paragraphe  est  du  code.   Ceci   permet   d'appliquer  la  coloration
-syntaxique à ces morceaux  de  code.  Nous  marquons  un passage de code
-dans un  texte  en  l'entourant  des  signes  inférieur  et  supérieur :
-<<lpm>\<import os\>>. Il est  possible  de  spécifier  le  langage de ce
-morceau de code en ajoutant,  directement  après  le signe inférieur, le
-langage     entouré      lui      aussi      des      même      signes :
+It is possible to  mark  a  portion  of  paragraph  text as source code.
+That allow us to  apply  special  formatting  and syntax highlighting to
+the code. We mark a  portion  of  text  as  code  by surrounding it with
+angle brackets: <<lpm>\<import  os\>>.  It  is  possible  to specify the
+language of the source code  by  adding,  right after the openning angle
+bracket, the language  name,  itself  surrounded  by  the same brackets:
 <<lpm>\<\<C\>printf("Wouhou!")\>>. 
 
 === Récapitulatif de code

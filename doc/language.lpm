@@ -581,22 +581,21 @@ the chunk name was not referenced anywhere:
 ~display code chunk
 >
 
-== Échappement de caractères
+== Character Escaping
 
-=== Échappement de caractères dans les paragraphes
+=== In Paragraph Character Escaping
 
-Lorsque nous utilisons  des  caractères  qui  devraient être interprétés
-par LPM, mais que nous  les  voulons  tels  quels,  il est nécessaire de
-les échapper. Ceci se  fait  à  la  mode  Unix :  tout caractère précédé
-d'un <<lpm>\\> sera rendu tel  quel,  sans être interprété. Par exemple,
-<<lpm>\\\*\*> affichera <<lpm>\*\*>.  Pour  un  exemple  plus compliqué,
-considéront    l'affichage    du    morceau     de    code    suivant* :
-<<lpm>\<\<C\>printf("Wouhou!")\>>. Pour arriver à  ce  résultat, il aura
-fallut échapper  les  caractères  spéciaux  dans  le  morceau  de  code,
-notamment le <<lpm>\>> qui aurait  fermé  le  bloc sinon. Le code source
-de       ce       morceau       de       code       est       celui-ci :
-<<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
- *: Ceci est un morceau de code LPM, pas un morceau de code C.
+When we use characters  that  should  be  interpreted  by  LPM, but want
+them “as is” in the output,  we  have  to  escape them. That is done the
+Unix way: every character  preceded  by  <<lpm>\\>  will be rendered “as
+is”,  without  being  interpreted.   For  instance,  <<lpm>\\\*\*>  will
+display <<lpm>\*\*>. For a  more  complex  instance,  let's  look at the
+following code  display:  <<lpm>\<\<C\>printf("Wouhou!")\>>.*  To manage
+to print it, we had to escape  every  special character in that piece of
+code,  especially  the  <<lpm>\>>  which  would  have  closed  the  code
+quotation if it wheren't  for  the  <<lpm>\\>.  Hence,  that code looked
+like this: <<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
+ *: That's a LPM source code, not a C source code.
 
 === Échappement de caractères dans les blocs de code
 

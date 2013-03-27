@@ -485,32 +485,30 @@ void main(){
 \>
 >
 
-Et pour finir, à  l'interieur  d'un  bloc  de  code,  il est possible de
-faire référence à un bloc de code nommé : 
+And, finally, it is possible to reference a named code block: 
 
 <Code (lpm): 
 \<code (c): test.c
 #include <stdio.c>
 void main(){
-\	<implémentation de main
+\	<main's implementation
 }
 \>
 >
 
-=== Programmation lettrée, la toile de code
+=== Literate Programming, the Code Web
 
-Cette dernière fonctionnalité nous ammène  à  aborder  le principe de la
-programmation lettrée : nous écrivons de  petits  morceaux de code, dans
-lesquels nous incluons des  références  vers  d'autres morceaux de code.
-Il est aussi possible de  commencer  un  bloc  de code, puis de rajouter
-plus tard du code  dans  celui-ci  en  créant  un  nouveau  bloc de code
-portant le même nom.  Cette  manière  de  présenter  le  code, emmêlé et
-avec des références, fait  penser  au  Web  et  ses liens hypertexte, et
-bien que la programmation lettrée  aie  été  inventée bien avant le Web,
-sont auteur avait déjà saisi le  concept  de toile d'idées créée par les
-références et nommé son invention Web : la toile. 
+That  last  functionality  bring  us  to   the  core  idea  of  literate
+programming: we  write  small  pieces  of  code,  in  which  we  include
+references to other pieces  of  code.  It  is  possible  to begin a code
+block, then append later more code  to  that piece, by creating an other
+code block with the  same  name.  That  way  of  presenting code, weaved
+with references, is not to far  of  the  idea  of the World Wide Web and
+it's hyperlinks, and, even  if  literate  programming  predate the World
+Wide Web, it's author already had  perceived  that idea of a web created
+by the references, and named his invention “web”. 
 
-Ainsi, avec la collection de blocs de code suivante : 
+So, with the following code block collection: 
 
 <Code (lpm): 
 \<code (c): test.c
@@ -521,39 +519,36 @@ Ainsi, avec la collection de blocs de code suivante :
 <Code (lpm): 
 \<code (c): test.c
 void main(){
-\	<implémentation de main
+\	<main's implementation
 }
 \>
 >
 
 <Code (lpm): 
-\<code (c): implémentation de main
+\<code (c): main's implementation
 printf("Hello, world!");
 \>
 >
 
-Le morceau de code  //test.c//  sera  réunifié,  puis  la référence vers
-//implémentation de main// sera résolue  et  remplacée par le morceau de
-code portant ce nom.  Toutes  les  lignes  du  code  ainsi inséré seront
-indentées  d'autant  de  caractères  que  ce  qui  précède  la  commande
-référençant  le  bloc.   Cette   fonctionnalité   est   nécessaire  pour
-permettre d'obtenir  un  code  source  lisible  d'une  part,  et d'autre
-part, pour supporter  certains  langages  dans  lesquels l'indentation a
-un sens  (il  serait  impossible  d'écrire  du  python  en programmation
-lettrée sans ça). 
+The code chunk  //test.c//  will  be  reunified,  then  the reference to
+//main's implementation // will  be  resolved  and  replaced by the code
+so named. All code lines will  be  indented  with has many characters as
+the ones preceding the command  referencing  the  block. That feature is
+necessary to, first, have  a  readable  source  code output, and second,
+support some languages  in  which  indentation  is  meaningful (a python
+literate program would be impossible  without  this  feature, as well as
+a literate Makefile). 
 
-Afin de générer le code source,  le  programme  va regarder les blocs de
-code nommés. Pour ceux  qui  n'ont  jamais  été référencés, le programme
-considère qu'ils doivent être sortis  dans  un  fichier texte portant le
-nom du bloc de code. 
+To output the  source  code,  the  software  will  look  for  code block
+names. Those never  referenced  will  be  considered  as  output, and be
+placed in files with the name of the code block. 
 
-Dans l'exemple précédent, //test.c//  n'est  jamais  inclu dans un autre
-bloc  de  code,  et  un   fichier   sera   donc  créé  portant  ce  nom.
-//implémentation de main//, par contre,  est  inséré  dans un autre bloc
-de code, et il ne sera donc pas extrait dans un fichier.* 
- *: En l'occurence, il le  sera,  mais  seulement  parce  que le morceau
-    dans lequel il est inclu, //test.c//,  est  lui même extrait dans un
-    fichier.
+In the example before, //test.c// is  never  included into an other code
+block, so a file  will  be  created  with  this  name. However, //main's
+implementation// is inserted into an  other  block,  and  it will not be
+output into it's own file.* 
+ *: It will be  output,  but  only  because  the  code  that include it,
+    //test.c//, is itself output into a file.
 
 === Morceaux de code dans les paragraphes
 

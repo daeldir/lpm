@@ -560,33 +560,25 @@ language of the source code  by  adding,  right after the openning angle
 bracket, the language  name,  itself  surrounded  by  the same brackets:
 <<lpm>\<\<C\>printf("Wouhou!")\>>. 
 
-=== Récapitulatif de code
+=== Code Summary
 
-Il peut être utile, après avoir  décrit  un  bloc de code petit à petit,
-de présenter un  récapitulatif  de  ce  code.  Deux commandes permettent
-d'afficher le code qui a été généré : 
+It can be useful to present  the  summary  of  a  code chunk when it has
+been wrote  piece  by  piece.  Two  commands  allow  us  to  display the
+generated code: 
 
-La première commande permet de  rappeler  le  contenu d'un bloc de code,
-et affiche tout le code de  ce  bloc,  même si celui-ci était morcelé en
-plusieurs blocs portant le même nom : 
+The first one allow us to  recall  a  code  chunk  as it has been wrote,
+but in one piece, even if it was splitted in multiple blocks: 
 
 <Code (lpm): 
-~remain morceau de code
+~remain code chunk
 >
 
-La seconde  commande  permet  non  seulement  d'afficher  un  morceau de
-code, mais  surtout  d'afficher  celui-ci  sans  aucune  référence  vers
-d'autres morceaux de code,  c'est  à  dire  qu'il  les remplace par leur
-contenu. Ainsi, utiliser  cette  commande  sur  un  bloc  destiné à être
-sortit dans un fichier revient  à  insérer  dans  le document le contenu
-de ce fichier.  Mais  il  est  possible,  bien  sûr,  d'insérer juste un
-morceau de code,  la  commande  fonctionnant  sur  ceux-ci,  et  non pas
-exclusivement sur les blocs destinés à être sortis dans un fichier. 
-
-Cette commande est celle-ci : 
+The second one allow  us  to  display  the  code chunk entirely, without
+any reference. That is, the code as  it  would  be output into a file if
+the chunk name was not referenced anywhere: 
 
 <Code (lpm): 
-~display morceau de code
+~display code chunk
 >
 
 == Échappement de caractères

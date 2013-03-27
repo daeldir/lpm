@@ -597,17 +597,17 @@ quotation if it wheren't  for  the  <<lpm>\\>.  Hence,  that code looked
 like this: <<lpm>\<\<lpm\>\\\<\\\<C\\\>printf("Wouhou!")\\\>\>>. 
  *: That's a LPM source code, not a C source code.
 
-=== Échappement de caractères dans les blocs de code
+=== In Code Block Character Escaping
 
-Si une ligne  de  code  commence  par  <<lpm>\<>,  elle sera interprétée
-comme une référence vers un  autre  bloc  de  code. Si elle commence par
-<<lpm>\>>, elle sera  interprétée  comme  une  sortie  du  bloc de code.
-Pour empêcher cela, on peut  échapper  la  ligne,  en la débutant par le
-caractère <<lpm>\\>.  Contrairement  à  l'échappement  traditionnel,  ce
-caractère, dans les blocs de  code,  va  échapper  la ligne entière, qui
-peut ensuite contenir n'importe quoi, et non pas juste un caractère. 
+If a code line  begins  with  <<lpm>\<>,  it  will  be  interpreted as a
+reference to another code block.  If  it  begins with <<lpm>\>>, it will
+be interpreted as the end of  the  code  block.  To prevent this, we can
+escape the line, by beginning  it  with  the <<lpm>\\> character. Unlike
+the “traditional” escapement  method,  that  character,  in code blocks,
+will escape the entire  line,  that  can  then  be composed of anything,
+and not just one character. 
 
-Ainsi : 
+So: 
 
 <Code (lpm): 
 \<code:
@@ -616,17 +616,16 @@ import os
 \>
 >
 
-Va donner : 
+Will give: 
 
 <Code (lpm): 
 import os
 \<coco
 >
 
-Et pour afficher  ce  bloc  de  code,  il  a  fallut  échapper  la ligne
-commençant  par  <<lpm>\\>,  //non   pas   en   échappant  le  caractère
-<<lpm>\\>,  mais  bien  la  ligne   entière//.  Le  code  utilisé  était
-celui-ci : 
+And to display that code  block,  we  had  to  escape the line beginning
+with <<lpm>\\>, //not  by  escaping  the  <<lpm>\\>  character,  but the
+entire line//. The used code was that one: 
 
 <Code (lpm): 
 \<code (lpm):
@@ -637,8 +636,8 @@ import os
 \>
 >
 
-//On voit bien ici que  l'on  n'a  échappé  que  le <<lpm>\\>, et pas le
-<<lpm>\\\<>, qui aurait  dû  être  échappé  <<lpm>\\\\\\\<>  (au lieu de
-<<lpm>\\\\\<>) si nous échappions caractère  par  caractère et non ligne
-par ligne.// 
+//We  see  here  that  we  only  escaped  the  <<lpm>\\>,  and  not  the
+<<lpm>\\\<>, which should  have  been  escaped  <<lpm>\\\\\\\<> (instead
+of <<lpm>\\\\\<>) if we had  escaped  character  by character instead of
+line by line.// 
 

@@ -1,7 +1,5 @@
 = The LPM Command
 
-== Command Usage
-
 The software is easy to use:  we  launch the <<sh>lpm> command, followed
 by the  name  of  our  documentation.  We  only  give  one  file  to the
 command, if the document is  splitted  in  many files, the software will

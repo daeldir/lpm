@@ -571,7 +571,7 @@ class Paragraph:
         def formatText(self, length):
             return escape(self.content)
         def outputHTML(self, inlink = None):
-            return self.content
+            return self.content.replace("<", "&lt;").replace(">", "&gt;")
 
     class Bold:
         def __init__(self):

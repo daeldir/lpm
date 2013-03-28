@@ -1,4 +1,4 @@
-= The LPM markup language
+= The LPM Markup Language
 
 [Syntax Basics] 
 
@@ -78,7 +78,7 @@ text with a characters overflow. Here is an example:
 This is a **bold text** followed by a reference to a footnote.*
 >
 
-=== The Simple Form, and the Complete Form of the language
+=== The Simple Form, and the Complete Form of the Language
 
 The markup language's goal  is  to  make  the  source  documents easy to
 read. To this  end,  characters  are  used  to  “draw” text decorations.

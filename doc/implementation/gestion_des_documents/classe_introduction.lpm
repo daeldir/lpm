@@ -1,8 +1,0 @@
-=== La classe Introduction
-
-<Code: classe Introduction
-class Introduction:
-    def __init__(self):
-        pass
->
-

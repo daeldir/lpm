@@ -105,32 +105,3 @@ We  also  can  create   two   actions   commands,  like,  for  instance,
     /!\ be obtained with  a  LPM  command named //clean-tangle// /!\
     /!\ and another one called //tangle-clean//.                 /!\
 
-== Dépendances du programme
-
-Le programme est écrit  en  python,  et  nécessite  donc un interpréteur
-python. Il n'est pas écrit en  python3,  et  nous ne savons pas s'il est
-compatible avec celui-ci. (À vrai dire, il y a peu de chances…) 
-
-Le programme utilise  aussi  pour  la  coloration  syntaxique  le module
-pygments[..], qui est  donc  nécessaire  pour  la  sortie  HTML. Ce sont
-théoriquement les seules dépendances du programme. 
-..: http://pygments.org/
-
-= Implémentation
-
-~Get implementation/architecture.lpm
-~Get implementation/unicode.lpm
-~Get implementation/actions_principales.lpm
-~Get implementation/structure_dun_document.lpm
-~Get implementation/gestion_des_documents.lpm
-~Get implementation/gestion_du_code.lpm
-~Get implementation/gestion_de_la_documentation.lpm
-~Get implementation/afficher_la_structure_du_document.lpm
-~Get implementation/formater_les_sources.lpm
-~Get implementation/sortie_html_du_document.lpm
-
-== Code final
-
-Voici à quoi ressemble le code une fois totalement assemblé : 
-~Display lpm
-

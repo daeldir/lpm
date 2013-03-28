@@ -1,29 +1,28 @@
-= Un fichier pour tester le programme
+= A Test Document
 
-Nous  allons  ici   créer   un   document   permettant   de  tester  les
-fonctionnalités du programme. 
+Here, we describe a  document  meant  to  allow  us  to test the program
+features. 
 
-Ce document sera composé de  trois  fichiers, permettant ainsi de tester
-les commandes d'inclusion de fichier. 
+That document will be splitted in  three  files, allowing us to test the
+file inclusion commands. 
 
-Le premier  fichier  sera  nommé  //test//  et  placé  dans  un  dossier
-//tests//. Son titre tiendra sur  plusieurs  lignes  afin de vérifier la
-génération de cadre autour de celui-ci. 
+The  first  file  will  be  named   //test//  and  placed  in  a  folder
+//tests//. It's title will be  on  more  than  one  line  so that we can
+check the frame creation around it. 
 
 <Code (lpm): tests/test
 **
-* Le titre du document :
-* Ce document est un document de test
+* Document's Title:
+* This is a Test Document
 *
-* Avec un titre chiant
+* And it's title is soooo boring!
 *
 **
 
 >
 
-Ce fichier contiendra,  pour  la  forme,  majoritairement  du python. Il
-sera  écrit  par  deux  individus   nommés  Tartempion  et  Mélanine  de
-Balzac : 
+That file will be  mostly  written  in  Python  (we  don't really care).
+It's authors will be Tartempion and Mélanine de Balzac. 
 
 <Code (lpm): tests/test
 ~Authors Tartempion
@@ -32,8 +31,8 @@ Balzac :
 
 >
 
-Le résumé contiendra deux  lorem  ipsum,  dont  un  sera considéré comme
-important : 
+The abstract  will  be  two  lorem  ipsum,  and  one  of  them  will  be
+//important//! 
 
 <Code (lpm): tests/test
 ~abstract~
@@ -66,62 +65,62 @@ nisi.
 
 >
 
-Ensuite, nous créons une section, et une sous-section : 
+Then, there will be a section, and a subsection: 
 
 <Code (lpm): tests/test
 = Section
 
-Introduction de la section
+Section introduction
 
-== Sous-section
+== Subsection
 >
 
-Cette  sous-section  contiendra  encore  des  sous-sections  testant  le
-fonctionnement des listes : 
+And that subsection  will  have  subsubsections,  testing  that list are
+ok: 
 
 <Code (lpm): tests/test
-=== Listes
+=== Lists
 
-==== Listes non-numérotées
+==== Unordered Lists
 
-- Les listes non numérotées
-- Les autres
+- Unordered lists
+- Other lists
 
-==== Listes numérotées
-Ou, si vous préférez :
-# Les listes numérotées
-# Les autres
+==== Ordered Lists
+You may prefer:
+# Ordered lists
+# Other lists
 
-==== Imbrication de listes
-Il y a aussi :
-- des listes numérotées dans des listes non numérotées
-' # avec plusieurs éléments
-' # comme ça
-- des listes non numérotées dans des listes numérotées
-' - avec autant d'éléments
-' - que précédemment
-# et aussi des liste non numérotées
-' dans des listes numérotées
-' - de ce style
-# Puis pour ne pas surprendre :
-' # des liste numérotées dans des
-' ' listes numérotées
-# Et un élément très très très très long pour voir comment les retours
-' à la ligne sont gérés. Et qui en plus contient
+==== Nested Lists
+Additionally, there are:
+- Ordered liss in unordered lists
+' # With many elements
+' # Like that
+- unordered lists in unordered lists
+' - With as many elements
+' - as in the previous list
+# And also unordered lists
+' in ordered lists
+' - as you can see here
+# It may surprise you, but:
+' # ordered lists
+' ' in ordered lists
+# Finally, we would like a very very long element to see how linefeeds (or
+' carriage returns) are managed. And that element also has
 '
-' /!\ un paragraphe important.
+' /!\ an important paragraph!!!
 
 >
 
-Nous testons ensuite les références (notes de bas de page et URLs) : 
+We then test references (footnotes and URLs): 
 
 <Code (lpm): tests/test
-== Renvois
-Il y a les notes de bas de page*, les liens[..], les (liens ancrés)[une 
-ancre] qui peuvent contenir plusieurs mots.
+== References
+There are footnotes*, links[..], and (anchored links)[an anchor] that can have
+many words.
 
-*: Comme ça
-..: http://fr.wikipedia.org/wiki/Lien_hypertexte
+*: Like that
+..: http:/en.wikipedia.org/wiki/Hyperlink
 
 Nulla aliquet adipiscing justo, ultricies blandit erat congue at. Sed
 sapien dui, convallis et sollicitudin ac, volutpat ut diam. Cras sed
@@ -132,18 +131,17 @@ malesuada, nunc vitae faucibus cursus, turpis nulla fringilla sapien,
 nec varius nisl dolor a nunc. Vivamus sed tellus tortor, in aliquet
 odio.
 
-L'ancre renvoie ici[=une ancre].
+The anchor send here[=an anchor].
 
 >
 
-Nous  présentons   ensuite   différentes   manière   de   formater   les
-paragraphes et le texte qu'ils contiennent : 
+We also  present  different  ways  of  formatting  paragraphs  and their
+text: 
 
 <Code (lpm): tests/test
-== La gueule des paragraphes et du texte
+== The Look of Paragraphs and Text
 
-/!\ Les paragraphes peuvent être formatés pour être rendus plus
-importants. /!\
+/!\ Paragraphs can be formatted to become important. /!\
 /!\
 /!\ Praesent tincidunt posuere velit. Fusce sed eros sed turpis lacinia
 rhoncus. Suspendisse potenti. Nulla feugiat, nisi vitae egestas
@@ -156,70 +154,67 @@ dui diam et ligula. Quisque nulla augue, semper nec commodo vel,
 consequat eget neque. Integer volutpat, mi eget interdum lobortis, lorem
 ligula accumsan elit, at imperdiet tellus turpis sit amet justo.
 
-/!\ Les deux paragraphes précédents sont dans un seul bloc important,
-mais celui-ci en est séparé.
+/!\ The two first paragraphs are in on important block, and that one in
+another.
 
-Les mots peuvent être **gras**, //italiques//, __soulignés__ ou
---barrés--.
+Words can be **bold**, //italic//, __underlined__, or --stroke--.
 
 >
 
-Nous pouvons aussi insérer  des  images.  Pour  cela,  nous devons avoir
-placé une image dans le repertoire de test : 
+We can insert images. To that  end,  we  must  have an image in our test
+folder: 
 ~Copy data/image.jpg tests/image.jpg
 
 <Code (lpm): tests/test
 ~Image ./image.jpg
 >
 
-Nous parlons ensuite des blocs de code : 
+What about code blocks? 
 
 <Code (lpm): tests/test
 = Code
-Dans cette partie, nous traiterons de la gestion du code dans le
-document
+
+In this part, we mess with the management of the document's code.
 
 \<Code: test.py
-""" Ce code sera extrait dans le fichier test.py, et formaté en python
+""" This code will be extracted in the file test.py, and formatted in Python
 """
 def a():
-\    <morceau de python
+\    <python piece
 a()
 \>
 
 \<Code: test.py
-""" Ce code sera ajouté à la suite de test.py """
+""" This code will be appended to test.py """
 \>
 
 \<Code: test.c
-/* Ce code sera extrait dans test.c, mais formaté en python */
+/* This code will be extracted in test.c, but formatted in Python */
 \>
 
 \<Code (c): test2.c
-/* Ce code sera extrait dans test2.c, et formaté en C */
-printf("une ligne\n");
+/* This code will be extracted in test2.c, and formatted in C */
+printf("a line\n");
 \>
 
-\<Code: morceau de python
-print "L'indentation est conservée"
+\<Code: python piece
+print "Indentation is preserved."
 \>
 
 \<Code:
-""" 
-Ce morceau de code affiche du python, mais n'est jamais extrait de
-ce
-document
+""" That piece of code display some Python, but is never extracted from the
+document.
 """
 \>
 
 \<Code (lpm):
 \\<Code:
 = Explication
-Voici comment on inclue un bloc de code :
+Here is how we include a code block:
 \\\<Code:
 coco
 \\\>
-Plein de retours à la ligne :
+A lot of newlines:
 
 
 
@@ -227,13 +222,12 @@ Plein de retours à la ligne :
 \>
 >
 
-Nous abordons ensuite le thème des rappels de code : 
+Let's see the code remaining commands: 
 
 <Code (lpm): tests/test
-La commande \~Remain rappelle un morceau de code, la commande \~Display
-affiche un morceau de code (dans le premier cas, on affiche ce qui a
-déjà été affiché, dans le second, on affiche le code tel qu'il sera
-sortit)
+The \~Remain command remain us a code chunk, the \~Display command display a
+code chunk (in the first case, we display what have already been displayed, in
+the second, we display the code as it will be output).
 
 Remain :
 ~Remain test.py
@@ -242,41 +236,39 @@ Display :
 ~Display test.py
 >
 
-Puis nous parlons des morceaux de code dans les paragraphes : 
+We then test in paragraph code: 
 
 <Code (lpm): tests/test
-On peut mettre des blocs de --code **dans un** paragraphe-- 
-(<import os>), spécifier le langage (<<c>#include \<stdio.h\>>), et
-échapper les caractères qui sont utilisés par lpm
-(<\<\<python\>--test\>>). On peut aussi finir un bloc de code par \\ en
-l'échappant : <test \\>.
+We can put --code blocks **in a** paragraph-- (<import os>), indicate the
+language (<<c>#include \<stdio.h\>>), and escape characters used by LPM
+(<\<\<python\>--test\>>). We can also end a code quotation with \\ by escaping
+it: <test \\>.
 >
 
-Enfin, notre  dernier  travail  consiste  à  tester  les  inclusions  de
-fichier : 
+Finally, we test file inclusion commands: 
 
 <Code (lpm): tests/test
-= Inclusion de fichiers
-On peut insérer un fichier sans le parser :
+= File Inclusion
+We can include files without parsing them:
 
 ~Include test2.txt
 
-Ou en le parsant :
+Or parsing them:
 
 ~Get test2.txt
 
-Et on peut insérer un fichier das le code source généré.
-~Copy image.jpg data/lolcat3\ avec\ espaces.jpg
+And we can include a file in the generated source code tree:
+~Copy image.jpg data/lolcat3\ with\ spaces.jpg
 
 >
 
-Nous créons ici nos deux autres  fichier,  dont le premier va inclure le
-second afin de tester les inclusions de fichier récursives : 
+We create here our two other  files,  the first one including the second
+one, so that we can test recursive inclusions. 
 
 <Code (lpm): tests/test2.txt
-===Une sous section à insérer
+===A subsection to include
 
-/!\ Contenant un paragraphe important.
+/!\ With an important paragraph.
 
 ~Get test3.txt
 

@@ -443,16 +443,20 @@ document:
 
 <Code (lpm): 
 \<code:
-import os
-print os.getcwd()
+#include <stdio.c>
+void main(){
+	printf("Hello, world!\n");
+}
 \>
 >
 
 Which will output: 
 
 <Code: 
-import os
-print os.getcwd()
+#include <stdio.c>
+void main(){
+	printf("Hello, world!\n");
+}
 >
 
 Additionally, it is possible  to  specify  the programming language used

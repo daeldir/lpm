@@ -1,0 +1,66 @@
+= Implementation
+
+    /!\ The implementation is, for  now,  kind  of  a draft. The /!\
+    /!\ code //and//  the  documentation  will  evolve,  but for /!\
+    /!\ now, I'm  walking  in  a  cloud,  and  the  only  way to /!\
+    /!\ produce something  is  to  write  without  worrying  too /!\
+    /!\ much about the book  structure.  That  will be took care /!\
+    /!\ of, don't worry.                                         /!\
+
+Let's begin the implementation. 
+
+== Code Separation
+
+We have three main files: one  for  the  main  program loop, one for the
+work, and one for the tests. 
+
+We have a //lpm.h// file  that  contains  lpm  features, and a //lpm.c//
+file that contain their implementation: 
+
+<Code: lpm.h
+#ifndef LPM
+#define LPM
+
+#endif //LPM
+>
+
+<Code: lpm.c
+#include "lpm.h"
+
+>
+
+To run the program, we have  a  //main.c//  file that call the //lpm.h//
+functions to do the job: 
+
+<Code: main.c
+#include "lpm.h"
+
+int main(int argc; char *argv[]) {
+	<lpm main function implementation
+}
+>
+
+The file that test code  load  the  lpm  library,  then run tests. Tests
+are not splitted into functions,  we  just  write  them  as we write the
+code. 
+
+<Code: tests.c
+#include "lpm.h"
+
+int main(int argc, char *argv[]) {
+	<tests code
+}
+>
+
+== Makefile
+
+A rule to run tests: 
+
+<Code: Makefile
+test:
+	gcc tests.c lpm.c -o run-tests
+	./run-tests
+>
+
+== In Paragraph Stuff
+

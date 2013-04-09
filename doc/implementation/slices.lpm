@@ -1,9 +1,9 @@
 == Slices
 
-When we load the document, we get a string to work on. While parsing, we never
-copy that string: we only refer to portions of that string, that we call
-“slices”. A slice is a pointer to the beginning of the string portion, and the
-length of the portion. 
+When we load the document, we  get  a  string to work on. While parsing,
+we never copy that string:  we  only  refer  to portions of that string,
+that we call “slices”. A  slice  is  a  pointer  to the beginning of the
+string portion, and the length of the portion. 
 
 <Code: lpm structures and types
 typedef struct Slice {
@@ -12,16 +12,17 @@ typedef struct Slice {
 } Slice;
 >
 
-Two functions can allocate a Slice:
+Two functions can allocate a Slice: 
 
 <Code: lpm functions prototypes
 Slice* newSlice(char *text);
 Slice* sliceOf(Slice *slice, int offset, int length);
 >
 
-<newSlice(char *text)> will create a “big” Slice from a string. That Slice will
-refer to the beginning of the string, and be of the length of the string. If we
-give <NULL> as the text argument, we create an empty Slice of length zero.
+<newSlice(char \*text)> will create a  “big”  Slice  from a string. That
+Slice will refer to the beginning  of  the  string, and be of the length
+of the string. If we  give  <NULL>  as  the  text argument, we create an
+empty Slice of length zero. 
 
 <Code: lpm functions definitions
 Slice* newSlice(char *text) {
@@ -37,8 +38,8 @@ Slice* newSlice(char *text) {
 
 >
 
-<sliceOf(Slice *old, int offset, int length)> creates a new Slice from an other
-Slice. It represents a subset of the other Slice.
+<sliceOf(Slice \*old, int  offset,  int  length)>  creates  a  new Slice
+from an other Slice. It represents a subset of the other Slice. 
 
 <Code: lpm functions definitions
 Slice* sliceOf(Slice *old, int offset, int length) {
@@ -50,48 +51,77 @@ Slice* sliceOf(Slice *old, int offset, int length) {
 
 >
 
-When parsing the documentation, we only consider words, and spacing is not
-significant. So, when creating slices, we usually trim the leading and trailing
-spaces out of the slice:
+When parsing the documentation, we  only  consider words, and spacing is
+not significant. So, when creating  slices,  we usually trim the leading
+and trailing spaces out of the  slice.  We  split the <trim> function in
+two subfunctions, <leftTrim> and  <rightTrim>,  which trim the beginning
+and the end of a Slice, respectively. 
 
 <Code: lpm functions prototypes
 void trim(Slice *slice);
->
-
-<Code: lpm functions prototypes
-void trim(Slice *slice);
-int sliceEqual(Slice *slice, char *text);
+void leftTrim(Slice *slice);
+void rightTrim(Slice *slice);
 >
 
 <Code: lpm functions definitions
-Slice* sliceOf(Slice *old, int offset, int length) {
-	Slice *new = malloc(sizeof(Slice));
-	new->content = old->content+offset;
-	new->length = length;
-	return new;
-}
-
 void trim(Slice *slice) {
-	while (slice->content[slice->length-1] == ' ') {
-		slice->length--;
-	}
+	leftTrim(slice);
+	rightTrim(slice);
+}
+
+>
+
+To trim  the  leading  spaces  of  the  Slice,  we  look  if  the  first
+character of the Slice is a  space.  If  it is, we increment the pointer
+of the slice to refer to  the  next  character, and decrease the size of
+the slice. 
+
+<Code: lpm functions definitions
+void leftTrim(Slice *slice) {
 	while (slice->content[0] == ' ') {
 		slice->content++;
 		slice->length--;
 	}
 }
 
-int sliceEqual(Slice *slice, char *text) {
+>
+
+To trim  the  trailing  spaces  of  the  Slice,  we  look  if  the  last
+character of the Slice is  a  space.  //Note:  the  last character is at
+<slice-\>length-1>, since we begin  the  count  of characters at zero.//
+While the last character  is  a  space,  we  decrement  the  size of the
+Slice. Decreasing the size of the  Slice  is  like throwing off the last
+characters. 
+
+<Code: lpm functions definitions
+void rightTrim(Slice *slice) {
+	while (slice->content[slice->length-1] == ' ') {
+		slice->length--;
+	}
+}
+
+>
+
+It may be useful to compare a  Slice  to  a standard C string. To do so,
+we provide the <sliceMatch> function: 
+
+<Code: lpm functions prototypes
+bool sliceMatch(Slice *slice, char *text);
+>
+
+<Code: lpm functions definitions
+
+bool sliceMatch(Slice *slice, char *text) {
 	int i;
 	for (i = 0; i < slice->length; i++) {
 		if (slice->content[i] != text[i]) {
-			return 0;
+			return FALSE;
 		}
 	}
 	if (text[i] != '\0') {
-		return 0;
+		return FALSE;
 	}
-	return 1;
+	return TRUE;
 }
 
 >

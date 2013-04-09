@@ -84,7 +84,7 @@ We verify that the parsed tree has the same root as the original tree:
 test("the root tree should be of type PARAGRAPH",
 	tree->type == PARAGRAPH);
 test("the root tree should contain all the given text",
-	sliceEqual(tree->text, "this //text// in //italics//"));
+	sliceMatch(tree->text, "this //text// in //italics//"));
 >
 
 We look at the type and content of each children of the trunk: 
@@ -94,22 +94,22 @@ We look at the type and content of each children of the trunk:
 test("the first child should be of type TEXT",
 	tree->children[0]->type == TEXT);
 test("the firt child text should be \"this\"",
-	sliceEqual(tree->children[0]->text, "this"));
+	sliceMatch(tree->children[0]->text, "this"));
 
 test("the second child should be of type ITALIC",
 	tree->children[1]->type == ITALIC);
 test("the second child text should be \"text\"",
-	sliceEqual(tree->children[1]->text, "text"));
+	sliceMatch(tree->children[1]->text, "text"));
 
 test("the third child should be of type TEXT",
 	tree->children[2]->type == TEXT);
 test("the third child text should be \"in\"",
-	sliceEqual(tree->children[2]->text, "in"));
+	sliceMatch(tree->children[2]->text, "in"));
 
 test("the fourth child should be of type ITALIC",
 	tree->children[3]->type == ITALIC);
 test("the fourth child text should be \"italics\"",
-	sliceEqual(tree->children[3]->text, "italics"));
+	sliceMatch(tree->children[3]->text, "italics"));
 >
 
 We verify the content of the terminal leaves: 
@@ -118,12 +118,12 @@ We verify the content of the terminal leaves:
 test("the child of the first italic text should be of type TEXT",
 	tree->children[1]->children[0]->type == TEXT);
 test("the child text of the first italic text should be \"text\"",
-	sliceEqual(tree->children[1]->children[0]->text, "text"));
+	sliceMatch(tree->children[1]->children[0]->text, "text"));
 
 test("the child of the second italic text should be of type TEXT",
 	tree->children[1]->children[0]->type == TEXT);
 test("the child text of the second italic text should be \"italics\"",
-	sliceEqual(tree->children[3]->children[0]->text, "italics"));
+	sliceMatch(tree->children[3]->children[0]->text, "italics"));
 >
 
 Test passed, we free the memory: 

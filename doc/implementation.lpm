@@ -11,6 +11,7 @@
 ~Get implementation/code-separation.lpm
 ~Get implementation/makefile.lpm
 ~Get implementation/testing-helpers.lpm
+~Get implementation/booleans.lpm
 ~Get implementation/slices.lpm
 ~Get implementation/parsing-tree-structure.lpm
 ~Get implementation/parsing-paragraphs.lpm

@@ -1,0 +1,16 @@
+== Booleans!
+
+They are not defined in the C89  standard.*  Booleans do not exist in C,
+but we define them anyway for their semantic value. 
+
+<Code: lpm structures and types
+#define TRUE 1
+#define FALSE !TRUE
+
+typedef char bool;
+
+>
+
+ *: I don't know where they  are  defined,  but  we sometime have a nice
+    <<text>bool.h> header to work with.
+

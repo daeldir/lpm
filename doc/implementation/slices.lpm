@@ -1,0 +1,98 @@
+== Slices
+
+When we load the document, we get a string to work on. While parsing, we never
+copy that string: we only refer to portions of that string, that we call
+“slices”. A slice is a pointer to the beginning of the string portion, and the
+length of the portion. 
+
+<Code: lpm structures and types
+typedef struct Slice {
+	char *content;
+	int length;
+} Slice;
+>
+
+Two functions can allocate a Slice:
+
+<Code: lpm functions prototypes
+Slice* newSlice(char *text);
+Slice* sliceOf(Slice *slice, int offset, int length);
+>
+
+<newSlice(char *text)> will create a “big” Slice from a string. That Slice will
+refer to the beginning of the string, and be of the length of the string. If we
+give <NULL> as the text argument, we create an empty Slice of length zero.
+
+<Code: lpm functions definitions
+Slice* newSlice(char *text) {
+	Slice *slice = malloc(sizeof(Slice));
+	slice->content = text;
+	if (text != NULL) {
+		slice->length = strlen(text);
+	} else {
+		slice->length = 0;
+	}
+	return slice;
+}
+
+>
+
+<sliceOf(Slice *old, int offset, int length)> creates a new Slice from an other
+Slice. It represents a subset of the other Slice.
+
+<Code: lpm functions definitions
+Slice* sliceOf(Slice *old, int offset, int length) {
+	Slice *new = malloc(sizeof(Slice));
+	new->content = old->content+offset;
+	new->length = length;
+	return new;
+}
+
+>
+
+When parsing the documentation, we only consider words, and spacing is not
+significant. So, when creating slices, we usually trim the leading and trailing
+spaces out of the slice:
+
+<Code: lpm functions prototypes
+void trim(Slice *slice);
+>
+
+<Code: lpm functions prototypes
+void trim(Slice *slice);
+int sliceEqual(Slice *slice, char *text);
+>
+
+<Code: lpm functions definitions
+Slice* sliceOf(Slice *old, int offset, int length) {
+	Slice *new = malloc(sizeof(Slice));
+	new->content = old->content+offset;
+	new->length = length;
+	return new;
+}
+
+void trim(Slice *slice) {
+	while (slice->content[slice->length-1] == ' ') {
+		slice->length--;
+	}
+	while (slice->content[0] == ' ') {
+		slice->content++;
+		slice->length--;
+	}
+}
+
+int sliceEqual(Slice *slice, char *text) {
+	int i;
+	for (i = 0; i < slice->length; i++) {
+		if (slice->content[i] != text[i]) {
+			return 0;
+		}
+	}
+	if (text[i] != '\0') {
+		return 0;
+	}
+	return 1;
+}
+
+>
+

@@ -1,0 +1,18 @@
+== Testing Helpers
+
+<Code: testing helpers
+char *context;
+
+void within(char *c) {
+	context = c;
+}
+
+void test(char *description, int result) {
+	if (!result) {
+		printf("%s: %s.\n", context, description);
+		exit(EXIT_FAILURE);
+	}
+}
+
+>
+

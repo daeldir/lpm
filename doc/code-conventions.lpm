@@ -1,0 +1,165 @@
+== Code Conventions
+
+=== Curly Brackets
+
+We use  a  ”java  style”  convention  for  our  source  code.  That  is,
+openning curly  brackets  are  on  the  same  line  as  their statement,
+closing curly brackets are  on  their  own  line,  except  in if/else or
+do/while  statements.   In   <for>,   <if>   and   <while>   statements,
+parenthesis are surrounded by spaces on the outside: 
+
+<Code: 
+int function() {
+	if (cond) {
+		/* ... */
+	} else {
+		/* ... */
+	}
+
+	do {
+		/* ... */
+	} while (cond);
+
+	while (cond) {
+		/* ... */
+	}
+}
+>
+
+Note that this convention is closest  to  the  java  one than to most of
+other C conventions, where  braces  tend  to  stand  on their own lines,
+like on this GNU style example: 
+
+<Code: 
+int
+function ()
+{
+	if (cond)
+	  {
+		/* ... */
+	  }
+	else
+	  {
+		/* ... */
+	  }
+}
+>
+
+Our choice  is  meant  to  not  distract  us  with  complex  rules  (for
+instance, in the  K&R  style,  we  sometime  have  braces  on their own,
+sometime not). Here, we always will  have  the same rule. Note also that
+we put the  return  type  of  our  function  on  the  same  line  as the
+function name, whereas some conventions  (as  in the example above) like
+to break the line at this point. 
+
+We will also  avoid  the  non-bracketed  form  of  some statements. When
+used, there will be no line break beetween the statements: 
+
+<Code: 
+/* Preferred */
+for (i = 0; i < 10; i++) {
+	printf("%d\n", i);
+}
+
+/* To avoid */
+for (i = 0; i < 10; i++) printf("%d\n", i);
+
+/* Forbidden */
+for (i = 0; i < 10; i++)
+	printf("%d\n", i);
+>
+
+=== Variable Names
+
+Variables and functions names are  in  //lowerCamelCase//. We do not use
+underscore to separate words in  variable  names. Structure names are in
+//UpperCamelCase//. 
+
+Acronyms capitalization follow  the  rules  of  camelcase,  and thus are
+not  all  in  uppercase.  So,  we  would  have  a  <lpmVariable>  and  a
+<LpmStructure>, but not a <LPMVariable> or a <LPMStructure>. 
+
+Constant names are all  uppercase.  Global  variable  (when used) are in
+“//gCamelCase//”, using  a  “light”  hungarian  convention:  they should
+begin  with  a  “//g//”:  <gGlobalVariable>.   The  “ugliness”  of  that
+solution (a mix of camelCase  and  hungarian  notation) should remind us
+of the “ugliness” of  global  variables.  They  may nevertheless be used
+in some part of  our  program,  because  they  can  sometime be the best
+solution (as a <goto> can  be  a  good  solution  to  make the code more
+readable,   whatever   says   Dijkstra,   but    only   in   some   rare
+circumstances). 
+
+Abbreviations  should  be  avoided,  as   well  as  overly  long  names.
+<result> should be  preferred  to  <res>,  and  <newParseTree> should be
+preferred to <parseTreeInitialization>.  Whenever  it  is  possible, try
+to use one word identifiers.  Do  not  fear  the  use of a thesaurus. An
+exception is done for the <i>,  <j>  and  <k> index identifiers in <for>
+loops,  or  <x>,  <y>,  <z>,   <a>,   <b>,   <c>  identifiers  found  in
+mathematical equations (you may  also  find  definitions  like <char c>,
+but they should be mostly local). 
+
+Some “general” names may be found  (such  as <trim>), when they can only
+have one meaning in the  program.  Care  should  be given however to not
+let those  name  end  up  in  the  exported  namespace  of <<text>lpm.h>
+(<trim> is fine in our program where  we  know  what it does, but we may
+prefer a  <trimSlice>  when  exporting  this  function  to  the  outside
+world, to avoid conflict and name ambiguity). 
+
+=== Comments
+
+Most of  the  comments  will  be  found  in  the  documentation.  When a
+comment slip into the source code,  it  will be using the multiline form
+of comments, and not  the  one  line  form  imported  from  C++. That is
+because we stick to the C89  standard,  that  did  not have the one line
+comments. 
+
+<Code: 
+/* Good comment */
+// Bad comment
+>
+
+=== Indentation and Line Size
+
+Indentation is done  using  tabulations.  Character  alignments are done
+with spaces. Snippets of code with  more  than two levels of indentation
+should be avoided in the  documentation  (the  resulting source code can
+however have many indentation levels,  as  it  is  not  the code that we
+read). 
+
+Lines should not exceed 72 columns.  At  redaction time, a tabulation is
+considered  to  be  8  columns  wide,   whatever  size  your  editor  is
+configured to print them. Please take  care  of that rule (especially if
+you prefer four or two  columns  wide  tabulation,  which gives you more
+space to write code, but  makes  it  harder  to  see  when a line is too
+long). It is true that  variable  tabulations size and different editors
+will not always  help  to  see  when  that  rule  is  broken.  At least,
+//try//. Code that do  not  follow  this  rule  will  be corrected as we
+notice it. 
+
+Those two rules (indentation  depth  and  line  size)  are  here to help
+enforce factorization. If a line is  too  long,  or too indented, it may
+be an indication of  code  complexity.  Also,  the  line size is aligned
+with  that  of  LPM.  Code  wider   than   72  columns  will  break  the
+presentation of the documentation on the documentation source side. 
+
+Here is a graphical description of these rules: 
+
+<Code (text): 
+Tabulation: “|——————>”
+Space:      “⋅”
+
+├────────────────────────────── Line Size ─────────────────────────────┤
+
+int⋅function()⋅{
+|––––––>int⋅variable1,
+|––––––>⋅⋅⋅⋅variable2;
+|––––––>if⋅(a⋅condition)⋅{
+|––––––>|––––––>if⋅(a⋅second⋅condition)⋅{
+|––––––>|––––––>|––––––>/*⋅That⋅is⋅beginning⋅to⋅be⋅a⋅lot⋅of
+|––––––>|––––––>|––––––>⋅⋅⋅indentation...⋅*/
+|––––––>|––––––>}
+|––––––>}
+}
+
+>
+

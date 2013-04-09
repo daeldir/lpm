@@ -1,0 +1,82 @@
+== Parsing Tree Structure
+
+We use a unique structure to  represent  our  parsed document. This is a
+recursive structure, which  has  a  type,  children,  and  point  to the
+slice of text it represent: 
+
+<Code: lpm structures and types
+
+<parsing types enum
+typedef struct ParseTree {
+	ParseType type;
+	Slice *text;
+	struct ParseTree **children;
+	int count;
+} ParseTree;
+
+>
+
+How do we define the type of  a  node?  With a simple enum, that we will
+fill as we write the parsing code: 
+
+<Code: parsing types enum
+typedef enum ParseType {
+	PARAGRAPH,
+	ITALIC,
+	TEXT,
+	UNKNOWN
+} ParseType;
+
+>
+
+<Code: lpm functions definitions
+
+ParseTree* newParseTree(char *text) {
+	ParseTree *result = malloc(sizeof(ParseTree));
+	result->type = UNKNOWN;
+	result->text = newSlice(text);
+	result->children = NULL;
+	result->count = 0;
+	return result;
+}
+
+void freeParseTree(ParseTree *tree) {
+	int i;
+	for (i = 0; i < tree->count; i++) {
+		freeParseTree(tree->children[i]);
+	}
+	free(tree->children);
+	free(tree->text);
+	free(tree);
+}
+
+ParseTree* childParseTree(ParseTree *parent, int offset, ParseType type) {
+	ParseTree *result = malloc(sizeof(ParseTree));
+        result->type = type;
+	result->text = sliceOf(parent->text, offset, 0);
+	result->children = NULL;
+	result->count = 0;
+        return result;
+}
+
+int appendChild(ParseTree *parent, ParseTree *child) {
+	int newSize;
+	if (child->text->length == 0 && child->count == 0) {
+		return 0;
+	}
+	parent->count += 1;
+	newSize = parent->count*sizeof(ParseTree*);
+	parent->children = realloc(parent->children, newSize);
+	parent->children[parent->count-1] = child;
+	return 1;
+}
+
+>
+
+<Code: lpm functions prototypes
+ParseTree* newParseTree(char *text);
+ParseTree* childParseTree(ParseTree *parent, int offset, ParseType type);
+int appendChild(ParseTree *tree, ParseTree *child);
+void freeParseTree(ParseTree *tree);
+>
+

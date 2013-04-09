@@ -1,0 +1,134 @@
+== Parsing Paragraphs
+
+<Code: lpm functions prototypes
+void parseParagraph(ParseTree *tree);
+>
+
+<Code: lpm functions definitions
+void parseParagraph(ParseTree *tree) {
+	int i, lastPosition = 0;
+	char currentChar, lastChar = '\0';
+	ParseTree *currentLeaf;
+	if (tree->type == TEXT) {
+		return;
+	}
+	currentLeaf = childParseTree(tree, 0, TEXT);
+	for (i = 0; i < tree->text->length; i++) {
+		currentChar = tree->text->content[i];
+		if (currentChar == ' ' && lastChar != '\\') {
+			/* Ignore unescaped spaces */
+		} else if (currentLeaf->type == TEXT) {
+			if (currentChar == '/' && lastChar == '/') {
+				currentLeaf->text->length = i-lastPosition-1;
+				trim(currentLeaf->text);
+				if (!appendChild(tree, currentLeaf)) {
+					freeParseTree(currentLeaf);
+				}
+				currentLeaf = childParseTree(tree, i+1, ITALIC);
+				lastPosition = i;
+				lastChar = '\0';
+			}
+		} else if (currentLeaf->type == ITALIC) {
+			if (currentChar == '/' && lastChar == '/') {
+				currentLeaf->text->length = i-lastPosition-2;
+				trim(currentLeaf->text);
+				if (!appendChild(tree, currentLeaf)) {
+					freeParseTree(currentLeaf);
+				}
+				currentLeaf = childParseTree(tree, i+1, TEXT);
+				lastPosition = i+1;
+				lastChar = '\0';
+			}
+		}
+		lastChar = currentChar;
+	}
+
+	currentLeaf->text->length = i-lastPosition;
+	trim(currentLeaf->text);
+	if (!appendChild(tree, currentLeaf)) {
+		freeParseTree(currentLeaf);
+	}
+	for (i = 0; i < tree->count; i++) {
+		parseParagraph(tree->children[i]);
+	}
+}
+
+>
+
+=== Tests
+
+==== Parsing italic words
+
+We initialize a text to parse, containing only italics and text. 
+
+<Code: running tests
+testItalicsParsing();
+>
+
+<Code: tests code
+void testItalicsParsing() {
+	<testing italics parsing
+}
+>
+
+<Code: testing italics parsing
+ParseTree *tree = newParseTree("this //text// in //italics//");
+within("Testing italics parsing");
+tree->type = PARAGRAPH;
+parseParagraph(tree);
+>
+
+We verify that the parsed tree has the same root as the original tree: 
+
+<Code: testing italics parsing
+test("the root tree should be of type PARAGRAPH",
+	tree->type == PARAGRAPH);
+test("the root tree should contain all the given text",
+	sliceEqual(tree->text, "this //text// in //italics//"));
+>
+
+We look at the type and content of each children of the trunk: 
+
+<Code: testing italics parsing
+
+test("the first child should be of type TEXT",
+	tree->children[0]->type == TEXT);
+test("the firt child text should be \"this\"",
+	sliceEqual(tree->children[0]->text, "this"));
+
+test("the second child should be of type ITALIC",
+	tree->children[1]->type == ITALIC);
+test("the second child text should be \"text\"",
+	sliceEqual(tree->children[1]->text, "text"));
+
+test("the third child should be of type TEXT",
+	tree->children[2]->type == TEXT);
+test("the third child text should be \"in\"",
+	sliceEqual(tree->children[2]->text, "in"));
+
+test("the fourth child should be of type ITALIC",
+	tree->children[3]->type == ITALIC);
+test("the fourth child text should be \"italics\"",
+	sliceEqual(tree->children[3]->text, "italics"));
+>
+
+We verify the content of the terminal leaves: 
+
+<Code: testing italics parsing
+test("the child of the first italic text should be of type TEXT",
+	tree->children[1]->children[0]->type == TEXT);
+test("the child text of the first italic text should be \"text\"",
+	sliceEqual(tree->children[1]->children[0]->text, "text"));
+
+test("the child of the second italic text should be of type TEXT",
+	tree->children[1]->children[0]->type == TEXT);
+test("the child text of the second italic text should be \"italics\"",
+	sliceEqual(tree->children[3]->children[0]->text, "italics"));
+>
+
+Test passed, we free the memory: 
+
+<Code: testing italics parsing
+freeParseTree(tree);
+>
+

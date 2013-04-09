@@ -1,0 +1,82 @@
+== Makefile
+
+The Makefile is hand written. At the  moment,  it is really simple. I do
+not have  great  knowledge  of  Makefile  rules  and  mechanics,  and am
+focusing on another part  of  the  job.  So,  we  have simple rules, and
+//no// compilation dependencies (for  now).  Files  are compiled at each
+<<sh>make> run. 
+
+We define some variables to  not  repeat  ourselves.  When a variable is
+declared that way: <<makefile>FOO?=bar>  (note  the <<text>?> before the
+<<text>\=>), that means  that  this  variable  can  be  modified when we
+issue the <<sh>make> command (that way: <<sh>make FOO=baz>). 
+
+We define the compiler.  We  use  GCC  for  our  project,  but it is not
+excluded, later, to use other  compilers  (we  aim  at being as portable
+as possible). The compiler can be changed from the command line. 
+
+<Code (makefile): Makefile
+CC?=gcc
+>
+
+We use GCC with options that will  help  us keep our code as portable as
+possible. <<sh>\-std=c89>  will  restrict  us  to  the  //C89// standard
+(supported by  almost  all  C  compilers),  <<sh>\-Wall>  will  complain
+about  every  little  things  that  could   go  bad  in  our  code,  and
+<<sh>\--pedantic> will complain  even  more,  about  bad  practices. Our
+goal is  to  stick  to  these  options  and  not  have  any  warning  at
+compilation time. We may latter use  other  compilers (such as LLVM), to
+detect   errors   and   code   smells    that   GCC   did   not   catch.
+<<makefile>$(OPTIONS)> can  be  defined  from  the  command  line  (when
+using an other compiler, for instance). 
+
+<Code (makefile): Makefile
+OPTIONS?=-std=c89 -Wall --pedantic
+>
+
+We define the command to  compile  our  tests  in a variable (many rules
+will issue that same  command).  It  uses  the <<makefile>$(CC)> and the
+<<makefile>$(OPTIONS)> variables we  defined  earlier.  It  compiles the
+<<text>tests.c> file //and//  the  <<text>lpm.c>  file,  sparing  us the
+need of an intermediate object file  (we  use <<sh>make> more as a fancy
+action selector  than  as  a  compilation  manager...).  The  binary  is
+output to the <<text>run-tests> file. 
+
+<Code (makefile): Makefile
+MAKE_TESTS=$(CC) $(OPTIONS) tests.c lpm.c -o run-tests
+>
+
+We have three test rules.  One  will  only  compile the tests (<<sh>make
+tests>). One will  compile  and  run  the  tests (<<sh>make run-tests>).
+The last one, <<sh>make memtest>  will  compile  the tests, and run them
+through valgrind to report memory leaks.* 
+ *: Here, we only control memory leaks  while  testing. We may miss real
+    application  leaks,  but  at  least  we   can  avoid  those  in  the
+    functions exported by  <<text>lpm.h>  when  they  are  used properly
+    (calling  <freeParseTree()>   after   operations,   those   kind  of
+    things...).
+
+<Code (makefile): Makefile
+tests:
+	$(MAKE_TESTS)
+
+run-tests:
+	$(MAKE_TESTS)
+	./run-tests
+
+memtest:
+	$(MAKE_TESTS)
+	valgrind --leak-check=full ./run-tests 2>&1
+>
+
+To run the commands  at  each  <<sh>make>  call,  we  have to define our
+targets as  “false”  targets.  The  <<makefile>.PHONY:>  rule  mark  the
+specified rules as such,  meaning  that  they  will  be executed without
+any dependency check when called.  That  is  to  avoid a message such as
+<<text>Nothing  to   do   for   "run-tests">   when   calling  <<sh>make
+run-tests>. 
+
+<Code (makefile): Makefile
+.PHONY: memtest run-tests tests
+>
+

@@ -1,0 +1,90 @@
+== Code Separation
+
+We have four main files:  one  for  the  main  program loop, one for the
+tests, and two as  a  header  and  implementation  file that contain all
+the work done by LPM. 
+
+So, we have a <<text>lpm.h> and  a  <<text>lpm.c> file, in which most of
+the  work  is  done.  As   usual,   the  <<text>lpm.h>  is  enclosed  in
+<\#ifndef>/<\#define>/<\#endif>* to  prevent  it  to  be  included  more
+than  one  time,   and   contains   types,   structures,  and  functions
+prototypes exported by LPM. 
+ *: That triplet works like  that:  first,  we  look  if  <LPM> has been
+    defined. If  it  has,  we  skip  the  inclusion  of  the  header: it
+    already has  been  included.  If  <LPM>  has  not  been  defined, we
+    define it, so that the  next  time  we  include <<text>lpm.h>, we do
+    not include that code once more.  Then,  we  define all of our code.
+    Finally,  we  close  the  <\#ifndef>  with  <\#endif>.  Usually,  we
+    remind in a comment  what  <\#if>,  <\#ifdef>  or  <\#ifndef> we are
+    closing (here, <\#endif /\* LPM \*/>).
+
+<Code: lpm.h
+#ifndef LPM
+#define LPM
+
+<lpm structures and types
+<lpm functions prototypes
+
+#endif /* LPM */
+>
+
+We effectively implement  the  lpm  functions  in <<text>lpm.c>. Headers
+are included  from  here  to  not  pollute  the  global  namespace  when
+including <<text>lpm.h>.* 
+ *: Correct me if I'm wrong, but  when  including a <<text>.h> file, all
+    symbols accessibles from  that  file  are  accessibles  in  the file
+    that  included   it.   So,   if   we   include   <<text>stdio.h>  in
+    <<text>foo.h>, <\#include "foo.h">  will  give  access  to <printf>,
+    but   if    we    include    <<text>stdio.h>    in    <<text>foo.c>,
+    <\#include "foo.h"> will **not**  give  access  to <printf>, only to
+    functions whose prototype is in <<text>foo.h>.
+
+<Code: lpm.c
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include "lpm.h"
+
+<lpm functions definitions
+
+>
+
+To run the program, we  have  a  <<text>main.c>  file that will call the
+<<text>lpm.h> functions. That file  does  not  contain  a  lot of logic,
+and  is  only  calling  functions   from  <<text>lpm.h>  (we  also  load
+<<text>stdlib.h>, but only to get <EXIT_SUCCESS>). 
+
+<Code: main.c
+#include <stdlib.h>
+#include "lpm.h"
+
+int main(int argc, char *argv[]) {
+
+	<lpm main function implementation
+
+	return EXIT_SUCCESS;
+}
+>
+
+In <<text>tests.c>, we put code  to  test  the <<text>lpm.h> library. We
+first define helpers  (functions  that  are  useful  to  run the tests),
+then one function per  tested  feature,  and  finally, a <main> function
+that will call those test functions when the program is run. 
+
+<Code: tests.c
+#include <stdlib.h>
+#include <stdio.h>
+#include "lpm.h"
+
+<testing helpers
+
+<tests code
+
+int main(int argc, char *argv[]) {
+
+	<running tests
+
+	return EXIT_SUCCESS;
+}
+>
+
